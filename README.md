@@ -1,7 +1,7 @@
 # Relatório — Aplicação de música para Android e Android Auto
 
 **Data:** 3 de setembro de 2026  
-**Diretório do projeto:** `C:\__GitPrivate\MusicPlayer`
+**Projeto:** `VCCMusic`
 
 ## 1. Objetivo
 
@@ -225,8 +225,8 @@ New Project
 Configuração inicial sugerida:
 
 ```text
-Nome: FolderBeat
-Package name: pt.seudominio.folderbeat
+Nome: VCCMusic
+Package name: pt.vcc.vccmusic
 Minimum SDK: API 26
 ```
 
@@ -241,7 +241,11 @@ Dependências funcionais previstas:
 - WorkManager.
 - DocumentFile ou consultas diretas ao `DocumentsContract`.
 
-## 12. Sugestões de nome
+## 12. Nome da aplicação
+
+O nome público e o nome do projeto Android escolhidos são **VCCMusic**. O identificador da aplicação é `pt.vcc.vccmusic`.
+
+### Alternativas anteriormente consideradas
 
 Foram considerados os seguintes nomes:
 
@@ -259,13 +263,13 @@ Foram considerados os seguintes nomes:
 - **RitmoLocal** — português e amigável.
 - **AutoBeats** — associado ao Android Auto, mas mais limitador para a identidade geral.
 
-As três opções preferidas são:
+As três alternativas anteriormente preferidas eram:
 
 1. **FolderBeat** — melhor equilíbrio geral e recomendação principal.
 2. **SomLocal** — melhor opção para uma identidade portuguesa.
 3. **SonicRoot** — melhor opção para uma marca mais distinta.
 
-Antes da publicação deverá ser verificado se o nome escolhido já existe na Google Play Store e se entra em conflito com alguma marca registada.
+Antes da publicação deverá ser verificado se **VCCMusic** já existe na Google Play Store e se entra em conflito com alguma marca registada.
 
 ## 13. Recomendação final
 
