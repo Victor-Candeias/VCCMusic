@@ -1,0 +1,32 @@
+package pt.vcc.vccmusic.di
+
+import android.content.Context
+import androidx.room.Room
+import pt.vcc.vccmusic.data.MusicRepository
+import pt.vcc.vccmusic.data.RoomMusicRepository
+import pt.vcc.vccmusic.data.local.MusicDatabase
+import pt.vcc.vccmusic.data.saf.AndroidSafRootRepository
+import pt.vcc.vccmusic.data.saf.SafRootRepository
+
+interface AppContainer {
+    val musicRepository: MusicRepository
+    val safRootRepository: SafRootRepository
+}
+
+class DefaultAppContainer(
+    applicationContext: Context,
+) : AppContainer {
+    private val appContext = applicationContext.applicationContext
+
+    private val database: MusicDatabase by lazy {
+        Room.databaseBuilder(appContext, MusicDatabase::class.java, "music.db").build()
+    }
+
+    override val musicRepository: MusicRepository by lazy {
+        RoomMusicRepository(database)
+    }
+
+    override val safRootRepository: SafRootRepository by lazy {
+        AndroidSafRootRepository(appContext)
+    }
+}

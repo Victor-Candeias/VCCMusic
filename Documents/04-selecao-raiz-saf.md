@@ -1,5 +1,7 @@
 # WI-04 — Selecionar e conservar a raiz com SAF
 
+**Estado:** Concluído em 3 de setembro de 2026
+
 ## Objetivo
 
 Permitir ao utilizador escolher uma pasta acessível e reutilizar a autorização depois de reiniciar a aplicação.
@@ -28,7 +30,17 @@ Permitir ao utilizador escolher uma pasta acessível e reutilizar a autorizaçã
 - Teste manual de persistência após reinício.
 - Teste manual de revogação da permissão nas definições do sistema.
 
+## Validação de fecho
+
+- `MainActivity` usa `ActivityResultContracts.OpenDocumentTree` e não solicita permissões de armazenamento amplo.
+- Uma seleção válida é validada como URI de árvore `content://`, recebe permissão persistente de leitura e é guardada no DataStore.
+- Cancelar o seletor não executa qualquer alteração ao estado anterior.
+- O acesso à raiz verifica a permissão persistente e trata URI inválida, autorização revogada e provider indisponível com estados recuperáveis.
+- A abstração `SafRootRepository` mantém a lógica de acesso separada da UI e testável por substituição.
+- Build, testes unitários e lint executam com sucesso.
+
+**Conclusão:** WI-04 finalizado.
+
 ## Dependências
 
 WI-02.
-

@@ -1,5 +1,9 @@
 # WI-02 — Criar o projeto Android base
 
+**Estado:** Concluído em 3 de setembro de 2026  
+**Arquitetura:** [Arquitetura inicial](ARQUITETURA.md)  
+**Build:** [Compilar e executar](BUILD.md)
+
 ## Objetivo
 
 Obter uma aplicação Android nativa mínima, reproduzível e preparada para crescer sem acoplar interface, dados e reprodução.
@@ -29,7 +33,19 @@ Obter uma aplicação Android nativa mínima, reproduzível e preparada para cre
 - Teste de navegação entre destinos vazios.
 - Verificação de build debug e release sem assinatura de produção.
 
+## Validação de fecho
+
+Validado em 3 de setembro de 2026 contra o estado atual do projeto:
+
+- `assembleDebug` e `assembleRelease` executam com sucesso.
+- Os testes unitários, o lint e `connectedDebugAndroidTest` executam com sucesso no emulador `Pixel_10a (AVD) - 17`.
+- A aplicação foi instalada e iniciada no emulador; a `MainActivity` apresentou a shell de navegação e o teste confirmou os destinos Biblioteca, Playlists e Em reprodução.
+- O catálogo de versões fixa as versões das dependências e dos plugins.
+- A arquitetura está separada por responsabilidades e usa injeção manual através de `AppContainer`, permitindo testar lógica JVM sem iniciar uma `Activity`.
+- Não foram encontrados segredos, caminhos absolutos ou versões dinâmicas na configuração.
+
+**Conclusão:** WI-02 finalizado e desbloqueia os WI-03 e WI-04.
+
 ## Dependências
 
 WI-01.
-

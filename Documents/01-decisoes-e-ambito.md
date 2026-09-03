@@ -34,7 +34,17 @@ Eliminar ambiguidades que influenciam toda a implementação antes de criar o pr
 
 Todos os critérios foram satisfeitos no ADR associado. O desenho detalhado do painel “Em reprodução” pertence ao WI-10 e não bloqueia este item.
 
+## Validação de fecho
+
+Validado em 3 de setembro de 2026 contra o estado atual do projeto:
+
+- `applicationId`, namespace, nome público e `minSdk` estão configurados como `pt.vcc.vccmusic`, **VCCMusic** e API 26.
+- A arquitetura e o código mantêm URIs SAF como `content://`, sem depender de caminhos físicos.
+- Não existem placeholders ou caminhos absolutos nas decisões do MVP.
+- `gradlew assembleDebug` e `gradlew testDebugUnitTest` executam com sucesso.
+
+**Conclusão:** WI-01 finalizado e desbloqueia o WI-02.
+
 ## Dependências
 
 Nenhuma.
-
