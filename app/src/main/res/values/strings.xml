@@ -31,4 +31,11 @@
     <string name="move_down">Descer</string>
     <string name="remove">Remover</string>
     <string name="confirm_delete_playlist">Tem a certeza de que pretende eliminar esta playlist?</string>
+    <string name="nothing_playing">Nada em reprodução</string>
+    <string name="play">Reproduzir</string>
+    <string name="pause">Pausar</string>
+    <string name="previous">Anterior</string>
+    <string name="next">Seguinte</string>
+    <string name="shuffle">Aleatório</string>
+    <string name="play_playlist">Reproduzir playlist</string>
 </resources>

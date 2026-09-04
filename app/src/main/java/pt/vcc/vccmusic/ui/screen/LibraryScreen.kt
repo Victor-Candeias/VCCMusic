@@ -33,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.local.MusicFolderEntity
 import pt.vcc.vccmusic.data.local.TrackEntity
+import pt.vcc.vccmusic.playback.QueueSource
 
 private sealed interface LibraryLocation {
     data object Root : LibraryLocation
@@ -43,6 +44,7 @@ private sealed interface LibraryLocation {
 @Composable
 fun LibraryScreen(
     viewModel: LibraryViewModel,
+    playbackViewModel: PlaybackViewModel,
     contentPadding: PaddingValues,
     onPickRoot: () -> Unit,
     onReindex: () -> Unit,
@@ -76,12 +78,14 @@ fun LibraryScreen(
                     },
                     onReindex = onReindex,
                     onPickRoot = onPickRoot,
+                    playbackViewModel = playbackViewModel,
                 )
                 LibraryLocation.AllTracks -> TrackContents(
                     title = stringResource(R.string.all_music),
                     tracks = viewModel.observeAllTracks(activeRoot.id)
                         .collectAsStateWithLifecycle(initialValue = emptyList()).value,
                     onBack = { location = LibraryLocation.Root },
+                    playbackViewModel = playbackViewModel,
                 )
                 is LibraryLocation.Folder -> FolderContents(
                     rootId = activeRoot.id,
@@ -96,6 +100,7 @@ fun LibraryScreen(
                         location = folderPath.lastOrNull()?.let(LibraryLocation::Folder)
                             ?: LibraryLocation.Root
                     },
+                    playbackViewModel = playbackViewModel,
                 )
             }
         }
@@ -128,6 +133,7 @@ private fun RootContents(
     onShowAllTracks: () -> Unit,
     onReindex: () -> Unit,
     onPickRoot: () -> Unit,
+    playbackViewModel: PlaybackViewModel,
 ) {
     val folders = viewModel.observeFolders(rootId, null)
         .collectAsStateWithLifecycle(initialValue = emptyList()).value
@@ -138,7 +144,7 @@ private fun RootContents(
     if (folders.isEmpty() && tracks.isEmpty()) {
         EmptyContent(R.string.library_empty)
     } else {
-        LibraryItems(folders, tracks, onOpenFolder)
+        LibraryItems(folders, tracks, onOpenFolder, playbackViewModel)
     }
 }
 
@@ -149,6 +155,7 @@ private fun FolderContents(
     viewModel: LibraryViewModel,
     onOpenFolder: (MusicFolderEntity) -> Unit,
     onBack: () -> Unit,
+    playbackViewModel: PlaybackViewModel,
 ) {
     val folders = viewModel.observeFolders(rootId, folder.id)
         .collectAsStateWithLifecycle(initialValue = emptyList()).value
@@ -158,14 +165,21 @@ private fun FolderContents(
     if (folders.isEmpty() && tracks.isEmpty()) {
         EmptyContent(R.string.folder_empty)
     } else {
-        LibraryItems(folders, tracks, onOpenFolder)
+        LibraryItems(folders, tracks, onOpenFolder, playbackViewModel)
     }
 }
 
 @Composable
-private fun TrackContents(title: String, tracks: List<TrackEntity>, onBack: () -> Unit) {
+private fun TrackContents(
+    title: String,
+    tracks: List<TrackEntity>,
+    onBack: () -> Unit,
+    playbackViewModel: PlaybackViewModel,
+) {
     LibraryHeader(title, onBack)
-    if (tracks.isEmpty()) EmptyContent(R.string.no_tracks) else TrackList(tracks)
+    if (tracks.isEmpty()) EmptyContent(R.string.no_tracks) else TrackList(tracks) {
+        playbackViewModel.playTracks(tracks, it, QueueSource.ALL_TRACKS)
+    }
 }
 
 @Composable
@@ -214,6 +228,7 @@ private fun LibraryItems(
     folders: List<MusicFolderEntity>,
     tracks: List<TrackEntity>,
     onOpenFolder: (MusicFolderEntity) -> Unit,
+    playbackViewModel: PlaybackViewModel,
 ) {
     LazyColumn {
         items(folders, key = { it.id }) { folder ->
@@ -227,7 +242,7 @@ private fun LibraryItems(
             HorizontalDivider()
         }
         items(tracks, key = { it.id }) { track ->
-            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().clickable { playbackViewModel.playTracks(tracks, track.id) }.padding(16.dp)) {
                 Text(track.title, style = MaterialTheme.typography.titleMedium)
                 val details = listOfNotNull(track.artist, track.album).joinToString(" - ")
                 if (details.isNotBlank()) {
@@ -240,10 +255,10 @@ private fun LibraryItems(
 }
 
 @Composable
-private fun TrackList(tracks: List<TrackEntity>) {
+private fun TrackList(tracks: List<TrackEntity>, onPlay: (Long) -> Unit) {
     LazyColumn {
         items(tracks, key = { it.id }) { track ->
-            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().clickable { onPlay(track.id) }.padding(16.dp)) {
                 Text(track.title, style = MaterialTheme.typography.titleMedium)
                 val details = listOfNotNull(track.artist, track.album).joinToString(" - ")
                 if (details.isNotBlank()) Text(details, style = MaterialTheme.typography.bodyMedium)

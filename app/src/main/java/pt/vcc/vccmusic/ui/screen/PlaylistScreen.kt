@@ -38,12 +38,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.local.PlaylistEntity
 import pt.vcc.vccmusic.data.local.TrackEntity
+import pt.vcc.vccmusic.playback.QueueSource
 
 @Composable
 fun PlaylistScreen(
     viewModel: PlaylistViewModel,
     rootId: Long?,
     contentPadding: PaddingValues,
+    playbackViewModel: PlaybackViewModel,
     modifier: Modifier = Modifier,
 ) {
     val playlists by viewModel.playlists.collectAsStateWithLifecycle(initialValue = emptyList())
@@ -79,6 +81,7 @@ fun PlaylistScreen(
                     viewModel.delete(selected!!.id)
                     selected = null
                 },
+                playbackViewModel = playbackViewModel,
             )
         }
     }
@@ -115,6 +118,7 @@ private fun PlaylistDetail(
     rootId: Long?,
     onBack: () -> Unit,
     onDelete: () -> Unit,
+    playbackViewModel: PlaybackViewModel,
 ) {
     val tracks by viewModel.observeTracks(playlist.id)
         .collectAsStateWithLifecycle(initialValue = emptyList())
@@ -136,6 +140,13 @@ private fun PlaylistDetail(
         IconButton(onClick = { confirmDelete = true }) {
             Icon(Icons.Default.Delete, stringResource(R.string.delete_playlist))
         }
+    }
+    Button(
+        onClick = { playbackViewModel.playTracks(tracks, source = QueueSource.SELECTION) },
+        enabled = tracks.isNotEmpty(),
+        modifier = Modifier.padding(horizontal = 16.dp),
+    ) {
+        Text(stringResource(R.string.play_playlist))
     }
     LazyColumn {
         items(tracks, key = { it.id }) { track ->

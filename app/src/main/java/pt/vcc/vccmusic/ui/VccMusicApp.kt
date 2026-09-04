@@ -22,12 +22,15 @@ import pt.vcc.vccmusic.ui.screen.LibraryScreen
 import pt.vcc.vccmusic.ui.screen.LibraryViewModel
 import pt.vcc.vccmusic.ui.screen.PlaylistScreen
 import pt.vcc.vccmusic.ui.screen.PlaylistViewModel
+import pt.vcc.vccmusic.ui.screen.PlaybackViewModel
+import pt.vcc.vccmusic.ui.screen.NowPlayingScreen
 import pt.vcc.vccmusic.data.MusicRepository
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun VccMusicApp(
@@ -36,6 +39,7 @@ fun VccMusicApp(
     onPickRoot: () -> Unit = {},
     onReindex: () -> Unit = {},
 ) {
+    val context = LocalContext.current
     val libraryViewModel: LibraryViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -48,6 +52,13 @@ fun VccMusicApp(
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T =
                 PlaylistViewModel(musicRepository) as T
+        },
+    )
+    val playbackViewModel: PlaybackViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                PlaybackViewModel(context) as T
         },
     )
     val navController = rememberNavController()
@@ -97,7 +108,7 @@ fun VccMusicApp(
             NavigationDestination.entries.forEach { destination ->
                 composable(destination.route) {
                     if (destination == NavigationDestination.Library) {
-                        LibraryScreen(libraryViewModel, contentPadding, onPickRoot, onReindex)
+                        LibraryScreen(libraryViewModel, playbackViewModel, contentPadding, onPickRoot, onReindex)
                     } else if (destination == NavigationDestination.Playlists) {
                         val activeRoot by musicRepository.observeActiveRoot()
                             .collectAsStateWithLifecycle(initialValue = null)
@@ -105,13 +116,18 @@ fun VccMusicApp(
                             playlistViewModel,
                             activeRoot?.id,
                             contentPadding,
+                            playbackViewModel,
                         )
                     } else {
-                        PlaceholderScreen(
-                            titleRes = destination.labelRes,
-                            contentPadding = contentPadding,
-                            testTag = "screen-${destination.route}",
-                        )
+                        if (destination == NavigationDestination.NowPlaying) {
+                            NowPlayingScreen(playbackViewModel, contentPadding)
+                        } else {
+                            PlaceholderScreen(
+                                titleRes = destination.labelRes,
+                                contentPadding = contentPadding,
+                                testTag = "screen-${destination.route}",
+                            )
+                        }
                     }
                 }
             }
