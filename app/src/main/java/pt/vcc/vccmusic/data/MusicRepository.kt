@@ -9,6 +9,7 @@ import pt.vcc.vccmusic.data.local.TrackEntity
 
 interface MusicRepository {
     fun observeActiveRoot(): Flow<MusicRootEntity?>
+    suspend fun activeRoot(): MusicRootEntity?
     fun observeFolders(rootId: Long, parentId: Long?): Flow<List<MusicFolderEntity>>
     fun observeDirectTracks(folderId: Long): Flow<List<TrackEntity>>
     fun observeAllTracks(rootId: Long): Flow<List<TrackEntity>>
@@ -20,6 +21,8 @@ class RoomMusicRepository(
     private val database: MusicDatabase,
 ) : MusicRepository {
     override fun observeActiveRoot(): Flow<MusicRootEntity?> = database.musicRootDao().observeActive()
+
+    override suspend fun activeRoot(): MusicRootEntity? = database.musicRootDao().findActive()
 
     override fun observeFolders(rootId: Long, parentId: Long?): Flow<List<MusicFolderEntity>> =
         database.musicFolderDao().observeChildren(rootId, parentId)

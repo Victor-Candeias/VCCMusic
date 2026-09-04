@@ -7,10 +7,13 @@ import pt.vcc.vccmusic.data.RoomMusicRepository
 import pt.vcc.vccmusic.data.local.MusicDatabase
 import pt.vcc.vccmusic.data.saf.AndroidSafRootRepository
 import pt.vcc.vccmusic.data.saf.SafRootRepository
+import pt.vcc.vccmusic.scanner.MusicScanner
+import pt.vcc.vccmusic.scanner.SafMusicScanner
 
 interface AppContainer {
     val musicRepository: MusicRepository
     val safRootRepository: SafRootRepository
+    val musicScanner: MusicScanner
 }
 
 class DefaultAppContainer(
@@ -28,5 +31,9 @@ class DefaultAppContainer(
 
     override val safRootRepository: SafRootRepository by lazy {
         AndroidSafRootRepository(appContext)
+    }
+
+    override val musicScanner: MusicScanner by lazy {
+        SafMusicScanner(appContext, database)
     }
 }

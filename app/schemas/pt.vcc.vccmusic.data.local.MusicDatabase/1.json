@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ae982b70a185e1e66df3ff74a7d530d7",
+    "identityHash": "d4c9ce022f9d5067ebe5950074adc9d5",
     "entities": [
       {
         "tableName": "music_roots",
@@ -150,7 +150,7 @@
       },
       {
         "tableName": "tracks",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `rootId` INTEGER NOT NULL, `folderId` INTEGER NOT NULL, `title` TEXT NOT NULL, `artist` TEXT, `album` TEXT, `durationMs` INTEGER, `uri` TEXT NOT NULL, `artworkUri` TEXT, FOREIGN KEY(`rootId`) REFERENCES `music_roots`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`folderId`) REFERENCES `music_folders`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `rootId` INTEGER NOT NULL, `folderId` INTEGER NOT NULL, `title` TEXT NOT NULL, `artist` TEXT, `album` TEXT, `durationMs` INTEGER, `uri` TEXT NOT NULL, `artworkUri` TEXT, `artwork` BLOB, FOREIGN KEY(`rootId`) REFERENCES `music_roots`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`folderId`) REFERENCES `music_folders`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -201,6 +201,11 @@
             "fieldPath": "artworkUri",
             "columnName": "artworkUri",
             "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "artwork",
+            "columnName": "artwork",
+            "affinity": "BLOB"
           }
         ],
         "primaryKey": {
@@ -382,7 +387,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ae982b70a185e1e66df3ff74a7d530d7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd4c9ce022f9d5067ebe5950074adc9d5')"
     ]
   }
 }

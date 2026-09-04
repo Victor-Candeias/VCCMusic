@@ -18,14 +18,26 @@ class MainActivity : ComponentActivity() {
         if (uri == null) return@registerForActivityResult
 
         lifecycleScope.launch {
-            appInstance.container.safRootRepository.accept(uri)
-                .onFailure { error ->
-                    Toast.makeText(
-                        this@MainActivity,
-                        error.message ?: getString(R.string.root_selection_failed),
-                        Toast.LENGTH_LONG,
-                    ).show()
+            val result = appInstance.container.safRootRepository.accept(uri)
+            if (result.isSuccess) {
+                val acceptedUri = result.getOrThrow()
+                appInstance.container.musicRepository.replaceRoot(
+                    acceptedUri.toString(),
+                    acceptedUri.lastPathSegment ?: getString(R.string.app_name),
+                )
+                val root = appInstance.container.musicRepository.activeRoot()
+                if (root != null) {
+                    appInstance.container.musicScanner.scan(acceptedUri, root.id)
                 }
+            } else {
+                val error = result.exceptionOrNull()
+                    ?: IllegalStateException("Falha desconhecida ao selecionar a raiz.")
+                Toast.makeText(
+                    this@MainActivity,
+                    error.message ?: getString(R.string.root_selection_failed),
+                    Toast.LENGTH_LONG,
+                ).show()
+            }
         }
     }
 

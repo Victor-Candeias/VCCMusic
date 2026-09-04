@@ -78,6 +78,7 @@ data class TrackEntity(
     val durationMs: Long?,
     val uri: String,
     val artworkUri: String?,
+    val artwork: ByteArray? = null,
 )
 
 @Entity(

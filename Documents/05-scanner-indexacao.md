@@ -1,5 +1,7 @@
 # WI-05 — Construir o scanner e indexar a biblioteca
 
+**Estado:** Em validação
+
 ## Objetivo
 
 Percorrer a raiz SAF recursivamente, extrair metadados e atualizar Room de forma segura e observável.
@@ -32,7 +34,17 @@ Percorrer a raiz SAF recursivamente, extrair metadados e atualizar Room de forma
 - Reindexação idempotente e remoção apenas após scan completo.
 - Teste de desempenho com uma coleção representativa definida no WI-01.
 
+## Implementação atual
+
+- `SafMusicScanner` percorre a árvore SAF iterativamente, com conjunto de URIs visitadas para evitar ciclos anómalos.
+- MIME types de áudio são preferidos; extensões conhecidas são usadas apenas quando o provider não fornece um MIME útil.
+- Metadados são lidos com `MediaMetadataRetriever`, com fallback para o nome do ficheiro e artwork embutido limitado a 512 KiB.
+- O I/O ocorre fora da transação Room; os resultados só são aplicados numa transação após uma enumeração concluída.
+- Reindexações preservam IDs existentes por URI, removem apenas entradas ausentes após sucesso e devolvem progresso/erros parciais.
+- O scanner está ligado ao `AppContainer` e pode ser cancelado por coroutine.
+- `assembleDebug`, testes unitários e lint executam com sucesso após a implementação.
+- O teste instrumentado de navegação (`connectedDebugAndroidTest`) executa com sucesso no emulador `Pixel_10a (AVD) - 17`.
+
 ## Dependências
 
 WI-03 e WI-04.
-

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Upsert
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
@@ -15,6 +16,9 @@ interface MusicRootDao {
 
     @Query("SELECT * FROM music_roots WHERE uri = :uri LIMIT 1")
     suspend fun findByUri(uri: String): MusicRootEntity?
+
+    @Query("SELECT * FROM music_roots WHERE isActive = 1 LIMIT 1")
+    suspend fun findActive(): MusicRootEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(root: MusicRootEntity): Long
@@ -39,6 +43,12 @@ interface MusicRootDao {
 
 @Dao
 interface MusicFolderDao {
+    @Query("SELECT * FROM music_folders WHERE rootId = :rootId")
+    suspend fun findAll(rootId: Long): List<MusicFolderEntity>
+
+    @Query("SELECT * FROM music_folders WHERE rootId = :rootId AND uri = :uri LIMIT 1")
+    suspend fun findByUri(rootId: Long, uri: String): MusicFolderEntity?
+
     @Query(
         """
         SELECT * FROM music_folders
@@ -48,8 +58,14 @@ interface MusicFolderDao {
     )
     fun observeChildren(rootId: Long, parentId: Long?): Flow<List<MusicFolderEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertAll(folders: List<MusicFolderEntity>)
+
+    @Upsert
+    suspend fun insert(folder: MusicFolderEntity): Long
+
+    @Query("DELETE FROM music_folders WHERE id IN (:ids)")
+    suspend fun deleteByIds(ids: List<Long>)
 
     @Query("DELETE FROM music_folders WHERE rootId = :rootId")
     suspend fun deleteForRoot(rootId: Long)
@@ -57,6 +73,9 @@ interface MusicFolderDao {
 
 @Dao
 interface TrackDao {
+    @Query("SELECT * FROM tracks WHERE rootId = :rootId")
+    suspend fun findAll(rootId: Long): List<TrackEntity>
+
     @Query(
         """
         SELECT * FROM tracks
@@ -78,8 +97,11 @@ interface TrackDao {
     @Query("SELECT * FROM tracks WHERE id IN (:ids) ORDER BY id")
     suspend fun findByIds(ids: List<Long>): List<TrackEntity>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertAll(tracks: List<TrackEntity>)
+
+    @Query("DELETE FROM tracks WHERE id IN (:ids)")
+    suspend fun deleteByIds(ids: List<Long>)
 
     @Query("DELETE FROM tracks WHERE rootId = :rootId")
     suspend fun deleteForRoot(rootId: Long)

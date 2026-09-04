@@ -28,12 +28,15 @@ Este diretório transforma os requisitos do `README.md` num backlog ordenado par
 | 12 | [Android Auto](12-android-auto.md) | Catálogo navegável e reproduzível no carro | 08, 09, 10 |
 | 13 | [Qualidade e robustez](13-qualidade-robustez.md) | Cobertura, acessibilidade e resiliência | 06–12 |
 | 14 | [Entrega do MVP](14-entrega-mvp.md) | Build de release validado | 13 |
+| 15 | [Menus e navegação](15-menus-e-navegacao.md) | Fluxo de ecrãs e menus conforme o layout | 03, 04, 05–10 |
 
 ## Caminho crítico
 
 `01 → 02 → (03 + 04) → 05 → (06 + 07) → 08 → 10 → 12 → 13 → 14`
 
 Os itens 03 e 04 podem ser feitos em paralelo. Depois do item 07, os itens 09 e 11 também podem avançar em paralelo com parte do trabalho de UI.
+
+O WI-15 é um item transversal de UI e pode ser executado por fases depois de existirem dados, seleção de raiz e reprodução. A entrada Rádios Online permanece condicionada a uma alteração explícita do âmbito do MVP.
 
 ## Definição global de concluído
 
