@@ -55,7 +55,9 @@ class MusicPlaybackService : MediaLibraryService() {
             val root = container.musicRepository.activeRoot() ?: return@launch
             val tracks = container.musicRepository.observeAllTracks(root.id)
             tracks.collect { entities ->
-                val items = entities.map(::toMediaItem)
+                val items = QueueBuilder.build(
+                    QueueRequest(QueueSource.ALL_TRACKS, entities),
+                ).map(::toMediaItem)
                 launch(Dispatchers.Main) {
                     if (items.isEmpty()) {
                         player.clearMediaItems()

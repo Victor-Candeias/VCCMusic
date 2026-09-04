@@ -1,5 +1,7 @@
 # WI-08 — Implementar filas e reprodução aleatória
 
+**Estado:** Concluído em 4 de setembro de 2026
+
 ## Objetivo
 
 Criar filas previsíveis para toda a biblioteca e para a pasta aberta, com shuffle apenas na sessão ativa.
@@ -33,3 +35,13 @@ Criar filas previsíveis para toda a biblioteca e para a pasta aberta, com shuff
 
 WI-06 e WI-07.
 
+## Implementação atual
+
+- `QueueBuilder` compõe filas determinísticas para biblioteca, pasta e seleção explícita.
+- A decisão do WI-01 é aplicada: “Tocar pasta” usa apenas as faixas diretamente contidas na pasta.
+- URIs vazias são ignoradas e URIs repetidas são deduplicadas sem alterar dados Room.
+- A faixa selecionada pode iniciar a fila; shuffle e repeat são propriedades da sessão Media3.
+- O serviço reconstrói a fila a partir do índice ativo sem persistir a ordem temporária.
+- Playlists e filas vazias não provocam inserções inválidas nem crash.
+
+**Conclusão:** WI-08 finalizado.

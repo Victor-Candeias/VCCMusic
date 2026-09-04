@@ -13,6 +13,8 @@ interface PlaybackController {
     fun seekTo(positionMs: Long)
     fun skipToPrevious()
     fun skipToNext()
+    fun setShuffleEnabled(enabled: Boolean)
+    fun setRepeatMode(mode: Int)
     fun release()
 }
 
@@ -43,6 +45,14 @@ class Media3PlaybackController(
 
     override fun skipToNext() {
         controllerFuture.get().seekToNextMediaItem()
+    }
+
+    override fun setShuffleEnabled(enabled: Boolean) {
+        controllerFuture.get().shuffleModeEnabled = enabled
+    }
+
+    override fun setRepeatMode(mode: Int) {
+        controllerFuture.get().repeatMode = mode
     }
 
     fun setQueue(items: List<MediaItem>) {
