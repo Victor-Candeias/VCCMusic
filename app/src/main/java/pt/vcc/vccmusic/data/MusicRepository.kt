@@ -12,7 +12,9 @@ interface MusicRepository {
     fun observeActiveRoot(): Flow<MusicRootEntity?>
     suspend fun activeRoot(): MusicRootEntity?
     fun observeFolders(rootId: Long, parentId: Long?): Flow<List<MusicFolderEntity>>
+    suspend fun folder(folderId: Long): MusicFolderEntity?
     fun observeDirectTracks(folderId: Long): Flow<List<TrackEntity>>
+    suspend fun track(trackId: Long): TrackEntity?
     fun observeAllTracks(rootId: Long): Flow<List<TrackEntity>>
     fun observePlaylists(): Flow<List<PlaylistEntity>>
     fun observePlaylistTracks(playlistId: Long): Flow<List<TrackEntity>>
@@ -34,8 +36,14 @@ class RoomMusicRepository(
     override fun observeFolders(rootId: Long, parentId: Long?): Flow<List<MusicFolderEntity>> =
         database.musicFolderDao().observeChildren(rootId, parentId)
 
+    override suspend fun folder(folderId: Long): MusicFolderEntity? =
+        database.musicFolderDao().findById(folderId)
+
     override fun observeDirectTracks(folderId: Long): Flow<List<TrackEntity>> =
         database.trackDao().observeDirectTracks(folderId)
+
+    override suspend fun track(trackId: Long): TrackEntity? =
+        database.trackDao().findById(trackId)
 
     override fun observeAllTracks(rootId: Long): Flow<List<TrackEntity>> =
         database.trackDao().observeAll(rootId)

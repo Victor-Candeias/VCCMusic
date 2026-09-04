@@ -49,6 +49,9 @@ interface MusicFolderDao {
     @Query("SELECT * FROM music_folders WHERE rootId = :rootId AND uri = :uri LIMIT 1")
     suspend fun findByUri(rootId: Long, uri: String): MusicFolderEntity?
 
+    @Query("SELECT * FROM music_folders WHERE id = :folderId LIMIT 1")
+    suspend fun findById(folderId: Long): MusicFolderEntity?
+
     @Query(
         """
         SELECT * FROM music_folders
@@ -96,6 +99,9 @@ interface TrackDao {
         """,
     )
     fun observeAll(rootId: Long): Flow<List<TrackEntity>>
+
+    @Query("SELECT * FROM tracks WHERE id = :trackId LIMIT 1")
+    suspend fun findById(trackId: Long): TrackEntity?
 
     @Query("SELECT * FROM tracks WHERE id IN (:ids) ORDER BY id")
     suspend fun findByIds(ids: List<Long>): List<TrackEntity>

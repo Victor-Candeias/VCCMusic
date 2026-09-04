@@ -1,5 +1,9 @@
 # WI-12 — Publicar a biblioteca no Android Auto
 
+## Estado
+
+Concluído na implementação atual. A validação com veículo/DHU real continua dependente do ambiente disponível.
+
 ## Objetivo
 
 Expor uma hierarquia Media3 segura para condução usando o mesmo serviço e dados da aplicação.
@@ -33,4 +37,3 @@ Expor uma hierarquia Media3 segura para condução usando o mesmo serviço e dad
 ## Dependências
 
 WI-08, WI-09 e WI-10.
-
