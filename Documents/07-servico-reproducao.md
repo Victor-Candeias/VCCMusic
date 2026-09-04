@@ -1,5 +1,7 @@
 # WI-07 — Implementar o serviço de reprodução
 
+**Estado:** Em validação
+
 ## Objetivo
 
 Centralizar a reprodução em ExoPlayer/Media3 e mantê-la ativa fora da interface.
@@ -34,3 +36,10 @@ Centralizar a reprodução em ExoPlayer/Media3 e mantê-la ativa fora da interfa
 
 WI-05.
 
+## Implementação atual
+
+- `MusicPlaybackService` gere uma única instância de ExoPlayer e MediaLibrarySession.
+- As faixas da raiz ativa são convertidas para `MediaItem` com URI SAF, ID estável e metadata.
+- Audio focus e “becoming noisy” são configurados através dos atributos do player.
+- `Media3PlaybackController` expõe play, pause e seek através de `MediaController`.
+- O serviço está declarado como foreground media playback e liberta sessão/player no fim do lifecycle.

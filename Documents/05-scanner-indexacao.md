@@ -1,6 +1,6 @@
 # WI-05 — Construir o scanner e indexar a biblioteca
 
-**Estado:** Em validação
+**Estado:** Concluído em 4 de setembro de 2026
 
 ## Objetivo
 
@@ -44,6 +44,18 @@ Percorrer a raiz SAF recursivamente, extrair metadados e atualizar Room de forma
 - O scanner está ligado ao `AppContainer` e pode ser cancelado por coroutine.
 - `assembleDebug`, testes unitários e lint executam com sucesso após a implementação.
 - O teste instrumentado de navegação (`connectedDebugAndroidTest`) executa com sucesso no emulador `Pixel_10a (AVD) - 17`.
+- Enumerações incompletas não alteram o índice nem removem entradas potencialmente válidas; erros de leitura de ficheiros continuam a ser parciais.
+- Faixas repetidas pelo provider são deduplicadas por URI antes da transação Room.
+
+## Validação de fecho
+
+- A enumeração recursiva, os fallbacks de MIME/extensão, os metadados e o limite de artwork estão implementados.
+- Cancelamento, falhas de provider e ficheiros ilegíveis não causam remoções indevidas.
+- A atualização concluída é idempotente, preserva IDs por URI e não insere a mesma faixa duas vezes.
+- O scanner força o traversal, a leitura de metadados e o acesso a Room para `Dispatchers.IO`, sem I/O na thread principal.
+- Build debug, testes unitários, lint e teste instrumentado de navegação foram executados com sucesso.
+
+**Conclusão:** WI-05 finalizado.
 
 ## Dependências
 

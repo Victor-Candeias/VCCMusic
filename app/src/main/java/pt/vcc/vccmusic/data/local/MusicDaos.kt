@@ -64,6 +64,9 @@ interface MusicFolderDao {
     @Upsert
     suspend fun insert(folder: MusicFolderEntity): Long
 
+    @Query("UPDATE music_folders SET parentId = :parentId WHERE id = :folderId")
+    suspend fun updateParent(folderId: Long, parentId: Long?)
+
     @Query("DELETE FROM music_folders WHERE id IN (:ids)")
     suspend fun deleteByIds(ids: List<Long>)
 

@@ -1,5 +1,7 @@
 # WI-11 — Atualizar e reconstruir o índice
 
+**Estado:** Em validação
+
 ## Objetivo
 
 Manter a biblioteca coerente quando ficheiros são adicionados, alterados ou removidos.
@@ -23,6 +25,15 @@ Manter a biblioteca coerente quando ficheiros são adicionados, alterados ou rem
 - WorkManager termina com sucesso/retry/failure coerente e diagnóstico visível.
 - Reconstrução mantém playlists segundo a política definida e não duplica dados.
 
+## Implementação atual
+
+- A Biblioteca disponibiliza a ação explícita **Reindexar**.
+- A `MainActivity` inicia uma reindexação automática ao abrir a aplicação quando existe uma raiz SAF ativa.
+- Reindexações concorrentes são evitadas; uma nova raiz cancela a execução anterior antes de iniciar a sua sincronização.
+- A permissão e o provider SAF são validados antes da reindexação, e o resultado é comunicado na ação manual.
+
+O trabalho periódico via WorkManager permanece por implementar e impede a conclusão deste WI.
+
 ## Testes
 
 - Testes do Worker com scanner fake: sucesso, retry, permissão perdida e cancelamento.
@@ -32,4 +43,3 @@ Manter a biblioteca coerente quando ficheiros são adicionados, alterados ou rem
 ## Dependências
 
 WI-05.
-

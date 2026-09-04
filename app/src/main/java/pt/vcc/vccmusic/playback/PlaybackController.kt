@@ -1,5 +1,45 @@
 package pt.vcc.vccmusic.playback
 
-/** Boundary for playback commands. Implemented as part of WI-07. */
-interface PlaybackController
+import android.content.ComponentName
+import android.content.Context
+import androidx.media3.common.MediaItem
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionToken
+import com.google.common.util.concurrent.ListenableFuture
 
+interface PlaybackController {
+    fun play()
+    fun pause()
+    fun seekTo(positionMs: Long)
+    fun release()
+}
+
+class Media3PlaybackController(
+    context: Context,
+) : PlaybackController {
+    private val controllerFuture: ListenableFuture<MediaController> =
+        MediaController.Builder(
+            context,
+            SessionToken(context, ComponentName(context, MusicPlaybackService::class.java)),
+        ).buildAsync()
+
+    override fun play() {
+        controllerFuture.get().play()
+    }
+
+    override fun pause() {
+        controllerFuture.get().pause()
+    }
+
+    override fun seekTo(positionMs: Long) {
+        controllerFuture.get().seekTo(positionMs)
+    }
+
+    fun setQueue(items: List<MediaItem>) {
+        controllerFuture.get().setMediaItems(items)
+    }
+
+    override fun release() {
+        if (controllerFuture.isDone) controllerFuture.get().release()
+    }
+}

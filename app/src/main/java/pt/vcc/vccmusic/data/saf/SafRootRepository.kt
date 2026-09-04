@@ -27,6 +27,7 @@ interface SafRootRepository {
     val activeRootUri: Flow<String?>
     suspend fun accept(uri: Uri): Result<Uri>
     suspend fun access(uri: Uri): RootAccess
+    suspend fun loadActiveRoot(): Uri?
     suspend fun clear()
 }
 
@@ -98,6 +99,6 @@ class AndroidSafRootRepository(
         appContext.rootPreferences.edit { preferences -> preferences.remove(activeRootKey) }
     }
 
-    suspend fun loadActiveRoot(): Uri? =
+    override suspend fun loadActiveRoot(): Uri? =
         activeRootUri.first()?.let(Uri::parse)
 }

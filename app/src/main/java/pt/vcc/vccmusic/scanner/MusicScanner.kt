@@ -10,7 +10,9 @@ import java.io.IOException
 import java.util.ArrayDeque
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.withContext
 import pt.vcc.vccmusic.data.local.MusicDatabase
 import pt.vcc.vccmusic.data.local.MusicFolderEntity
 import pt.vcc.vccmusic.data.local.TrackEntity
@@ -69,14 +71,23 @@ class SafMusicScanner(
         root: Uri,
         rootId: Long,
         onProgress: (ScanProgress) -> Unit,
+    ): ScanResult = withContext(Dispatchers.IO) {
+        scanOnIo(root, rootId, onProgress)
+    }
+
+    private suspend fun scanOnIo(
+        root: Uri,
+        rootId: Long,
+        onProgress: (ScanProgress) -> Unit,
     ): ScanResult {
         val existingFolders = database.musicFolderDao().findAll(rootId).associateBy { it.uri }
         val existingTracks = database.trackDao().findAll(rootId).associateBy { it.uri }
         val folders = mutableListOf<ScannedFolder>()
-        val tracks = mutableListOf<ScannedTrack>()
+        val tracksByUri = linkedMapOf<String, ScannedTrack>()
         val errors = mutableListOf<ScanError>()
         val pending = ArrayDeque<Pair<DocumentInfo, String?>>()
         val visited = mutableSetOf<String>()
+        var enumerationComplete = true
         val rootInfo = DocumentInfo(root, root.lastPathSegment ?: "Música", DocumentsContract.Document.MIME_TYPE_DIR)
         pending.add(rootInfo to null)
         var scannedFolders = 0
@@ -101,6 +112,7 @@ class SafMusicScanner(
                     throw error
                 } catch (error: Exception) {
                     errors += ScanError(folder.uri.toString(), error.message ?: "Não foi possível listar a pasta.")
+                    enumerationComplete = false
                     continue
                 }
 
@@ -110,41 +122,54 @@ class SafMusicScanner(
                         pending.add(child to folder.uri.toString())
                     } else if (isAudio(child)) {
                         readTrack(child, rootId, existingTracks[child.uri.toString()])
-                            .onSuccess { tracks += ScannedTrack(it, folder.uri.toString()) }
+                            .onSuccess {
+                                tracksByUri.putIfAbsent(
+                                    it.uri,
+                                    ScannedTrack(it, folder.uri.toString()),
+                                )
+                            }
                             .onFailure { error ->
                                 errors += ScanError(child.uri.toString(), error.message ?: "Não foi possível ler a faixa.")
                             }
                     }
                 }
-                onProgress(ScanProgress(scannedFolders, tracks.size, errors.size))
+                onProgress(ScanProgress(scannedFolders, tracksByUri.size, errors.size))
             }
         } catch (_: kotlinx.coroutines.CancellationException) {
-            return ScanResult(false, scannedFolders, tracks.size, errors)
+            return ScanResult(false, scannedFolders, tracksByUri.size, errors)
+        }
+
+        if (!enumerationComplete) {
+            return ScanResult(false, scannedFolders, tracksByUri.size, errors)
         }
 
         database.withTransaction {
             val currentFolderUris = folders.map { it.entity.uri }.toSet()
-            val currentTrackUris = tracks.map { it.entity.uri }.toSet()
+            val currentTrackUris = tracksByUri.keys
             database.trackDao().deleteByIds(existingTracks.values.filter { it.uri !in currentTrackUris }.map { it.id })
-            database.musicFolderDao().deleteByIds(existingFolders.values.filter { it.uri !in currentFolderUris }.map { it.id })
 
             val folderIds = mutableMapOf<String, Long>()
             folders.forEach { scanned ->
-                val parentId = scanned.parentUri?.let(folderIds::get)
                 val id = database.musicFolderDao().insert(
-                    scanned.entity.copy(parentId = parentId),
+                    scanned.entity.copy(parentId = null),
                 )
                 folderIds[scanned.entity.uri] = id
             }
+            folders.forEach { scanned ->
+                val folderId = folderIds[scanned.entity.uri] ?: return@forEach
+                val parentId = scanned.parentUri?.let(folderIds::get)
+                database.musicFolderDao().updateParent(folderId, parentId)
+            }
+            database.musicFolderDao().deleteByIds(existingFolders.values.filter { it.uri !in currentFolderUris }.map { it.id })
             database.trackDao().insertAll(
-                tracks.mapNotNull { scanned ->
+                tracksByUri.values.mapNotNull { scanned ->
                     folderIds[scanned.folderUri]?.let { folderId ->
                         scanned.entity.copy(folderId = folderId)
                     }
                 },
             )
         }
-        return ScanResult(true, folders.size, tracks.size, errors)
+        return ScanResult(true, folders.size, tracksByUri.size, errors)
     }
 
     private fun listChildren(folderUri: Uri): List<DocumentInfo> {

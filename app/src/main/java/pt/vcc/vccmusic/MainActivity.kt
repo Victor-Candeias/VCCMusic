@@ -7,11 +7,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import pt.vcc.vccmusic.data.saf.RootAccess
 import pt.vcc.vccmusic.ui.VccMusicApp
 import pt.vcc.vccmusic.ui.theme.VccMusicTheme
 
 class MainActivity : ComponentActivity() {
+    private var reindexJob: Job? = null
+
     private val rootPicker = registerForActivityResult(
         ActivityResultContracts.OpenDocumentTree(),
     ) { uri ->
@@ -25,10 +29,8 @@ class MainActivity : ComponentActivity() {
                     acceptedUri.toString(),
                     acceptedUri.lastPathSegment ?: getString(R.string.app_name),
                 )
-                val root = appInstance.container.musicRepository.activeRoot()
-                if (root != null) {
-                    appInstance.container.musicScanner.scan(acceptedUri, root.id)
-                }
+                reindexJob?.cancel()
+                reindexCurrentRoot(showFeedback = false)
             } else {
                 val error = result.exceptionOrNull()
                     ?: IllegalStateException("Falha desconhecida ao selecionar a raiz.")
@@ -46,9 +48,56 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             VccMusicTheme {
-                VccMusicApp(onPickRoot = { rootPicker.launch(null) })
+                VccMusicApp(
+                    musicRepository = appInstance.container.musicRepository,
+                    onPickRoot = { rootPicker.launch(null) },
+                    onReindex = { reindexCurrentRoot(showFeedback = true) },
+                )
             }
         }
+        reindexCurrentRoot(showFeedback = false)
+    }
+
+    private fun reindexCurrentRoot(showFeedback: Boolean) {
+        if (reindexJob?.isActive == true) return
+        reindexJob = lifecycleScope.launch {
+            val rootUri = appInstance.container.safRootRepository.loadActiveRoot()
+            if (rootUri == null) {
+                if (showFeedback) showReindexMessage(getString(R.string.no_music_root))
+                return@launch
+            }
+            if (appInstance.container.safRootRepository.access(rootUri) != RootAccess.Available) {
+                if (showFeedback) showReindexMessage(getString(R.string.root_access_lost))
+                return@launch
+            }
+            val root = appInstance.container.musicRepository.activeRoot()
+            if (root == null) {
+                if (showFeedback) showReindexMessage(getString(R.string.no_music_root))
+                return@launch
+            }
+            val result = try {
+                appInstance.container.musicScanner.scan(rootUri, root.id)
+            } catch (error: Exception) {
+                if (showFeedback) {
+                    showReindexMessage(
+                        error.message ?: getString(R.string.reindex_failed),
+                    )
+                }
+                return@launch
+            }
+            if (showFeedback) {
+                val message = if (result.completed) {
+                    getString(R.string.reindex_completed, result.tracks)
+                } else {
+                    getString(R.string.reindex_incomplete)
+                }
+                showReindexMessage(message)
+            }
+        }
+    }
+
+    private fun showReindexMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     private val appInstance: VccMusicApplication

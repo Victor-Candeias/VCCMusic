@@ -1,5 +1,7 @@
 # WI-06 — Criar a interface da biblioteca
 
+**Estado:** Concluído em 4 de setembro de 2026
+
 ## Objetivo
 
 Permitir navegar pela hierarquia indexada e consultar todas as faixas no telefone.
@@ -34,3 +36,13 @@ Permitir navegar pela hierarquia indexada e consultar todas as faixas no telefon
 
 WI-05.
 
+## Implementação atual
+
+- A biblioteca observa a raiz ativa e apresenta um estado recuperável quando nenhuma raiz foi escolhida.
+- A raiz mostra subpastas e faixas indexadas, com acesso a “Todas as músicas”.
+- A navegação percorre subpastas arbitrariamente profundas e mantém o caminho para voltar corretamente.
+- As listas usam `Flow` do Room, chaves estáveis e `LazyColumn`; alterações no índice refletem-se sem refresh manual.
+- Os itens apresentam título, artista e álbum quando disponíveis, com estados vazios para biblioteca, pasta e lista global.
+- O estado da biblioteca é mantido num `LibraryViewModel` e a seleção da raiz continua a usar SAF.
+
+**Conclusão:** WI-06 finalizado.

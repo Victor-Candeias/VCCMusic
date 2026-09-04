@@ -7,4 +7,16 @@
     <string name="screen_under_construction">Funcionalidade preparada para o próximo work item.</string>
     <string name="choose_music_root">Escolher pasta de música</string>
     <string name="root_selection_failed">Não foi possível selecionar a pasta.</string>
+    <string name="all_music">Todas as músicas</string>
+    <string name="no_music_root">Escolha uma pasta para começar a indexar a sua música.</string>
+    <string name="library_empty">A biblioteca está vazia.</string>
+    <string name="folder_empty">Esta pasta está vazia.</string>
+    <string name="no_tracks">Não existem músicas indexadas.</string>
+    <string name="back">Voltar</string>
+    <string name="reindex">Reindexar</string>
+    <string name="root_access_lost">A pasta de música deixou de estar acessível.</string>
+    <string name="reindex_completed">Biblioteca atualizada: %1$d músicas.</string>
+    <string name="reindex_incomplete">A atualização da biblioteca ficou incompleta.</string>
+    <string name="reindex_failed">Não foi possível atualizar a biblioteca.</string>
+    <string name="change_music_root">Alterar pasta</string>
 </resources>

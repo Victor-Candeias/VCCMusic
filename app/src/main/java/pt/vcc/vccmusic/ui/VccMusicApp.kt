@@ -18,12 +18,27 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import pt.vcc.vccmusic.ui.screen.PlaceholderScreen
+import pt.vcc.vccmusic.ui.screen.LibraryScreen
+import pt.vcc.vccmusic.ui.screen.LibraryViewModel
+import pt.vcc.vccmusic.data.MusicRepository
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 
 @Composable
 fun VccMusicApp(
     modifier: Modifier = Modifier,
+    musicRepository: MusicRepository,
     onPickRoot: () -> Unit = {},
+    onReindex: () -> Unit = {},
 ) {
+    val libraryViewModel: LibraryViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                LibraryViewModel(musicRepository) as T
+        },
+    )
     val navController = rememberNavController()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
@@ -70,12 +85,15 @@ fun VccMusicApp(
         ) {
             NavigationDestination.entries.forEach { destination ->
                 composable(destination.route) {
-                    PlaceholderScreen(
-                        titleRes = destination.labelRes,
-                        contentPadding = contentPadding,
-                        testTag = "screen-${destination.route}",
-                        action = if (destination == NavigationDestination.Library) onPickRoot else null,
-                    )
+                    if (destination == NavigationDestination.Library) {
+                        LibraryScreen(libraryViewModel, contentPadding, onPickRoot, onReindex)
+                    } else {
+                        PlaceholderScreen(
+                            titleRes = destination.labelRes,
+                            contentPadding = contentPadding,
+                            testTag = "screen-${destination.route}",
+                        )
+                    }
                 }
             }
         }
