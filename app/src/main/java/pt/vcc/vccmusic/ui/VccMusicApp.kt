@@ -20,10 +20,14 @@ import androidx.navigation.compose.rememberNavController
 import pt.vcc.vccmusic.ui.screen.PlaceholderScreen
 import pt.vcc.vccmusic.ui.screen.LibraryScreen
 import pt.vcc.vccmusic.ui.screen.LibraryViewModel
+import pt.vcc.vccmusic.ui.screen.PlaylistScreen
+import pt.vcc.vccmusic.ui.screen.PlaylistViewModel
 import pt.vcc.vccmusic.data.MusicRepository
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.runtime.getValue
 
 @Composable
 fun VccMusicApp(
@@ -37,6 +41,13 @@ fun VccMusicApp(
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T =
                 LibraryViewModel(musicRepository) as T
+        },
+    )
+    val playlistViewModel: PlaylistViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                PlaylistViewModel(musicRepository) as T
         },
     )
     val navController = rememberNavController()
@@ -87,6 +98,14 @@ fun VccMusicApp(
                 composable(destination.route) {
                     if (destination == NavigationDestination.Library) {
                         LibraryScreen(libraryViewModel, contentPadding, onPickRoot, onReindex)
+                    } else if (destination == NavigationDestination.Playlists) {
+                        val activeRoot by musicRepository.observeActiveRoot()
+                            .collectAsStateWithLifecycle(initialValue = null)
+                        PlaylistScreen(
+                            playlistViewModel,
+                            activeRoot?.id,
+                            contentPadding,
+                        )
                     } else {
                         PlaceholderScreen(
                             titleRes = destination.labelRes,

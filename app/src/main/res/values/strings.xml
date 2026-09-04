@@ -19,4 +19,16 @@
     <string name="reindex_incomplete">A atualização da biblioteca ficou incompleta.</string>
     <string name="reindex_failed">Não foi possível atualizar a biblioteca.</string>
     <string name="change_music_root">Alterar pasta</string>
+    <string name="no_playlists">Ainda não existem playlists.</string>
+    <string name="create_playlist">Criar playlist</string>
+    <string name="rename_playlist">Renomear playlist</string>
+    <string name="delete_playlist">Eliminar playlist</string>
+    <string name="playlist_name">Nome da playlist</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="add_track">Adicionar %1$s</string>
+    <string name="move_up">Subir</string>
+    <string name="move_down">Descer</string>
+    <string name="remove">Remover</string>
+    <string name="confirm_delete_playlist">Tem a certeza de que pretende eliminar esta playlist?</string>
 </resources>

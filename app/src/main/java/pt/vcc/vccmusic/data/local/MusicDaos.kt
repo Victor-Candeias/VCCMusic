@@ -115,6 +115,9 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlists ORDER BY name COLLATE NOCASE, id")
     fun observeAll(): Flow<List<PlaylistEntity>>
 
+    @Query("SELECT * FROM playlists WHERE id = :playlistId LIMIT 1")
+    suspend fun findById(playlistId: Long): PlaylistEntity?
+
     @Insert
     suspend fun insert(playlist: PlaylistEntity): Long
 

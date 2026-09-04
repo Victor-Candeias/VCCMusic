@@ -1,5 +1,7 @@
 # WI-09 — Implementar playlists personalizadas
 
+**Estado:** Concluído em 4 de setembro de 2026
+
 ## Objetivo
 
 Permitir criar, editar e reproduzir listas ordenadas sem duplicar ficheiros de música.
@@ -32,3 +34,12 @@ Permitir criar, editar e reproduzir listas ordenadas sem duplicar ficheiros de m
 
 WI-03 e WI-07; integração visual após WI-06.
 
+## Implementação atual
+
+- O separador Playlists apresenta CRUD persistente com Room.
+- O detalhe permite adicionar/remover faixas e reordená-las com operações transacionais.
+- A eliminação exige confirmação e não remove as faixas da biblioteca.
+- A associação de uma faixa só pode ocorrer uma vez por playlist; as posições são reconstruídas sem lacunas.
+- O estado vazio e a biblioteca sem raiz são tratados sem ecrã em branco.
+
+**Conclusão:** WI-09 finalizado.
