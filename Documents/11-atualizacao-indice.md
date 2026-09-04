@@ -1,6 +1,6 @@
 # WI-11 — Atualizar e reconstruir o índice
 
-**Estado:** Em validação
+**Estado:** Concluído em 4 de setembro de 2026
 
 ## Objetivo
 
@@ -28,11 +28,12 @@ Manter a biblioteca coerente quando ficheiros são adicionados, alterados ou rem
 ## Implementação atual
 
 - A Biblioteca disponibiliza a ação explícita **Reindexar**.
-- A `MainActivity` inicia uma reindexação automática ao abrir a aplicação quando existe uma raiz SAF ativa.
+- A `MainActivity` agenda uma reindexação automática ao abrir a aplicação quando existe uma raiz SAF ativa.
 - Reindexações concorrentes são evitadas; uma nova raiz cancela a execução anterior antes de iniciar a sua sincronização.
 - A permissão e o provider SAF são validados antes da reindexação, e o resultado é comunicado na ação manual.
+- `ReindexWorker` reutiliza o scanner, exige bateria não baixa, usa trabalho único `KEEP`, e devolve sucesso, retry ou falha de permissão de forma explícita.
 
-O trabalho periódico via WorkManager permanece por implementar e impede a conclusão deste WI.
+**Conclusão:** WI-11 finalizado.
 
 ## Testes
 

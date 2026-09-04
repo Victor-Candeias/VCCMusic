@@ -1,6 +1,6 @@
 # WI-07 — Implementar o serviço de reprodução
 
-**Estado:** Em validação
+**Estado:** Concluído em 4 de setembro de 2026
 
 ## Objetivo
 
@@ -42,4 +42,7 @@ WI-05.
 - As faixas da raiz ativa são convertidas para `MediaItem` com URI SAF, ID estável e metadata.
 - Audio focus e “becoming noisy” são configurados através dos atributos do player.
 - `Media3PlaybackController` expõe play, pause e seek através de `MediaController`.
+- O controlador também expõe anterior e seguinte; erros de uma URI avançam para a próxima faixa ou param no fim da fila.
 - O serviço está declarado como foreground media playback e liberta sessão/player no fim do lifecycle.
+
+**Conclusão:** WI-07 finalizado.

@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import pt.vcc.vccmusic.data.saf.RootAccess
+import pt.vcc.vccmusic.scanner.ReindexScheduler
 import pt.vcc.vccmusic.ui.VccMusicApp
 import pt.vcc.vccmusic.ui.theme.VccMusicTheme
 
@@ -55,7 +56,7 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-        reindexCurrentRoot(showFeedback = false)
+        ReindexScheduler.enqueue(this)
     }
 
     private fun reindexCurrentRoot(showFeedback: Boolean) {

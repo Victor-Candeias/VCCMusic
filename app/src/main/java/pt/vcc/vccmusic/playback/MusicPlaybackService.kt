@@ -5,6 +5,7 @@ import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
@@ -33,6 +34,13 @@ class MusicPlaybackService : MediaLibraryService() {
             )
             .setHandleAudioBecomingNoisy(true)
             .build()
+        player.addListener(
+            object : Player.Listener {
+                override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
+                    if (player.hasNextMediaItem()) player.seekToNextMediaItem() else player.stop()
+                }
+            },
+        )
         mediaLibrarySession = MediaLibrarySession.Builder(
             this,
             player,
@@ -49,8 +57,14 @@ class MusicPlaybackService : MediaLibraryService() {
             tracks.collect { entities ->
                 val items = entities.map(::toMediaItem)
                 launch(Dispatchers.Main) {
-                    player.setMediaItems(items)
-                    player.prepare()
+                    if (items.isEmpty()) {
+                        player.clearMediaItems()
+                    } else {
+                        val index = player.currentMediaItemIndex
+                            .coerceIn(0, items.lastIndex)
+                        player.setMediaItems(items, index, player.currentPosition)
+                        player.prepare()
+                    }
                 }
             }
         }

@@ -11,6 +11,8 @@ interface PlaybackController {
     fun play()
     fun pause()
     fun seekTo(positionMs: Long)
+    fun skipToPrevious()
+    fun skipToNext()
     fun release()
 }
 
@@ -33,6 +35,14 @@ class Media3PlaybackController(
 
     override fun seekTo(positionMs: Long) {
         controllerFuture.get().seekTo(positionMs)
+    }
+
+    override fun skipToPrevious() {
+        controllerFuture.get().seekToPreviousMediaItem()
+    }
+
+    override fun skipToNext() {
+        controllerFuture.get().seekToNextMediaItem()
     }
 
     fun setQueue(items: List<MediaItem>) {
