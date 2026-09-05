@@ -231,7 +231,7 @@ private fun LibraryItems(
     playbackViewModel: PlaybackViewModel,
 ) {
     LazyColumn {
-        items(folders, key = { it.id }) { folder ->
+        items(folders, key = { "folder-${it.id}" }) { folder ->
             Row(
                 modifier = Modifier.fillMaxWidth().clickable { onOpenFolder(folder) }.padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -241,7 +241,7 @@ private fun LibraryItems(
             }
             HorizontalDivider()
         }
-        items(tracks, key = { it.id }) { track ->
+        items(tracks, key = { "track-${it.id}" }) { track ->
             Column(modifier = Modifier.fillMaxWidth().clickable { playbackViewModel.playTracks(tracks, track.id) }.padding(16.dp)) {
                 Text(track.title, style = MaterialTheme.typography.titleMedium)
                 val details = listOfNotNull(track.artist, track.album).joinToString(" - ")
