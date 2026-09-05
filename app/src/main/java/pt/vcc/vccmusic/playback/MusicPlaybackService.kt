@@ -167,10 +167,10 @@ class MusicPlaybackService : MediaLibraryService() {
             val root = repository.activeRoot()
             val items = when (parentId) {
                 ROOT_ID -> listOf(
-                    toCategoryItem(FOLDERS_ID, "Pastas"),
-                    toCategoryItem(ALL_TRACKS_ID, "Todas as músicas"),
-                    toCategoryItem(PLAYLISTS_ID, "Playlists"),
-                    toCategoryItem(SHUFFLE_ID, "Reprodução aleatória"),
+                    toCategoryItem(FOLDERS_ID, getString(R.string.folders)),
+                    toCategoryItem(ALL_TRACKS_ID, getString(R.string.all_music)),
+                    toCategoryItem(PLAYLISTS_ID, getString(R.string.playlists)),
+                    toCategoryItem(SHUFFLE_ID, getString(R.string.shuffle)),
                 )
                 FOLDERS_ID -> root?.let {
                     repository.observeFolders(it.id, null).first().map { folder ->
@@ -214,10 +214,10 @@ class MusicPlaybackService : MediaLibraryService() {
             val repository = (application as VccMusicApplication).container.musicRepository
             val item = when {
                 mediaId == ROOT_ID -> toCategoryItem(ROOT_ID, getString(R.string.app_name))
-                mediaId == FOLDERS_ID -> toCategoryItem(FOLDERS_ID, "Pastas")
-                mediaId == ALL_TRACKS_ID -> toCategoryItem(ALL_TRACKS_ID, "Todas as músicas")
-                mediaId == PLAYLISTS_ID -> toCategoryItem(PLAYLISTS_ID, "Playlists")
-                mediaId == SHUFFLE_ID -> toCategoryItem(SHUFFLE_ID, "Reprodução aleatória")
+                mediaId == FOLDERS_ID -> toCategoryItem(FOLDERS_ID, getString(R.string.folders))
+                mediaId == ALL_TRACKS_ID -> toCategoryItem(ALL_TRACKS_ID, getString(R.string.all_music))
+                mediaId == PLAYLISTS_ID -> toCategoryItem(PLAYLISTS_ID, getString(R.string.playlists))
+                mediaId == SHUFFLE_ID -> toCategoryItem(SHUFFLE_ID, getString(R.string.shuffle))
                 mediaId.startsWith(FOLDER_PREFIX) -> repository.folder(
                     mediaId.removePrefix(FOLDER_PREFIX).toLongOrNull() ?: -1,
                 )?.let { toFolderItem(it.id, it.name) }

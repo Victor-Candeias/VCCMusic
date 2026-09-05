@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,7 +53,12 @@ fun PlaylistScreen(
     var selected by remember { mutableStateOf<PlaylistEntity?>(null) }
     var showCreate by remember { mutableStateOf(false) }
 
-    Column(modifier = modifier.fillMaxSize().padding(contentPadding)) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(contentPadding)
+            .testTag("screen-playlists"),
+    ) {
         if (selected == null) {
             PlaylistHeader(onCreate = { showCreate = true })
             if (playlists.isEmpty()) {

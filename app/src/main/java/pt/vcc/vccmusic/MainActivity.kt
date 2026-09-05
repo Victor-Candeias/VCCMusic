@@ -88,7 +88,11 @@ class MainActivity : ComponentActivity() {
             }
             if (showFeedback) {
                 val message = if (result.completed) {
-                    getString(R.string.reindex_completed, result.tracks)
+                    resources.getQuantityString(
+                        R.plurals.reindex_completed,
+                        result.tracks,
+                        result.tracks,
+                    )
                 } else {
                     getString(R.string.reindex_incomplete)
                 }

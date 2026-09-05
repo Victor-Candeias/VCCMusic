@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,10 +30,15 @@ import pt.vcc.vccmusic.R
 fun NowPlayingScreen(
     viewModel: PlaybackViewModel,
     contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Column(
-        modifier = Modifier.fillMaxSize().padding(contentPadding).padding(24.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(contentPadding)
+            .padding(24.dp)
+            .testTag("screen-now-playing"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -69,8 +75,9 @@ fun NowPlayingScreen(
     }
 }
 
+@Composable
 private fun repeatLabel(mode: Int): String = when (mode) {
-    Player.REPEAT_MODE_ONE -> "Repetir faixa"
-    Player.REPEAT_MODE_ALL -> "Repetir fila"
-    else -> "Repetição desligada"
+    Player.REPEAT_MODE_ONE -> stringResource(R.string.repeat_track)
+    Player.REPEAT_MODE_ALL -> stringResource(R.string.repeat_queue)
+    else -> stringResource(R.string.repeat_off)
 }

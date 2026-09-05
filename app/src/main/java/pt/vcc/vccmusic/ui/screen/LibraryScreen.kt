@@ -205,7 +205,7 @@ private fun LibraryShortcuts(
 ) {
     Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         Button(onClick = onShowAllTracks) {
-            Icon(Icons.Default.Home, null)
+            Icon(Icons.Default.Home, stringResource(R.string.all_music_icon))
             Text(stringResource(R.string.all_music), modifier = Modifier.padding(start = 8.dp))
         }
         Button(
@@ -236,7 +236,7 @@ private fun LibraryItems(
                 modifier = Modifier.fillMaxWidth().clickable { onOpenFolder(folder) }.padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(Icons.Default.Home, null)
+                Icon(Icons.Default.Home, stringResource(R.string.folder_icon))
                 Text(folder.name, modifier = Modifier.padding(start = 12.dp))
             }
             HorizontalDivider()
@@ -258,7 +258,12 @@ private fun LibraryItems(
 private fun TrackList(tracks: List<TrackEntity>, onPlay: (Long) -> Unit) {
     LazyColumn {
         items(tracks, key = { it.id }) { track ->
-            Column(modifier = Modifier.fillMaxWidth().clickable { onPlay(track.id) }.padding(16.dp)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onPlay(track.id) }
+                    .padding(16.dp),
+            ) {
                 Text(track.title, style = MaterialTheme.typography.titleMedium)
                 val details = listOfNotNull(track.artist, track.album).joinToString(" - ")
                 if (details.isNotBlank()) Text(details, style = MaterialTheme.typography.bodyMedium)

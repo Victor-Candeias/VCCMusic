@@ -135,6 +135,5 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         ticker?.cancel()
         controller?.removeListener(listener)
         if (controllerFuture.isDone) controllerFuture.get().release()
-        super.onCleared()
     }
 }

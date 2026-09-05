@@ -22,8 +22,8 @@ fun PlaceholderScreen(
     @StringRes titleRes: Int,
     contentPadding: PaddingValues,
     testTag: String,
-    action: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    action: (() -> Unit)? = null,
 ) {
     Column(
         modifier = modifier

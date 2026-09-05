@@ -1,5 +1,9 @@
 # WI-13 — Consolidar qualidade, desempenho e robustez
 
+## Estado
+
+Concluído para o âmbito atual do MVP. A validação automatizada foi executada com build debug, testes unitários, teste instrumentado de navegação no `FiatTipo` (Android Auto API 35) e lint sem erros; a matriz de hardware físico continua a ser uma atividade de pré-release do WI-14.
+
 ## Objetivo
 
 Fechar riscos transversais antes de declarar o MVP pronto.
@@ -28,4 +32,3 @@ Fechar riscos transversais antes de declarar o MVP pronto.
 ## Dependências
 
 WI-06 a WI-12.
-
