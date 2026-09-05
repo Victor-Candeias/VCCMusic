@@ -38,7 +38,12 @@ class RadioBrowserRepository {
                         add(
                             RadioBrowserStation(
                                 id = station.optString("stationuuid", stream),
-                                name = station.optString("name", "Rádio sem nome"),
+                                name = station.optString("name", "Rádio sem nome")
+                                    .replace(
+                                        Regex("\\s*\\([^)]*(Portugal|PT)[^)]*\\)\\s*$", RegexOption.IGNORE_CASE),
+                                        "",
+                                    )
+                                    .trim(),
                                 streamUrl = stream,
                                 tags = station.optString("tags"),
                                 favicon = station.optString("favicon").takeIf { it.isNotBlank() },

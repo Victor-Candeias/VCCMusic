@@ -1,5 +1,6 @@
 package pt.vcc.vccmusic.ui.screen
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -22,13 +24,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.net.URL
 import pt.vcc.vccmusic.R
 
 @Composable
@@ -92,7 +100,7 @@ private fun RadioCard(station: RadioBrowserStation, onPlay: () -> Unit) {
             modifier = Modifier.padding(18.dp),
             horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.play), tint = Color.White)
+            RadioFavicon(station)
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(station.name, color = Color.White, style = MaterialTheme.typography.titleLarge)
                 if (station.tags.isNotBlank()) {
@@ -104,5 +112,35 @@ private fun RadioCard(station: RadioBrowserStation, onPlay: () -> Unit) {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun RadioFavicon(station: RadioBrowserStation) {
+    val image by produceState<androidx.compose.ui.graphics.ImageBitmap?>(null, station.favicon) {
+        value = station.favicon?.let { favicon ->
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    URL(favicon).openStream().use { input ->
+                        BitmapFactory.decodeStream(input)?.asImageBitmap()
+                    }
+                }
+            }.getOrNull()
+        }
+    }
+    if (image != null) {
+        androidx.compose.foundation.Image(
+            bitmap = image!!,
+            contentDescription = station.name,
+            modifier = Modifier.size(56.dp),
+            contentScale = ContentScale.Crop,
+        )
+    } else {
+        Icon(
+            Icons.Default.PlayArrow,
+            contentDescription = stringResource(R.string.play),
+            tint = Color.White,
+            modifier = Modifier.size(56.dp),
+        )
     }
 }
