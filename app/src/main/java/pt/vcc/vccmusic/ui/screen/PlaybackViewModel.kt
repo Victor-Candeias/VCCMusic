@@ -27,6 +27,7 @@ import pt.vcc.vccmusic.playback.QueueSource
 data class PlaybackUiState(
     val title: String? = null,
     val artist: String? = null,
+    val artworkData: ByteArray? = null,
     val isPlaying: Boolean = false,
     val positionMs: Long = 0,
     val durationMs: Long = 0,
@@ -132,6 +133,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         _state.value = PlaybackUiState(
             title = metadata.title?.toString(),
             artist = metadata.artist?.toString(),
+            artworkData = metadata.artworkData,
             isPlaying = player.isPlaying,
             positionMs = player.currentPosition.coerceAtLeast(0),
             durationMs = player.duration.takeIf { it != C.TIME_UNSET }?.coerceAtLeast(0) ?: 0,
@@ -145,7 +147,12 @@ class PlaybackViewModel(context: Context) : ViewModel() {
             .setMediaId(track.id.toString())
             .setUri(track.uri)
             .setMediaMetadata(
-                MediaMetadata.Builder().setTitle(track.title).setArtist(track.artist).setAlbumTitle(track.album).build(),
+                MediaMetadata.Builder()
+                    .setTitle(track.title)
+                    .setArtist(track.artist)
+                    .setAlbumTitle(track.album)
+                    .setArtworkData(track.artwork)
+                    .build(),
             )
             .build()
 
