@@ -71,7 +71,7 @@ fun OnlineRadioScreen(
             error != null -> Text(error!!, color = MaterialTheme.colorScheme.error)
             stations.isEmpty() -> Text(stringResource(R.string.no_online_radios))
             else -> LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
+                columns = GridCells.Adaptive(minSize = 140.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
@@ -92,26 +92,26 @@ private fun RadioCard(station: RadioBrowserStation, onPlay: () -> Unit) {
         onClick = onPlay,
         modifier = Modifier
             .fillMaxWidth()
-            .height(180.dp),
+            .height(156.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             RadioFavicon(station)
             Text(
                 station.name,
                 color = Color.White,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleSmall,
                 maxLines = 2,
             )
             Text(
                 text = station.tags.ifBlank { stringResource(R.string.online_radio) },
                 color = Color.White.copy(alpha = 0.82f),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.labelSmall,
                 maxLines = 2,
             )
         }
@@ -134,7 +134,7 @@ private fun RadioFavicon(station: RadioBrowserStation) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(72.dp),
+            .height(56.dp),
     ) {
         if (image != null) {
             androidx.compose.foundation.Image(
