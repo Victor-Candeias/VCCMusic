@@ -1,13 +1,14 @@
 package pt.vcc.vccmusic.ui.screen
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
@@ -63,14 +64,14 @@ fun OnlineRadioScreen(
             loading -> CircularProgressIndicator()
             error != null -> Text(error!!, color = MaterialTheme.colorScheme.error)
             stations.isEmpty() -> Text(stringResource(R.string.no_online_radios))
-            else -> Row(
-                modifier = Modifier.horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(14.dp),
+            else -> LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                stations.forEach { station ->
-                    RadioCard(station) {
-                        playbackViewModel.playRadio(station.name, station.streamUrl)
-                    }
+                items(stations, key = { it.id }) { station ->
+                    RadioCard(
+                        station = station,
+                        onPlay = { playbackViewModel.playRadio(station.name, station.streamUrl) },
+                    )
                 }
             }
         }
@@ -81,20 +82,23 @@ fun OnlineRadioScreen(
 private fun RadioCard(station: RadioBrowserStation, onPlay: () -> Unit) {
     Card(
         onClick = onPlay,
+        modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
     ) {
-        Column(
+        Row(
             modifier = Modifier.padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.play), tint = Color.White)
-            Text(station.name, color = Color.White, style = MaterialTheme.typography.titleLarge)
-            if (station.tags.isNotBlank()) {
-                Text(
-                    station.tags,
-                    color = Color.White.copy(alpha = 0.82f),
-                    maxLines = 2,
-                )
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(station.name, color = Color.White, style = MaterialTheme.typography.titleLarge)
+                if (station.tags.isNotBlank()) {
+                    Text(
+                        station.tags,
+                        color = Color.White.copy(alpha = 0.82f),
+                        maxLines = 2,
+                    )
+                }
             }
         }
     }

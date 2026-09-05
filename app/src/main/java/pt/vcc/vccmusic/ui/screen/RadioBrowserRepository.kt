@@ -17,7 +17,7 @@ data class RadioBrowserStation(
 class RadioBrowserRepository {
     suspend fun loadPortugueseStations(): List<RadioBrowserStation> = withContext(Dispatchers.IO) {
         val connection = URL(
-            "https://de1.api.radio-browser.info/json/stations/bycountrycodeexact/PT?hidebroken=true&limit=40",
+            "https://de1.api.radio-browser.info/json/stations/bycountrycodeexact/PT?hidebroken=true&limit=100",
         ).openConnection() as HttpURLConnection
         try {
             connection.connectTimeout = 10_000
