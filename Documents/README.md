@@ -36,7 +36,7 @@ Este diretório transforma os requisitos do `README.md` num backlog ordenado par
 
 Os itens 03 e 04 podem ser feitos em paralelo. Depois do item 07, os itens 09 e 11 também podem avançar em paralelo com parte do trabalho de UI.
 
-O WI-15 é um item transversal de UI e pode ser executado por fases depois de existirem dados, seleção de raiz e reprodução. A entrada Rádios Online permanece condicionada a uma alteração explícita do âmbito do MVP.
+O WI-15 é um item transversal de UI e pode ser executado por fases depois de existirem dados, seleção de raiz e reprodução. As rádios online estão disponíveis com estações públicas configuradas e ativação individual em Configurações.
 
 ## Definição global de concluído
 

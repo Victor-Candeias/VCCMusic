@@ -23,6 +23,6 @@ O Android Auto navega pelas categorias publicadas pelo serviço: Pastas, Todas a
 
 ## Limitações conhecidas
 
-- Rádios online, artistas e álbuns não fazem parte do MVP atual.
+- Rádios online estão disponíveis no menu principal; as estações podem ser ativadas ou desativadas em Configurações.
 - A seleção de uma raiz SAF é específica do perfil Android ativo; perfis multiutilizador têm armazenamento e MediaStore separados.
 - A assinatura final da Play Store deve ser configurada fora do repositório.

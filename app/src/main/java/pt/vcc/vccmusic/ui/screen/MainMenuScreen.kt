@@ -4,9 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +21,7 @@ fun MainMenuScreen(
     onMusic: () -> Unit,
     onPlaylists: () -> Unit,
     onNowPlaying: () -> Unit,
+    onOnlineRadio: () -> Unit,
     onSettings: () -> Unit,
     onExit: () -> Unit,
 ) {
@@ -37,21 +37,16 @@ fun MainMenuScreen(
         MenuButton(R.string.music, onMusic)
         MenuButton(R.string.playlists, onPlaylists)
         MenuButton(R.string.now_playing, onNowPlaying)
+        MenuButton(R.string.online_radio, onOnlineRadio)
         MenuButton(R.string.settings, onSettings)
         MenuButton(R.string.close_app, onExit)
-        Text(
-            stringResource(R.string.online_radio_unavailable),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(top = 8.dp),
-        )
     }
 }
 
 @Composable
 private fun MenuButton(labelRes: Int, onClick: () -> Unit) {
-    Button(
+    ElevatedButton(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth(),
     ) {
         Text(stringResource(labelRes))
     }

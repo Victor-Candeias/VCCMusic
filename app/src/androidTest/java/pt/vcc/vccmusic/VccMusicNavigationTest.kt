@@ -4,6 +4,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.performClick
 import org.junit.Rule
 import org.junit.Test
@@ -25,5 +27,14 @@ class VccMusicNavigationTest {
 
         composeRule.onNodeWithText("Em reprodução").performClick()
         composeRule.onNodeWithTag("screen-now-playing").assertIsDisplayed()
+    }
+
+    @Test
+    fun opensOnlineRadioAndRadioSettings() {
+        composeRule.onNodeWithTag("screen-main-menu").assertIsDisplayed()
+        composeRule.onAllNodesWithText("Rádios Online").onFirst().performClick()
+        composeRule.onNodeWithTag("screen-online-radio").assertIsDisplayed()
+        composeRule.onNodeWithText("Configurações").performClick()
+        composeRule.onNodeWithText("Configuração das rádios online").assertIsDisplayed()
     }
 }

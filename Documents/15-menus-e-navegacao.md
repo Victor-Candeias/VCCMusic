@@ -77,9 +77,9 @@ As preferências simples devem usar DataStore. A imagem escolhida deve manter um
 
 ### Rádios Online
 
-O layout inclui um ecrã com cartões de rádio contendo imagem, nome e estado da estação. Ao tocar numa rádio, o cartão deve indicar visualmente a estação ativa e o player deve apresentar a informação da emissão.
+O menu principal inclui um ecrã de rádios com estações configuradas. Cada estação pode iniciar um stream HTTP/HTTPS no player Media3 e fica visível em **Em reprodução**.
 
-Esta funcionalidade não está incluída no âmbito MVP definido no WI-01. Antes da implementação deve ser aceite uma alteração de âmbito que defina fontes permitidas, persistência das estações, reprodução de streams, tratamento de erro e requisitos de privacidade. Até essa decisão, a entrada pode ficar oculta ou apresentar um estado explicitamente indisponível.
+As estações disponíveis podem ser ativadas ou desativadas em **Configurações > Configuração das rádios online**. A configuração atual é mantida enquanto a aplicação está aberta; os endereços usados devem ser streams públicos e autorizados.
 
 ## Navegação
 

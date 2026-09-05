@@ -14,4 +14,5 @@ enum class NavigationDestination(
     Playlists("playlists", R.string.playlists),
     NowPlaying("now-playing", R.string.now_playing),
     Settings("settings", R.string.settings),
+    OnlineRadio("online-radio", R.string.online_radio),
 }

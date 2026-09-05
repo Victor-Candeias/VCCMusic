@@ -73,6 +73,24 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         currentController.play()
     }
 
+    fun playRadio(name: String, streamUrl: String) {
+        val currentController = controller ?: return
+        currentController.setMediaItem(
+            MediaItem.Builder()
+                .setMediaId("radio:$streamUrl")
+                .setUri(streamUrl)
+                .setMediaMetadata(
+                    MediaMetadata.Builder()
+                        .setTitle(name)
+                        .setArtist("Rádio Online")
+                        .build(),
+                )
+                .build(),
+        )
+        currentController.prepare()
+        currentController.play()
+    }
+
     fun playPause() {
         controller?.let { if (it.isPlaying) it.pause() else it.play() }
     }

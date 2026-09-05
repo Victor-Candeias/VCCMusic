@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +38,7 @@ fun MusicMenuScreen(
         MenuAction(R.string.playlists, onPlaylists)
         MenuAction(R.string.artists_unavailable, {})
         MenuAction(R.string.albums_unavailable, {})
-        Button(onClick = onBack, modifier = Modifier.fillMaxWidth()) {
+        ElevatedButton(onClick = onBack) {
             Text(stringResource(R.string.back))
         }
     }
@@ -46,7 +46,7 @@ fun MusicMenuScreen(
 
 @Composable
 private fun MenuAction(labelRes: Int, onClick: () -> Unit) {
-    Button(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+    ElevatedButton(onClick = onClick) {
         Text(stringResource(labelRes))
     }
 }

@@ -26,13 +26,18 @@ import pt.vcc.vccmusic.ui.screen.PlaylistViewModel
 import pt.vcc.vccmusic.ui.screen.PlaybackViewModel
 import pt.vcc.vccmusic.ui.screen.NowPlayingScreen
 import pt.vcc.vccmusic.ui.screen.SettingsScreen
+import pt.vcc.vccmusic.ui.screen.OnlineRadioScreen
+import pt.vcc.vccmusic.ui.screen.RadioStation
+import pt.vcc.vccmusic.ui.screen.defaultRadioStations
 import pt.vcc.vccmusic.data.MusicRepository
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.mutableStateListOf
 
 @Composable
 fun VccMusicApp(
@@ -43,6 +48,9 @@ fun VccMusicApp(
     onExit: () -> Unit = {},
 ) {
     val context = LocalContext.current
+    val radioStations = remember {
+        mutableStateListOf<RadioStation>().also { it.addAll(defaultRadioStations) }
+    }
     val libraryViewModel: LibraryViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -97,6 +105,7 @@ fun VccMusicApp(
                                     NavigationDestination.Playlists -> Icons.AutoMirrored.Filled.List
                                     NavigationDestination.NowPlaying -> Icons.Default.PlayArrow
                                     NavigationDestination.Settings -> Icons.Default.Home
+                                                    NavigationDestination.OnlineRadio -> Icons.Default.PlayArrow
                                 },
                                 contentDescription = label,
                             )
@@ -117,6 +126,7 @@ fun VccMusicApp(
                     onMusic = { navController.navigate(NavigationDestination.MusicMenu.route) },
                     onPlaylists = { navController.navigate(NavigationDestination.Playlists.route) },
                     onNowPlaying = { navController.navigate(NavigationDestination.NowPlaying.route) },
+                    onOnlineRadio = { navController.navigate(NavigationDestination.OnlineRadio.route) },
                     onSettings = { navController.navigate(NavigationDestination.Settings.route) },
                     onExit = onExit,
                 )
@@ -147,7 +157,19 @@ fun VccMusicApp(
                 NowPlayingScreen(playbackViewModel, contentPadding)
             }
             composable(NavigationDestination.Settings.route) {
-                SettingsScreen(contentPadding, onPickRoot, onReindex)
+                SettingsScreen(
+                    contentPadding = contentPadding,
+                    onPickRoot = onPickRoot,
+                    onReindex = onReindex,
+                    radioStations = radioStations,
+                    onRadioStationEnabledChanged = { name, enabled ->
+                        val index = radioStations.indexOfFirst { it.name == name }
+                        if (index >= 0) radioStations[index] = radioStations[index].copy(enabled = enabled)
+                    },
+                )
+            }
+            composable(NavigationDestination.OnlineRadio.route) {
+                OnlineRadioScreen(radioStations, playbackViewModel, contentPadding)
             }
         }
     }
