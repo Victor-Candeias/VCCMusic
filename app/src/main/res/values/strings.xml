@@ -2,6 +2,12 @@
 <resources>
     <string name="app_name">VCCMusic</string>
     <string name="main_menu">Menu principal</string>
+    <string name="my_music">A minha música</string>
+    <string name="my_music_subtitle">O som para o seu dia</string>
+    <string name="all_your_tracks">Todas as suas faixas</string>
+    <string name="your_collections">As suas coleções</string>
+    <string name="listening_now">A ouvir agora</string>
+    <string name="quick_actions">Acesso rápido</string>
     <string name="music">Música</string>
     <string name="settings">Configurações</string>
     <string name="online_radio">Rádios Online</string>
@@ -17,6 +23,10 @@
     <string name="library">Biblioteca</string>
     <string name="playlists">Playlists</string>
     <string name="now_playing">Em reprodução</string>
+    <string name="more_options">Mais opções</string>
+    <string name="album_art">Imagem do álbum</string>
+    <string name="favorite">Favorito</string>
+    <string name="swipe_to_change_track">Deslize para a direita ou esquerda para mudar de faixa</string>
     <string name="screen_under_construction">Funcionalidade preparada para o próximo work item.</string>
     <string name="choose_music_root">Escolher pasta de música</string>
     <string name="root_selection_failed">Não foi possível selecionar a pasta.</string>

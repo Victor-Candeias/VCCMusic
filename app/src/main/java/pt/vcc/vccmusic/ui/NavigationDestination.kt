@@ -13,6 +13,6 @@ enum class NavigationDestination(
     Library("library", R.string.library),
     Playlists("playlists", R.string.playlists),
     NowPlaying("now-playing", R.string.now_playing),
-    Settings("settings", R.string.settings),
     OnlineRadio("online-radio", R.string.online_radio),
+    Settings("settings", R.string.settings),
 }
