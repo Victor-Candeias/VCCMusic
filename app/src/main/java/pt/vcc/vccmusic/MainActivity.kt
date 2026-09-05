@@ -53,6 +53,7 @@ class MainActivity : ComponentActivity() {
                     musicRepository = appInstance.container.musicRepository,
                     onPickRoot = { rootPicker.launch(null) },
                     onReindex = { reindexCurrentRoot(showFeedback = true) },
+                    onExit = ::finish,
                 )
             }
         }

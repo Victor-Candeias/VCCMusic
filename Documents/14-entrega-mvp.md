@@ -1,5 +1,9 @@
 # WI-14 — Preparar e entregar o MVP
 
+## Estado
+
+Concluído para o MVP atual. A versão `1.0.0` tem build Release com shrinking de recursos/código ativo, bundle e APK gerados, sem credenciais no repositório. A assinatura de distribuição continua a ser fornecida externamente no pipeline de publicação.
+
 ## Objetivo
 
 Produzir um artefacto de release rastreável, instalável e acompanhado pela documentação necessária.

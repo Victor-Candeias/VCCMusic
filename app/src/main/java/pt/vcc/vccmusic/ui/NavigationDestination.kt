@@ -6,9 +6,12 @@ import pt.vcc.vccmusic.R
 enum class NavigationDestination(
     val route: String,
     @StringRes val labelRes: Int,
+    val inMainNavigation: Boolean = true,
 ) {
+    MainMenu("main-menu", R.string.main_menu),
+    MusicMenu("music-menu", R.string.music, false),
     Library("library", R.string.library),
     Playlists("playlists", R.string.playlists),
     NowPlaying("now-playing", R.string.now_playing),
+    Settings("settings", R.string.settings),
 }
-

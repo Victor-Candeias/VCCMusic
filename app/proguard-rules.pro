@@ -1,2 +1,2 @@
-# Project-specific R8 rules will be added when release shrinking is enabled.
-
+# Room and Media3 publish their own consumer rules; keep this file as the
+# project-specific extension point for release-only rules.

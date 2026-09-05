@@ -1,5 +1,9 @@
 # WI-15 — Criar menus e navegação conforme o layout
 
+## Estado
+
+Concluído para o âmbito atual do MVP. Foi implementado o menu principal, submenu Música, navegação para Biblioteca/Playlists/Em reprodução, Configurações, ação Fechar e estados explícitos para funcionalidades fora do MVP.
+
 **Estado:** Planeado  
 **Referência:** `Documents/Layout.pptx`
 

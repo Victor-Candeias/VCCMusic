@@ -17,13 +17,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import pt.vcc.vccmusic.ui.screen.PlaceholderScreen
 import pt.vcc.vccmusic.ui.screen.LibraryScreen
 import pt.vcc.vccmusic.ui.screen.LibraryViewModel
+import pt.vcc.vccmusic.ui.screen.MainMenuScreen
+import pt.vcc.vccmusic.ui.screen.MusicMenuScreen
 import pt.vcc.vccmusic.ui.screen.PlaylistScreen
 import pt.vcc.vccmusic.ui.screen.PlaylistViewModel
 import pt.vcc.vccmusic.ui.screen.PlaybackViewModel
 import pt.vcc.vccmusic.ui.screen.NowPlayingScreen
+import pt.vcc.vccmusic.ui.screen.SettingsScreen
 import pt.vcc.vccmusic.data.MusicRepository
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.ViewModel
@@ -38,6 +40,7 @@ fun VccMusicApp(
     musicRepository: MusicRepository,
     onPickRoot: () -> Unit = {},
     onReindex: () -> Unit = {},
+    onExit: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val libraryViewModel: LibraryViewModel = viewModel(
@@ -68,7 +71,7 @@ fun VccMusicApp(
         modifier = modifier,
         bottomBar = {
             NavigationBar {
-                NavigationDestination.entries.forEach { destination ->
+                NavigationDestination.entries.filter { it.inMainNavigation }.forEach { destination ->
                     val selected = currentDestination?.hierarchy?.any {
                         it.route == destination.route
                     } == true
@@ -78,7 +81,7 @@ fun VccMusicApp(
                         selected = selected,
                         onClick = {
                             navController.navigate(destination.route) {
-                                popUpTo(NavigationDestination.Library.route) {
+                                popUpTo(NavigationDestination.MainMenu.route) {
                                     saveState = true
                                 }
                                 launchSingleTop = true
@@ -88,9 +91,12 @@ fun VccMusicApp(
                         icon = {
                             Icon(
                                 imageVector = when (destination) {
+                                    NavigationDestination.MainMenu -> Icons.Default.Home
+                                    NavigationDestination.MusicMenu -> Icons.Default.Home
                                     NavigationDestination.Library -> Icons.Default.Home
                                     NavigationDestination.Playlists -> Icons.AutoMirrored.Filled.List
                                     NavigationDestination.NowPlaying -> Icons.Default.PlayArrow
+                                    NavigationDestination.Settings -> Icons.Default.Home
                                 },
                                 contentDescription = label,
                             )
@@ -103,33 +109,45 @@ fun VccMusicApp(
     ) { contentPadding ->
         NavHost(
             navController = navController,
-            startDestination = NavigationDestination.Library.route,
+            startDestination = NavigationDestination.MainMenu.route,
         ) {
-            NavigationDestination.entries.forEach { destination ->
-                composable(destination.route) {
-                    if (destination == NavigationDestination.Library) {
-                        LibraryScreen(libraryViewModel, playbackViewModel, contentPadding, onPickRoot, onReindex)
-                    } else if (destination == NavigationDestination.Playlists) {
-                        val activeRoot by musicRepository.observeActiveRoot()
-                            .collectAsStateWithLifecycle(initialValue = null)
-                        PlaylistScreen(
-                            playlistViewModel,
-                            activeRoot?.id,
-                            contentPadding,
-                            playbackViewModel,
-                        )
-                    } else {
-                        if (destination == NavigationDestination.NowPlaying) {
-                            NowPlayingScreen(playbackViewModel, contentPadding)
-                        } else {
-                            PlaceholderScreen(
-                                titleRes = destination.labelRes,
-                                contentPadding = contentPadding,
-                                testTag = "screen-${destination.route}",
-                            )
-                        }
-                    }
-                }
+            composable(NavigationDestination.MainMenu.route) {
+                MainMenuScreen(
+                    contentPadding = contentPadding,
+                    onMusic = { navController.navigate(NavigationDestination.MusicMenu.route) },
+                    onPlaylists = { navController.navigate(NavigationDestination.Playlists.route) },
+                    onNowPlaying = { navController.navigate(NavigationDestination.NowPlaying.route) },
+                    onSettings = { navController.navigate(NavigationDestination.Settings.route) },
+                    onExit = onExit,
+                )
+            }
+            composable(NavigationDestination.MusicMenu.route) {
+                MusicMenuScreen(
+                    contentPadding = contentPadding,
+                    onTracks = { navController.navigate(NavigationDestination.Library.route) },
+                    onFolders = { navController.navigate(NavigationDestination.Library.route) },
+                    onPlaylists = { navController.navigate(NavigationDestination.Playlists.route) },
+                    onBack = { navController.popBackStack() },
+                )
+            }
+            composable(NavigationDestination.Library.route) {
+                LibraryScreen(libraryViewModel, playbackViewModel, contentPadding, onPickRoot, onReindex)
+            }
+            composable(NavigationDestination.Playlists.route) {
+                val activeRoot by musicRepository.observeActiveRoot()
+                    .collectAsStateWithLifecycle(initialValue = null)
+                PlaylistScreen(
+                    playlistViewModel,
+                    activeRoot?.id,
+                    contentPadding,
+                    playbackViewModel,
+                )
+            }
+            composable(NavigationDestination.NowPlaying.route) {
+                NowPlayingScreen(playbackViewModel, contentPadding)
+            }
+            composable(NavigationDestination.Settings.route) {
+                SettingsScreen(contentPadding, onPickRoot, onReindex)
             }
         }
     }

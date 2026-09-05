@@ -13,7 +13,11 @@ class VccMusicNavigationTest {
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun startsAtLibraryAndNavigatesAcrossTopLevelDestinations() {
+    fun startsAtMainMenuAndNavigatesAcrossTopLevelDestinations() {
+        composeRule.onNodeWithTag("screen-main-menu").assertIsDisplayed()
+
+        composeRule.onNodeWithText("Música").performClick()
+        composeRule.onNodeWithText("Faixas").performClick()
         composeRule.onNodeWithTag("screen-library").assertIsDisplayed()
 
         composeRule.onNodeWithText("Playlists").performClick()
