@@ -2,22 +2,19 @@ package pt.vcc.vccmusic.ui.screen
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -93,24 +90,30 @@ fun OnlineRadioScreen(
 private fun RadioCard(station: RadioBrowserStation, onPlay: () -> Unit) {
     Card(
         onClick = onPlay,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(180.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
     ) {
-        Row(
-            modifier = Modifier.padding(18.dp),
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             RadioFavicon(station)
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(station.name, color = Color.White, style = MaterialTheme.typography.titleLarge)
-                if (station.tags.isNotBlank()) {
-                    Text(
-                        station.tags,
-                        color = Color.White.copy(alpha = 0.82f),
-                        maxLines = 2,
-                    )
-                }
-            }
+            Text(
+                station.name,
+                color = Color.White,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 2,
+            )
+            Text(
+                text = station.tags.ifBlank { stringResource(R.string.online_radio) },
+                color = Color.White.copy(alpha = 0.82f),
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 2,
+            )
         }
     }
 }
@@ -128,19 +131,18 @@ private fun RadioFavicon(station: RadioBrowserStation) {
             }.getOrNull()
         }
     }
-    if (image != null) {
-        androidx.compose.foundation.Image(
-            bitmap = image!!,
-            contentDescription = station.name,
-            modifier = Modifier.size(56.dp),
-            contentScale = ContentScale.Crop,
-        )
-    } else {
-        Icon(
-            Icons.Default.PlayArrow,
-            contentDescription = stringResource(R.string.play),
-            tint = Color.White,
-            modifier = Modifier.size(56.dp),
-        )
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(72.dp),
+    ) {
+        if (image != null) {
+            androidx.compose.foundation.Image(
+                bitmap = image!!,
+                contentDescription = station.name,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit,
+            )
+        }
     }
 }
