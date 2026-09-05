@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +31,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.Player
 import pt.vcc.vccmusic.R
@@ -62,8 +61,13 @@ fun NowPlayingScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    listOf(Color(0xFF442E2A), Color(0xFF101015)),
+                ),
+            )
             .padding(contentPadding)
-            .padding(horizontal = 24.dp, vertical = 12.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .then(swipeModifier)
             .testTag("screen-now-playing"),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -73,14 +77,14 @@ fun NowPlayingScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(stringResource(R.string.now_playing), style = MaterialTheme.typography.titleLarge)
+            Text(stringResource(R.string.now_playing), style = MaterialTheme.typography.titleMedium, color = Color.White)
             IconButton(onClick = {}) {
                 Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
             }
         }
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(0.62f)
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(24.dp))
                 .background(
@@ -90,12 +94,7 @@ fun NowPlayingScreen(
                 ),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(
-                Icons.Default.Home,
-                contentDescription = stringResource(R.string.album_art),
-                tint = Color.White,
-                modifier = Modifier.fillMaxSize(0.42f),
-            )
+            Text("♫", color = Color.White, fontSize = 72.sp)
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -103,8 +102,8 @@ fun NowPlayingScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column {
-                Text(state.title ?: stringResource(R.string.nothing_playing), style = MaterialTheme.typography.headlineSmall)
-                Text(state.artist.orEmpty(), style = MaterialTheme.typography.bodyLarge)
+                Text(state.title ?: stringResource(R.string.nothing_playing), style = MaterialTheme.typography.titleLarge, color = Color.White)
+                Text(state.artist.orEmpty(), style = MaterialTheme.typography.bodyMedium, color = Color.White.copy(alpha = 0.75f))
             }
             IconButton(onClick = {}) {
                 Icon(Icons.Default.FavoriteBorder, contentDescription = stringResource(R.string.favorite))
@@ -117,30 +116,31 @@ fun NowPlayingScreen(
             enabled = state.durationMs > 0,
         )
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(formatTime(state.positionMs))
-            Text(formatTime(state.durationMs))
+            Text(formatTime(state.positionMs), color = Color.White)
+            Text(formatTime(state.durationMs), color = Color.White)
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            IconButton(onClick = viewModel::toggleShuffle) { Icon(Icons.Default.Home, stringResource(R.string.shuffle)) }
-            IconButton(onClick = viewModel::skipPrevious) { Icon(Icons.Default.Home, stringResource(R.string.previous)) }
+            IconButton(onClick = viewModel::toggleShuffle) { Text("⇆", color = Color.White, fontSize = 26.sp) }
+            IconButton(onClick = viewModel::skipPrevious) { Text("|◀", color = Color.White, fontSize = 22.sp) }
             IconButton(onClick = viewModel::playPause) {
-                Icon(
-                    Icons.Default.PlayArrow,
-                    stringResource(if (state.isPlaying) R.string.pause else R.string.play),
+                Text(
+                    if (state.isPlaying) "Ⅱ" else "▶",
+                    color = Color.White,
+                    fontSize = 28.sp,
                 )
             }
-            IconButton(onClick = viewModel::skipNext) { Icon(Icons.Default.Home, stringResource(R.string.next)) }
-            IconButton(onClick = viewModel::cycleRepeat) { Icon(Icons.Default.Home, repeatLabel(state.repeatMode)) }
+            IconButton(onClick = viewModel::skipNext) { Text("▶|", color = Color.White, fontSize = 22.sp) }
+            IconButton(onClick = viewModel::cycleRepeat) { Text("↻", color = Color.White, fontSize = 26.sp) }
         }
         Text(
             stringResource(R.string.swipe_to_change_track),
             modifier = Modifier.align(Alignment.CenterHorizontally),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = Color.White.copy(alpha = 0.7f),
         )
     }
 }

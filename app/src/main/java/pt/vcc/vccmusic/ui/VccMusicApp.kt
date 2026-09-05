@@ -24,6 +24,7 @@ import pt.vcc.vccmusic.ui.screen.MusicMenuScreen
 import pt.vcc.vccmusic.ui.screen.PlaylistScreen
 import pt.vcc.vccmusic.ui.screen.PlaylistViewModel
 import pt.vcc.vccmusic.ui.screen.PlaybackViewModel
+import pt.vcc.vccmusic.ui.screen.LibraryStart
 import pt.vcc.vccmusic.ui.screen.NowPlayingScreen
 import pt.vcc.vccmusic.ui.screen.SettingsScreen
 import pt.vcc.vccmusic.ui.screen.OnlineRadioScreen
@@ -37,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.runtime.mutableStateListOf
 
 @Composable
@@ -86,6 +88,7 @@ fun VccMusicApp(
                     val label = stringResource(destination.labelRes)
 
                     NavigationBarItem(
+                        modifier = Modifier.testTag("bottom-${destination.route}"),
                         selected = selected,
                         onClick = {
                             navController.navigate(destination.route) {
@@ -103,9 +106,10 @@ fun VccMusicApp(
                                     NavigationDestination.MusicMenu -> Icons.Default.Home
                                     NavigationDestination.Library -> Icons.Default.Home
                                     NavigationDestination.Playlists -> Icons.AutoMirrored.Filled.List
+                                    NavigationDestination.Folders -> Icons.Default.Home
                                     NavigationDestination.NowPlaying -> Icons.Default.PlayArrow
+                                    NavigationDestination.OnlineRadio -> Icons.Default.PlayArrow
                                     NavigationDestination.Settings -> Icons.Default.Home
-                                                    NavigationDestination.OnlineRadio -> Icons.Default.PlayArrow
                                 },
                                 contentDescription = label,
                             )
@@ -123,8 +127,9 @@ fun VccMusicApp(
             composable(NavigationDestination.MainMenu.route) {
                 MainMenuScreen(
                     contentPadding = contentPadding,
-                    onMusic = { navController.navigate(NavigationDestination.MusicMenu.route) },
+                    onMusic = { navController.navigate(NavigationDestination.Library.route) },
                     onPlaylists = { navController.navigate(NavigationDestination.Playlists.route) },
+                    onFolders = { navController.navigate(NavigationDestination.Folders.route) },
                     onNowPlaying = { navController.navigate(NavigationDestination.NowPlaying.route) },
                     onOnlineRadio = { navController.navigate(NavigationDestination.OnlineRadio.route) },
                     onSettings = { navController.navigate(NavigationDestination.Settings.route) },
@@ -141,7 +146,23 @@ fun VccMusicApp(
                 )
             }
             composable(NavigationDestination.Library.route) {
-                LibraryScreen(libraryViewModel, playbackViewModel, contentPadding, onPickRoot, onReindex)
+                LibraryScreen(
+                    libraryViewModel,
+                    playbackViewModel,
+                    contentPadding,
+                    onPickRoot,
+                    onReindex,
+                    start = LibraryStart.ALL_TRACKS,
+                )
+            }
+            composable(NavigationDestination.Folders.route) {
+                LibraryScreen(
+                    libraryViewModel,
+                    playbackViewModel,
+                    contentPadding,
+                    onPickRoot,
+                    onReindex,
+                )
             }
             composable(NavigationDestination.Playlists.route) {
                 val activeRoot by musicRepository.observeActiveRoot()
@@ -169,7 +190,7 @@ fun VccMusicApp(
                 )
             }
             composable(NavigationDestination.OnlineRadio.route) {
-                OnlineRadioScreen(radioStations, playbackViewModel, contentPadding)
+                OnlineRadioScreen(playbackViewModel, contentPadding)
             }
         }
     }

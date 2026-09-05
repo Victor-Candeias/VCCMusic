@@ -41,6 +41,8 @@ private sealed interface LibraryLocation {
     data class Folder(val folder: MusicFolderEntity) : LibraryLocation
 }
 
+enum class LibraryStart { ROOT, ALL_TRACKS }
+
 @Composable
 fun LibraryScreen(
     viewModel: LibraryViewModel,
@@ -48,10 +50,15 @@ fun LibraryScreen(
     contentPadding: PaddingValues,
     onPickRoot: () -> Unit,
     onReindex: () -> Unit,
+    start: LibraryStart = LibraryStart.ROOT,
     modifier: Modifier = Modifier,
 ) {
     val root by viewModel.activeRoot.collectAsStateWithLifecycle(initialValue = null)
-    var location by remember { mutableStateOf<LibraryLocation>(LibraryLocation.Root) }
+    var location by remember {
+        mutableStateOf<LibraryLocation>(
+            if (start == LibraryStart.ALL_TRACKS) LibraryLocation.AllTracks else LibraryLocation.Root,
+        )
+    }
     var folderPath by remember { mutableStateOf<List<MusicFolderEntity>>(emptyList()) }
 
     Column(

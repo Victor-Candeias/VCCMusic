@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
@@ -32,6 +32,7 @@ fun MainMenuScreen(
     contentPadding: PaddingValues,
     onMusic: () -> Unit,
     onPlaylists: () -> Unit,
+    onFolders: () -> Unit,
     onNowPlaying: () -> Unit,
     onOnlineRadio: () -> Unit,
     onSettings: () -> Unit,
@@ -59,9 +60,9 @@ fun MainMenuScreen(
             modifier = Modifier.horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            FeatureCard(R.string.music, R.string.all_your_tracks, Icons.Default.Home, MaterialTheme.colorScheme.primary, onMusic)
-            FeatureCard(R.string.playlists, R.string.your_collections, Icons.Default.List, MaterialTheme.colorScheme.tertiary, onPlaylists)
-            FeatureCard(R.string.now_playing, R.string.listening_now, Icons.Default.PlayArrow, MaterialTheme.colorScheme.secondary, onNowPlaying)
+            FeatureCard(R.string.music, R.string.all_your_tracks, Icons.Default.Home, MaterialTheme.colorScheme.primary, onMusic, "action-music")
+            FeatureCard(R.string.playlists, R.string.your_collections, Icons.AutoMirrored.Filled.List, MaterialTheme.colorScheme.tertiary, onPlaylists, "action-playlists")
+            FeatureCard(R.string.folders, R.string.all_folders, Icons.Default.Home, MaterialTheme.colorScheme.secondary, onFolders, "action-folders")
         }
         Text(
             text = stringResource(R.string.quick_actions),
@@ -69,10 +70,10 @@ fun MainMenuScreen(
             modifier = Modifier.padding(top = 4.dp),
         )
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            CompactAction(R.string.now_playing, Icons.Default.PlayArrow, onNowPlaying)
             CompactAction(R.string.online_radio, Icons.Default.PlayArrow, onOnlineRadio, "action-online-radio")
-            CompactAction(R.string.settings, Icons.Default.Settings, onSettings)
         }
-        CompactAction(R.string.close_app, Icons.Default.PlayArrow, onExit)
+        CompactAction(R.string.settings, Icons.Default.Settings, onSettings)
     }
 }
 
@@ -83,10 +84,11 @@ private fun FeatureCard(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     color: Color,
     onClick: () -> Unit,
+    testTag: String,
 ) {
     Card(
         onClick = onClick,
-        modifier = Modifier,
+        modifier = Modifier.testTag(testTag),
         colors = CardDefaults.cardColors(containerColor = color),
     ) {
         Column(

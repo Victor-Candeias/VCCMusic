@@ -5,6 +5,7 @@
     <string name="my_music">A minha música</string>
     <string name="my_music_subtitle">O som para o seu dia</string>
     <string name="all_your_tracks">Todas as suas faixas</string>
+    <string name="all_folders">Todas as subpastas</string>
     <string name="your_collections">As suas coleções</string>
     <string name="listening_now">A ouvir agora</string>
     <string name="quick_actions">Acesso rápido</string>
@@ -14,6 +15,7 @@
     <string name="online_radio_description">Escolha uma estação para iniciar a reprodução online.</string>
     <string name="online_radio_settings">Configuração das rádios online</string>
     <string name="no_enabled_radio_stations">Nenhuma rádio online está ativa. Ative uma em Configurações.</string>
+    <string name="no_online_radios">Não foram encontradas rádios portuguesas.</string>
     <string name="close_app">Fechar</string>
     <string name="tracks">Faixas</string>
     <string name="artists_unavailable">Artistas (indisponível no MVP)</string>
