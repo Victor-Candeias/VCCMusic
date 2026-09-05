@@ -1,6 +1,5 @@
 package pt.vcc.vccmusic.ui.screen
 
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -25,13 +24,11 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -48,9 +45,6 @@ fun NowPlayingScreen(
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val artwork = remember(state.artworkData) {
-        state.artworkData?.let { BitmapFactory.decodeByteArray(it, 0, it.size)?.asImageBitmap() }
-    }
     val swipeModifier = Modifier.pointerInput(Unit) {
         var distance = 0f
         detectHorizontalDragGestures(
@@ -96,20 +90,12 @@ fun NowPlayingScreen(
                 ),
             contentAlignment = Alignment.Center,
         ) {
-            if (artwork != null) {
-                androidx.compose.foundation.Image(
-                    bitmap = artwork,
-                    contentDescription = stringResource(R.string.album_art),
-                    modifier = Modifier.fillMaxSize(),
-                )
-            } else {
-                Icon(
-                    Icons.Default.Home,
-                    contentDescription = stringResource(R.string.album_art),
-                    tint = Color.White,
-                    modifier = Modifier.fillMaxSize(0.42f),
-                )
-            }
+            Icon(
+                Icons.Default.Home,
+                contentDescription = stringResource(R.string.album_art),
+                tint = Color.White,
+                modifier = Modifier.fillMaxSize(0.42f),
+            )
         }
         Row(
             modifier = Modifier.fillMaxWidth(),

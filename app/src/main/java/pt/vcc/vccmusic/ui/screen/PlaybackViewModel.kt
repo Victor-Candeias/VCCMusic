@@ -133,7 +133,6 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         _state.value = PlaybackUiState(
             title = metadata.title?.toString(),
             artist = metadata.artist?.toString(),
-            artworkData = metadata.artworkData,
             isPlaying = player.isPlaying,
             positionMs = player.currentPosition.coerceAtLeast(0),
             durationMs = player.duration.takeIf { it != C.TIME_UNSET }?.coerceAtLeast(0) ?: 0,
@@ -151,7 +150,6 @@ class PlaybackViewModel(context: Context) : ViewModel() {
                     .setTitle(track.title)
                     .setArtist(track.artist)
                     .setAlbumTitle(track.album)
-                    .setArtworkData(track.artwork)
                     .build(),
             )
             .build()
