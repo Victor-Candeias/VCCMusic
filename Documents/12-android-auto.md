@@ -2,7 +2,7 @@
 
 ## Estado
 
-Concluído na implementação atual. A validação com veículo/DHU real continua dependente do ambiente disponível.
+Concluído, incluindo a validação prática no emulador Android Auto/DHU.
 
 ## Objetivo
 
