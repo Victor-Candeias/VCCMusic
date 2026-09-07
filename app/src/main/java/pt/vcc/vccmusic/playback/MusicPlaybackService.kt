@@ -1,6 +1,7 @@
 package pt.vcc.vccmusic.playback
 
 import android.content.Intent
+import android.net.Uri
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -29,6 +30,7 @@ class MusicPlaybackService : MediaLibraryService() {
     private lateinit var player: ExoPlayer
     private var mediaLibrarySession: MediaLibrarySession? = null
     private lateinit var libraryCallback: LibraryCallback
+    private var radioHttpFallbackAttemptedFor: String? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -45,7 +47,21 @@ class MusicPlaybackService : MediaLibraryService() {
         player.addListener(
             object : Player.Listener {
                 override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
-                    if (player.hasNextMediaItem()) player.seekToNextMediaItem() else player.stop()
+                    val currentItem = player.currentMediaItem
+                    val currentUri = currentItem?.localConfiguration?.uri
+                    if (
+                        currentItem?.mediaId?.startsWith("radio:") == true &&
+                        currentUri != null &&
+                        currentUri.scheme.equals("https", ignoreCase = true) &&
+                        radioHttpFallbackAttemptedFor != currentItem.mediaId
+                    ) {
+                        radioHttpFallbackAttemptedFor = currentItem.mediaId
+                        retryRadioOverHttp(currentItem, currentUri)
+                    } else if (player.hasNextMediaItem()) {
+                        player.seekToNextMediaItem()
+                    } else {
+                        player.stop()
+                    }
                 }
             },
         )
@@ -56,6 +72,16 @@ class MusicPlaybackService : MediaLibraryService() {
             libraryCallback,
         ).build()
         loadActiveLibrary()
+    }
+
+    private fun retryRadioOverHttp(mediaItem: MediaItem, uri: Uri) {
+        player.setMediaItem(
+            mediaItem.buildUpon()
+                .setUri(uri.buildUpon().scheme("http").build())
+                .build(),
+        )
+        player.prepare()
+        player.play()
     }
 
     private fun loadActiveLibrary() {
