@@ -14,6 +14,11 @@
     <string name="online_radio">Rádios Online</string>
     <string name="online_radio_description">Escolha uma estação para iniciar a reprodução online.</string>
     <string name="online_radio_settings">Configuração das rádios online</string>
+    <string name="refresh_online_radios">Atualizar rádios online</string>
+    <string name="radio_api_url">URL da API externa</string>
+    <string name="validate_radio_api">Validar e guardar API</string>
+    <string name="radio_api_saved">API validada e rádios guardadas localmente.</string>
+    <string name="radio_api_error">Não foi possível validar a API.</string>
     <string name="no_enabled_radio_stations">Nenhuma rádio online está ativa. Ative uma em Configurações.</string>
     <string name="no_online_radios">Não foram encontradas rádios portuguesas.</string>
     <string name="close_app">Fechar</string>

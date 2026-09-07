@@ -68,6 +68,7 @@ class MusicPlaybackService : MediaLibraryService() {
                     QueueRequest(QueueSource.ALL_TRACKS, entities),
                 ).map(::toMediaItem)
                 launch(Dispatchers.Main) {
+                    if (player.currentMediaItem?.mediaId?.startsWith("radio:") == true) return@launch
                     if (items.isEmpty()) {
                         player.clearMediaItems()
                     } else {

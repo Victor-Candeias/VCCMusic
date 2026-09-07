@@ -30,6 +30,7 @@ import pt.vcc.vccmusic.ui.screen.SettingsScreen
 import pt.vcc.vccmusic.ui.screen.OnlineRadioScreen
 import pt.vcc.vccmusic.ui.screen.RadioStation
 import pt.vcc.vccmusic.ui.screen.defaultRadioStations
+import pt.vcc.vccmusic.ui.screen.RadioBrowserRepository
 import pt.vcc.vccmusic.data.MusicRepository
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.ViewModel
@@ -37,9 +38,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 
 @Composable
 fun VccMusicApp(
@@ -50,9 +55,15 @@ fun VccMusicApp(
     onExit: () -> Unit = {},
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val radioStations = remember {
         mutableStateListOf<RadioStation>().also { it.addAll(defaultRadioStations) }
     }
+    val radioRepository = remember { RadioBrowserRepository(context) }
+    val radioApiUrl by radioRepository.apiUrl.collectAsStateWithLifecycle(
+        initialValue = pt.vcc.vccmusic.ui.screen.DEFAULT_RADIO_BROWSER_API_URL,
+    )
+    var radioApiValidationMessage by remember { mutableStateOf<String?>(null) }
     val libraryViewModel: LibraryViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -182,6 +193,25 @@ fun VccMusicApp(
                     contentPadding = contentPadding,
                     onPickRoot = onPickRoot,
                     onReindex = onReindex,
+                    onRefreshOnlineRadios = {
+                        coroutineScope.launch {
+                            radioApiValidationMessage = runCatching {
+                                radioRepository.refreshPortugueseStations()
+                            }.exceptionOrNull()?.message
+                        }
+                    },
+                    radioApiUrl = radioApiUrl,
+                    onValidateRadioApiUrl = { value ->
+                        coroutineScope.launch {
+                            radioApiValidationMessage = runCatching {
+                                radioRepository.validateAndSaveApiUrl(value)
+                            }.fold(
+                                onSuccess = { context.getString(pt.vcc.vccmusic.R.string.radio_api_saved) },
+                                onFailure = { it.message ?: context.getString(pt.vcc.vccmusic.R.string.radio_api_error) },
+                            )
+                        }
+                    },
+                    radioApiValidationMessage = radioApiValidationMessage,
                     radioStations = radioStations,
                     onRadioStationEnabledChanged = { name, enabled ->
                         val index = radioStations.indexOfFirst { it.name == name }
@@ -190,7 +220,7 @@ fun VccMusicApp(
                 )
             }
             composable(NavigationDestination.OnlineRadio.route) {
-                OnlineRadioScreen(playbackViewModel, contentPadding)
+                OnlineRadioScreen(playbackViewModel, contentPadding, radioRepository)
             }
         }
     }

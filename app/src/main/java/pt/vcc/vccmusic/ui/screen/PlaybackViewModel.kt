@@ -25,6 +25,7 @@ import pt.vcc.vccmusic.playback.QueueRequest
 import pt.vcc.vccmusic.playback.QueueSource
 
 data class PlaybackUiState(
+    val mediaId: String? = null,
     val title: String? = null,
     val artist: String? = null,
     val artworkData: ByteArray? = null,
@@ -44,6 +45,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
     ).buildAsync()
     private var controller: MediaController? = null
     private var ticker: Job? = null
+    private var pendingRadio: Pair<String, String>? = null
 
     init {
         controllerFuture.addListener(
@@ -51,6 +53,10 @@ class PlaybackViewModel(context: Context) : ViewModel() {
                 controller = controllerFuture.get().also {
                     it.addListener(listener)
                     updateState(it)
+                        pendingRadio?.let { (name, streamUrl) ->
+                            pendingRadio = null
+                            playRadioOnController(it, name, streamUrl)
+                        }
                     ticker = viewModelScope.launch {
                         while (isActive) {
                             updateState(it)
@@ -75,7 +81,19 @@ class PlaybackViewModel(context: Context) : ViewModel() {
     }
 
     fun playRadio(name: String, streamUrl: String) {
-        val currentController = controller ?: return
+        val currentController = controller
+        if (currentController == null) {
+            pendingRadio = name to streamUrl
+            return
+        }
+        playRadioOnController(currentController, name, streamUrl)
+    }
+
+    private fun playRadioOnController(
+        currentController: MediaController,
+        name: String,
+        streamUrl: String,
+    ) {
         currentController.setMediaItem(
             MediaItem.Builder()
                 .setMediaId("radio:$streamUrl")
@@ -131,6 +149,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
     private fun updateState(player: Player) {
         val metadata = player.mediaMetadata
         _state.value = PlaybackUiState(
+            mediaId = player.currentMediaItem?.mediaId,
             title = metadata.title?.toString(),
             artist = metadata.artist?.toString(),
             isPlaying = player.isPlaying,
