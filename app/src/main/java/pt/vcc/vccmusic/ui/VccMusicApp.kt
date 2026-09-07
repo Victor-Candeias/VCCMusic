@@ -2,13 +2,17 @@ package pt.vcc.vccmusic.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LibraryMusic
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Radio
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,8 +32,6 @@ import pt.vcc.vccmusic.ui.screen.LibraryStart
 import pt.vcc.vccmusic.ui.screen.NowPlayingScreen
 import pt.vcc.vccmusic.ui.screen.SettingsScreen
 import pt.vcc.vccmusic.ui.screen.OnlineRadioScreen
-import pt.vcc.vccmusic.ui.screen.RadioStation
-import pt.vcc.vccmusic.ui.screen.defaultRadioStations
 import pt.vcc.vccmusic.ui.screen.RadioBrowserRepository
 import pt.vcc.vccmusic.data.MusicRepository
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,7 +43,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.launch
@@ -56,14 +57,12 @@ fun VccMusicApp(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val radioStations = remember {
-        mutableStateListOf<RadioStation>().also { it.addAll(defaultRadioStations) }
-    }
     val radioRepository = remember { RadioBrowserRepository(context) }
     val radioApiUrl by radioRepository.apiUrl.collectAsStateWithLifecycle(
         initialValue = pt.vcc.vccmusic.ui.screen.DEFAULT_RADIO_BROWSER_API_URL,
     )
     var radioApiValidationMessage by remember { mutableStateOf<String?>(null) }
+    var configureOnlineRadios by remember { mutableStateOf(false) }
     val libraryViewModel: LibraryViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -114,18 +113,17 @@ fun VccMusicApp(
                             Icon(
                                 imageVector = when (destination) {
                                     NavigationDestination.MainMenu -> Icons.Default.Home
-                                    NavigationDestination.MusicMenu -> Icons.Default.Home
-                                    NavigationDestination.Library -> Icons.Default.Home
+                                    NavigationDestination.MusicMenu -> Icons.Default.MusicNote
+                                    NavigationDestination.Library -> Icons.Default.LibraryMusic
                                     NavigationDestination.Playlists -> Icons.AutoMirrored.Filled.List
-                                    NavigationDestination.Folders -> Icons.Default.Home
+                                    NavigationDestination.Folders -> Icons.Default.Folder
                                     NavigationDestination.NowPlaying -> Icons.Default.PlayArrow
-                                    NavigationDestination.OnlineRadio -> Icons.Default.PlayArrow
-                                    NavigationDestination.Settings -> Icons.Default.Home
+                                    NavigationDestination.OnlineRadio -> Icons.Default.Radio
+                                    NavigationDestination.Settings -> Icons.Default.Settings
                                 },
                                 contentDescription = label,
                             )
                         },
-                        label = { Text(label) },
                     )
                 }
             }
@@ -200,6 +198,10 @@ fun VccMusicApp(
                             }.exceptionOrNull()?.message
                         }
                     },
+                    onConfigureOnlineRadios = {
+                        configureOnlineRadios = true
+                        navController.navigate(NavigationDestination.OnlineRadio.route)
+                    },
                     radioApiUrl = radioApiUrl,
                     onValidateRadioApiUrl = { value ->
                         coroutineScope.launch {
@@ -212,15 +214,16 @@ fun VccMusicApp(
                         }
                     },
                     radioApiValidationMessage = radioApiValidationMessage,
-                    radioStations = radioStations,
-                    onRadioStationEnabledChanged = { name, enabled ->
-                        val index = radioStations.indexOfFirst { it.name == name }
-                        if (index >= 0) radioStations[index] = radioStations[index].copy(enabled = enabled)
-                    },
                 )
             }
             composable(NavigationDestination.OnlineRadio.route) {
-                OnlineRadioScreen(playbackViewModel, contentPadding, radioRepository)
+                OnlineRadioScreen(
+                    playbackViewModel = playbackViewModel,
+                    contentPadding = contentPadding,
+                    repository = radioRepository,
+                    forceConfiguration = configureOnlineRadios,
+                    onConfigurationFinished = { configureOnlineRadios = false },
+                )
             }
         }
     }

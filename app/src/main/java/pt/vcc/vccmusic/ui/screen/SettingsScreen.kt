@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -31,11 +28,10 @@ fun SettingsScreen(
     onPickRoot: () -> Unit,
     onReindex: () -> Unit,
     onRefreshOnlineRadios: () -> Unit,
+    onConfigureOnlineRadios: () -> Unit,
     radioApiUrl: String,
     onValidateRadioApiUrl: (String) -> Unit,
     radioApiValidationMessage: String?,
-    radioStations: List<RadioStation>,
-    onRadioStationEnabledChanged: (String, Boolean) -> Unit,
 ) {
     var editableRadioApiUrl by remember(radioApiUrl) { mutableStateOf(radioApiUrl) }
     LaunchedEffect(radioApiUrl) {
@@ -60,6 +56,9 @@ fun SettingsScreen(
         ElevatedButton(onClick = onRefreshOnlineRadios) {
             Text(stringResource(R.string.refresh_online_radios))
         }
+        ElevatedButton(onClick = onConfigureOnlineRadios) {
+            Text(stringResource(R.string.configure_online_radios))
+        }
         OutlinedTextField(
             value = editableRadioApiUrl,
             onValueChange = { editableRadioApiUrl = it },
@@ -78,18 +77,6 @@ fun SettingsScreen(
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(top = 8.dp),
         )
-        radioStations.forEach { station ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(station.name)
-                    Text(station.streamUrl, style = MaterialTheme.typography.bodySmall)
-                }
-                Switch(
-                    checked = station.enabled,
-                    onCheckedChange = { onRadioStationEnabledChanged(station.name, it) },
-                )
-            }
-        }
         Text(
             stringResource(R.string.settings_scope_note),
             style = MaterialTheme.typography.bodyMedium,

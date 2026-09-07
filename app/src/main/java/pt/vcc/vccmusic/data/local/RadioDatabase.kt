@@ -16,6 +16,7 @@ data class RadioStationEntity(
     val streamUrl: String,
     val tags: String,
     val favicon: String?,
+    val faviconLocalPath: String?,
     val isFavorite: Boolean = false,
 )
 
@@ -30,11 +31,17 @@ interface RadioStationDao {
     @Upsert
     suspend fun upsertAll(stations: List<RadioStationEntity>)
 
+    @Query("DELETE FROM radio_stations")
+    suspend fun deleteAll()
+
     @Query("UPDATE radio_stations SET isFavorite = :isFavorite WHERE id = :stationId")
     suspend fun setFavorite(stationId: String, isFavorite: Boolean)
+
+    @Query("UPDATE radio_stations SET faviconLocalPath = :path WHERE id = :stationId")
+    suspend fun setFaviconLocalPath(stationId: String, path: String)
 }
 
-@Database(entities = [RadioStationEntity::class], version = 1, exportSchema = false)
+@Database(entities = [RadioStationEntity::class], version = 3, exportSchema = false)
 abstract class RadioDatabase : RoomDatabase() {
     abstract fun radioStationDao(): RadioStationDao
 }

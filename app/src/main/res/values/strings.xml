@@ -15,9 +15,13 @@
     <string name="online_radio_description">Escolha uma estação para iniciar a reprodução online.</string>
     <string name="online_radio_settings">Configuração das rádios online</string>
     <string name="refresh_online_radios">Atualizar rádios online</string>
+    <string name="configure_online_radios">Configurar rádios online</string>
+    <string name="configure_online_radios_description">Selecione as rádios que pretende guardar.</string>
+    <string name="search_online_radios">Pesquisar rádio</string>
+    <string name="save_online_radios">Guardar rádios selecionadas</string>
     <string name="radio_api_url">URL da API externa</string>
     <string name="validate_radio_api">Validar e guardar API</string>
-    <string name="radio_api_saved">API validada e rádios guardadas localmente.</string>
+    <string name="radio_api_saved">API validada e guardada.</string>
     <string name="radio_api_error">Não foi possível validar a API.</string>
     <string name="no_enabled_radio_stations">Nenhuma rádio online está ativa. Ative uma em Configurações.</string>
     <string name="no_online_radios">Não foram encontradas rádios portuguesas.</string>
@@ -26,7 +30,7 @@
     <string name="artists_unavailable">Artistas (indisponível no MVP)</string>
     <string name="albums_unavailable">Álbuns (indisponível no MVP)</string>
     <string name="settings_description">Escolha a pasta local e atualize o índice da biblioteca.</string>
-    <string name="settings_scope_note">As rádios online podem ser ativadas ou desativadas nesta área. O endereço do stream é mostrado para referência.</string>
+    <string name="settings_scope_note">Selecione as rádios online no menu de configuração. O endereço do stream é gerido automaticamente.</string>
     <string name="library">Biblioteca</string>
     <string name="playlists">Playlists</string>
     <string name="now_playing">Em reprodução</string>
