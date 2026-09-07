@@ -42,7 +42,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.launch
@@ -56,11 +69,16 @@ fun VccMusicApp(
     onExit: () -> Unit = {},
 ) {
     val context = LocalContext.current
+    val configuration = LocalConfiguration.current
+    val compactNavigation = configuration.screenWidthDp > configuration.screenHeightDp ||
+        minOf(configuration.screenWidthDp, configuration.screenHeightDp) <= 360
     val coroutineScope = rememberCoroutineScope()
     val radioRepository = remember { RadioBrowserRepository(context) }
     val radioApiUrl by radioRepository.apiUrl.collectAsStateWithLifecycle(
         initialValue = pt.vcc.vccmusic.ui.screen.DEFAULT_RADIO_BROWSER_API_URL,
     )
+    val favoriteStations by radioRepository.observePortugueseStations()
+        .collectAsStateWithLifecycle(initialValue = emptyList())
     var radioApiValidationMessage by remember { mutableStateOf<String?>(null) }
     var configureOnlineRadios by remember { mutableStateOf(false) }
     val libraryViewModel: LibraryViewModel = viewModel(
@@ -84,45 +102,77 @@ fun VccMusicApp(
                 PlaybackViewModel(context) as T
         },
     )
+    val playbackState by playbackViewModel.state.collectAsStateWithLifecycle()
     val navController = rememberNavController()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                modifier = Modifier.height(if (compactNavigation) 64.dp else 80.dp),
+                windowInsets = WindowInsets(0.dp),
+            ) {
                 NavigationDestination.entries.filter { it.inMainNavigation }.forEach { destination ->
                     val selected = currentDestination?.hierarchy?.any {
                         it.route == destination.route
-                    } == true
+                    } == true || (
+                        destination == NavigationDestination.OnlineRadio &&
+                            currentDestination?.hierarchy?.any {
+                                it.route == NavigationDestination.NowPlaying.route
+                            } == true &&
+                            playbackState.mediaId?.startsWith("radio:") == true
+                        )
                     val label = stringResource(destination.labelRes)
 
                     NavigationBarItem(
                         modifier = Modifier.testTag("bottom-${destination.route}"),
                         selected = selected,
                         onClick = {
-                            navController.navigate(destination.route) {
-                                popUpTo(NavigationDestination.MainMenu.route) {
-                                    saveState = true
+                            if (destination == NavigationDestination.MainMenu) {
+                                if (!navController.popBackStack(NavigationDestination.MainMenu.route, false)) {
+                                    navController.navigate(NavigationDestination.MainMenu.route)
                                 }
-                                launchSingleTop = true
-                                restoreState = true
+                            } else if (!navController.popBackStack(destination.route, false)) {
+                                navController.navigate(destination.route) {
+                                    popUpTo(NavigationDestination.MainMenu.route) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
                         },
                         icon = {
-                            Icon(
-                                imageVector = when (destination) {
-                                    NavigationDestination.MainMenu -> Icons.Default.Home
-                                    NavigationDestination.MusicMenu -> Icons.Default.MusicNote
-                                    NavigationDestination.Library -> Icons.Default.LibraryMusic
-                                    NavigationDestination.Playlists -> Icons.AutoMirrored.Filled.List
-                                    NavigationDestination.Folders -> Icons.Default.Folder
-                                    NavigationDestination.NowPlaying -> Icons.Default.PlayArrow
-                                    NavigationDestination.OnlineRadio -> Icons.Default.Radio
-                                    NavigationDestination.Settings -> Icons.Default.Settings
-                                },
-                                contentDescription = label,
-                            )
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Icon(
+                                    imageVector = when (destination) {
+                                        NavigationDestination.MainMenu -> Icons.Default.Home
+                                        NavigationDestination.MusicMenu -> Icons.Default.MusicNote
+                                        NavigationDestination.Library -> Icons.Default.LibraryMusic
+                                        NavigationDestination.Playlists -> Icons.AutoMirrored.Filled.List
+                                        NavigationDestination.Folders -> Icons.Default.Folder
+                                        NavigationDestination.NowPlaying -> Icons.Default.PlayArrow
+                                        NavigationDestination.OnlineRadio -> Icons.Default.Radio
+                                        NavigationDestination.Settings -> Icons.Default.Settings
+                                    },
+                                    contentDescription = label,
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .padding(top = 4.dp)
+                                        .width(48.dp)
+                                        .height(3.dp)
+                                        .background(
+                                            color = if (selected) {
+                                                MaterialTheme.colorScheme.primary
+                                            } else {
+                                                Color.Transparent
+                                            },
+                                            shape = RoundedCornerShape(50),
+                                        ),
+                                )
+                            }
                         },
                     )
                 }
@@ -138,11 +188,18 @@ fun VccMusicApp(
                     contentPadding = contentPadding,
                     onMusic = { navController.navigate(NavigationDestination.Library.route) },
                     onPlaylists = { navController.navigate(NavigationDestination.Playlists.route) },
-                    onFolders = { navController.navigate(NavigationDestination.Folders.route) },
-                    onNowPlaying = { navController.navigate(NavigationDestination.NowPlaying.route) },
                     onOnlineRadio = { navController.navigate(NavigationDestination.OnlineRadio.route) },
-                    onSettings = { navController.navigate(NavigationDestination.Settings.route) },
-                    onExit = onExit,
+                    favoriteStations = favoriteStations.filter { it.isFavorite },
+                    onFavoriteRadio = { station ->
+                        playbackViewModel.playRadio(
+                            station.name,
+                            station.streamUrl,
+                            station.faviconLocalPath,
+                        )
+                        navController.navigate(NavigationDestination.NowPlaying.route) {
+                            launchSingleTop = true
+                        }
+                    },
                 )
             }
             composable(NavigationDestination.MusicMenu.route) {
@@ -223,6 +280,11 @@ fun VccMusicApp(
                     repository = radioRepository,
                     forceConfiguration = configureOnlineRadios,
                     onConfigurationFinished = { configureOnlineRadios = false },
+                    onStationPlayed = {
+                        navController.navigate(NavigationDestination.NowPlaying.route) {
+                            launchSingleTop = true
+                        }
+                    },
                 )
             }
         }

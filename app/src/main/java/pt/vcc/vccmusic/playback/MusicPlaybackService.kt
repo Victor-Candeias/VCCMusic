@@ -32,7 +32,7 @@ class MusicPlaybackService : MediaLibraryService() {
 
     override fun onCreate() {
         super.onCreate()
-        player = ExoPlayer.Builder(this)
+        player = ExoPlayer.Builder(this, SpectrumRenderersFactory(this))
             .setAudioAttributes(
                 AudioAttributes.Builder()
                     .setUsage(C.USAGE_MEDIA)

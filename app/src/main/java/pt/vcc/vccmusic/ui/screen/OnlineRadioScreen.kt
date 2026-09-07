@@ -83,6 +83,7 @@ fun OnlineRadioScreen(
     repository: RadioBrowserRepository,
     forceConfiguration: Boolean = false,
     onConfigurationFinished: () -> Unit = {},
+    onStationPlayed: () -> Unit = {},
 ) {
     val stations by repository.observePortugueseStations().collectAsState(initial = emptyList())
     val playbackState by playbackViewModel.state.collectAsState()
@@ -159,13 +160,18 @@ fun OnlineRadioScreen(
             loading -> CircularProgressIndicator()
             error != null -> Text(error ?: "", color = MaterialTheme.colorScheme.error)
             stations.isEmpty() -> Text(stringResource(R.string.no_online_radios))
-            else -> BoxWithConstraints {
+            else -> BoxWithConstraints(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+            ) {
                 val numberOfColumns = when {
                     maxWidth >= 900.dp -> 5
                     maxWidth >= 600.dp -> 4
                     else -> 3
                 }
                 LazyVerticalGrid(
+                    modifier = Modifier.fillMaxSize(),
                     columns = GridCells.Fixed(numberOfColumns),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     horizontalArrangement = Arrangement.spacedBy(15.dp),
@@ -175,7 +181,14 @@ fun OnlineRadioScreen(
                             station = station,
                             repository = repository,
                             isPlaying = playbackState.mediaId == "radio:${station.streamUrl}",
-                            onPlay = { playbackViewModel.playRadio(station.name, station.streamUrl) },
+                            onPlay = {
+                                playbackViewModel.playRadio(
+                                    station.name,
+                                    station.streamUrl,
+                                    station.faviconLocalPath,
+                                )
+                                onStationPlayed()
+                            },
                             onFavoriteChanged = {
                                 coroutineScope.launch { repository.setFavorite(station.id, it) }
                             },

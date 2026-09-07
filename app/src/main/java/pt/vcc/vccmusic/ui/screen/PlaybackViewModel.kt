@@ -2,6 +2,8 @@ package pt.vcc.vccmusic.ui.screen
 
 import android.content.ComponentName
 import android.content.Context
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
@@ -16,6 +18,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import pt.vcc.vccmusic.data.local.TrackEntity
@@ -23,6 +27,7 @@ import pt.vcc.vccmusic.playback.MusicPlaybackService
 import pt.vcc.vccmusic.playback.QueueBuilder
 import pt.vcc.vccmusic.playback.QueueRequest
 import pt.vcc.vccmusic.playback.QueueSource
+import pt.vcc.vccmusic.playback.SpectrumAnalyzer
 
 data class PlaybackUiState(
     val mediaId: String? = null,
@@ -34,6 +39,7 @@ data class PlaybackUiState(
     val durationMs: Long = 0,
     val shuffleEnabled: Boolean = false,
     val repeatMode: Int = Player.REPEAT_MODE_OFF,
+    val spectrum: List<Float> = List(24) { 0f },
 )
 
 class PlaybackViewModel(context: Context) : ViewModel() {
@@ -63,6 +69,11 @@ class PlaybackViewModel(context: Context) : ViewModel() {
                             delay(500)
                         }
                     }
+                    viewModelScope.launch {
+                        SpectrumAnalyzer.spectrum.collect { spectrum ->
+                            _state.update { it.copy(spectrum = spectrum) }
+                        }
+                    }
                 }
             },
             MoreExecutors.directExecutor(),
@@ -80,7 +91,20 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         currentController.play()
     }
 
-    fun playRadio(name: String, streamUrl: String) {
+    fun playRadio(name: String, streamUrl: String, artworkPath: String? = null) {
+        val mediaId = "radio:$streamUrl"
+        viewModelScope.launch {
+            val artworkData = artworkPath?.let {
+                withContext(Dispatchers.IO) { java.io.File(it).takeIf { file -> file.exists() }?.readBytes() }
+            }
+            _state.update { state ->
+                if (state.mediaId == mediaId || artworkData != null) {
+                    state.copy(mediaId = mediaId, title = name, artist = "Rádio Online", artworkData = artworkData)
+                } else {
+                    state.copy(mediaId = mediaId, title = name, artist = "Rádio Online", artworkData = null)
+                }
+            }
+        }
         val currentController = controller
         if (currentController == null) {
             pendingRadio = name to streamUrl
@@ -148,8 +172,9 @@ class PlaybackViewModel(context: Context) : ViewModel() {
 
     private fun updateState(player: Player) {
         val metadata = player.mediaMetadata
+        val mediaId = player.currentMediaItem?.mediaId
         _state.value = PlaybackUiState(
-            mediaId = player.currentMediaItem?.mediaId,
+            mediaId = mediaId,
             title = metadata.title?.toString(),
             artist = metadata.artist?.toString(),
             isPlaying = player.isPlaying,
@@ -157,6 +182,8 @@ class PlaybackViewModel(context: Context) : ViewModel() {
             durationMs = player.duration.takeIf { it != C.TIME_UNSET }?.coerceAtLeast(0) ?: 0,
             shuffleEnabled = player.shuffleModeEnabled,
             repeatMode = player.repeatMode,
+            spectrum = _state.value.spectrum,
+            artworkData = _state.value.artworkData.takeIf { _state.value.mediaId == mediaId },
         )
     }
 
@@ -178,4 +205,5 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         controller?.removeListener(listener)
         if (controllerFuture.isDone) controllerFuture.get().release()
     }
+
 }
