@@ -7,12 +7,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.runtime.getValue
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import pt.vcc.vccmusic.data.saf.RootAccess
 import pt.vcc.vccmusic.scanner.ReindexScheduler
 import pt.vcc.vccmusic.ui.VccMusicApp
 import pt.vcc.vccmusic.ui.theme.VccMusicTheme
+import pt.vcc.vccmusic.ui.theme.ThemePreferences
 
 class MainActivity : ComponentActivity() {
     private var reindexJob: Job? = null
@@ -48,11 +51,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            VccMusicTheme {
+            val darkTheme by ThemePreferences.observeDarkTheme(this@MainActivity)
+                .collectAsStateWithLifecycle(initialValue = false)
+            VccMusicTheme(darkTheme = darkTheme) {
                 VccMusicApp(
                     musicRepository = appInstance.container.musicRepository,
                     onPickRoot = { rootPicker.launch(null) },
                     onReindex = { reindexCurrentRoot(showFeedback = true) },
+                    isDarkTheme = darkTheme,
+                    onToggleTheme = {
+                        lifecycleScope.launch {
+                            ThemePreferences.setDarkTheme(this@MainActivity, !darkTheme)
+                        }
+                    },
                     onExit = ::finish,
                 )
             }

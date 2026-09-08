@@ -79,6 +79,7 @@ data class TrackEntity(
     val uri: String,
     val artworkUri: String?,
     val artwork: ByteArray? = null,
+    val isFavorite: Boolean = false,
 )
 
 @Entity(

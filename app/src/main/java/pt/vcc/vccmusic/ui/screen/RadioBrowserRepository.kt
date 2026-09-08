@@ -5,12 +5,8 @@ import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -24,8 +20,6 @@ import pt.vcc.vccmusic.data.local.RadioStationEntity
 const val DEFAULT_RADIO_BROWSER_API_URL =
     "https://de1.api.radio-browser.info/json/stations/bycountrycodeexact/PT?hidebroken=true&limit=100"
 
-private val Context.radioPreferences by preferencesDataStore(name = "radio_preferences")
-private val radioApiUrlKey = stringPreferencesKey("api_url")
 private const val MAX_FAVICON_SIZE_BYTES = 2 * 1024 * 1024
 
 private val RADIO_DATABASE_MIGRATION_1_2 = object : Migration(1, 2) {
@@ -61,10 +55,6 @@ class RadioBrowserRepository(context: Context) {
     ).addMigrations(RADIO_DATABASE_MIGRATION_1_2, RADIO_DATABASE_MIGRATION_2_3).build()
     private val dao = database.radioStationDao()
 
-    val apiUrl: Flow<String> = appContext.radioPreferences.data.map { preferences ->
-        preferences[radioApiUrlKey] ?: DEFAULT_RADIO_BROWSER_API_URL
-    }
-
     fun observePortugueseStations(): Flow<List<RadioBrowserStation>> =
         dao.observeAll().map { stations -> stations.map { it.toDomain() } }
 
@@ -75,19 +65,8 @@ class RadioBrowserRepository(context: Context) {
         saveStations(stations)
     }
 
-    suspend fun validateAndSaveApiUrl(url: String) {
-        val normalizedUrl = url.trim()
-        require(normalizedUrl.startsWith("https://") || normalizedUrl.startsWith("http://")) {
-            "O URL da API deve começar por http:// ou https://."
-        }
-        val stations = fetchPortugueseStations(normalizedUrl)
-        check(stations.isNotEmpty()) { "A API não devolveu nenhuma rádio." }
-        saveApiUrl(normalizedUrl)
-    }
-
     suspend fun fetchAvailablePortugueseStations(): List<RadioBrowserStation> {
-        val url = apiUrl.first()
-        return fetchPortugueseStations(url)
+        return fetchPortugueseStations(DEFAULT_RADIO_BROWSER_API_URL)
     }
 
     suspend fun replaceConfiguredStations(stations: List<RadioBrowserStation>) {
@@ -109,12 +88,6 @@ class RadioBrowserRepository(context: Context) {
                 )
             },
         )
-    }
-
-    private suspend fun saveApiUrl(url: String) {
-        appContext.radioPreferences.edit { preferences ->
-            preferences[radioApiUrlKey] = url
-        }
     }
 
     suspend fun setFavorite(stationId: String, isFavorite: Boolean) {

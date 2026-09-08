@@ -15,13 +15,16 @@ interface MusicRepository {
     suspend fun folder(folderId: Long): MusicFolderEntity?
     fun observeDirectTracks(folderId: Long): Flow<List<TrackEntity>>
     suspend fun track(trackId: Long): TrackEntity?
+    suspend fun setTrackFavorite(trackId: Long, isFavorite: Boolean)
     fun observeAllTracks(rootId: Long): Flow<List<TrackEntity>>
+    fun observeFavoriteTracks(rootId: Long): Flow<List<TrackEntity>>
     fun observePlaylists(): Flow<List<PlaylistEntity>>
     fun observePlaylistTracks(playlistId: Long): Flow<List<TrackEntity>>
     suspend fun createPlaylist(name: String): Long
     suspend fun renamePlaylist(playlistId: Long, name: String)
     suspend fun deletePlaylist(playlistId: Long)
     suspend fun replacePlaylistTracks(playlistId: Long, trackIds: List<Long>)
+    suspend fun addTrackToPlaylist(playlistId: Long, trackId: Long)
     suspend fun replaceRoot(rootUri: String, displayName: String)
     suspend fun clearRoot(rootId: Long)
 }
@@ -45,8 +48,15 @@ class RoomMusicRepository(
     override suspend fun track(trackId: Long): TrackEntity? =
         database.trackDao().findById(trackId)
 
+    override suspend fun setTrackFavorite(trackId: Long, isFavorite: Boolean) {
+        database.trackDao().setFavorite(trackId, isFavorite)
+    }
+
     override fun observeAllTracks(rootId: Long): Flow<List<TrackEntity>> =
         database.trackDao().observeAll(rootId)
+
+    override fun observeFavoriteTracks(rootId: Long): Flow<List<TrackEntity>> =
+        database.trackDao().observeFavorites(rootId)
 
     override fun observePlaylists(): Flow<List<PlaylistEntity>> =
         database.playlistDao().observeAll()
@@ -69,6 +79,11 @@ class RoomMusicRepository(
 
     override suspend fun replacePlaylistTracks(playlistId: Long, trackIds: List<Long>) {
         database.playlistDao().replaceTracks(playlistId, trackIds.distinct())
+    }
+
+    override suspend fun addTrackToPlaylist(playlistId: Long, trackId: Long) {
+        val currentTrackIds = database.playlistDao().findTrackIds(playlistId)
+        database.playlistDao().replaceTracks(playlistId, currentTrackIds + trackId)
     }
 
     override suspend fun replaceRoot(rootUri: String, displayName: String) {

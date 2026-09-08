@@ -100,8 +100,14 @@ interface TrackDao {
     )
     fun observeAll(rootId: Long): Flow<List<TrackEntity>>
 
+    @Query("SELECT * FROM tracks WHERE rootId = :rootId AND isFavorite = 1 ORDER BY title COLLATE NOCASE, uri")
+    fun observeFavorites(rootId: Long): Flow<List<TrackEntity>>
+
     @Query("SELECT * FROM tracks WHERE id = :trackId LIMIT 1")
     suspend fun findById(trackId: Long): TrackEntity?
+
+    @Query("UPDATE tracks SET isFavorite = :isFavorite WHERE id = :trackId")
+    suspend fun setFavorite(trackId: Long, isFavorite: Boolean)
 
     @Query("SELECT * FROM tracks WHERE id IN (:ids) ORDER BY id")
     suspend fun findByIds(ids: List<Long>): List<TrackEntity>
@@ -142,6 +148,9 @@ interface PlaylistDao {
         """,
     )
     fun observeTracks(playlistId: Long): Flow<List<TrackEntity>>
+
+    @Query("SELECT trackId FROM playlist_tracks WHERE playlistId = :playlistId ORDER BY position")
+    suspend fun findTrackIds(playlistId: Long): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTracks(entries: List<PlaylistTrackEntity>)

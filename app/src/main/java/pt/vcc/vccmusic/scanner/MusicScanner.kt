@@ -232,6 +232,7 @@ class SafMusicScanner(
                         uri = document.uri.toString(),
                         artworkUri = null,
                         artwork = retriever.embeddedPicture?.takeIf { it.size <= MAX_ARTWORK_BYTES },
+                        isFavorite = existing?.isFavorite == true,
                     ),
                 )
             } ?: error("O documento não está acessível.")

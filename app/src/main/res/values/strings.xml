@@ -13,6 +13,8 @@
     <string name="no_favorites">Ainda não existem favoritos.</string>
     <string name="music">Música</string>
     <string name="settings">Configurações</string>
+    <string name="light_mode">Ativar modo claro</string>
+    <string name="dark_mode">Ativar modo escuro</string>
     <string name="online_radio">Rádios Online</string>
     <string name="online_radio_description">Escolha uma estação para iniciar a reprodução online.</string>
     <string name="online_radio_settings">Configuração das rádios online</string>
@@ -21,10 +23,6 @@
     <string name="configure_online_radios_description">Selecione as rádios que pretende guardar.</string>
     <string name="search_online_radios">Pesquisar rádio</string>
     <string name="save_online_radios">Guardar rádios selecionadas</string>
-    <string name="radio_api_url">URL da API externa</string>
-    <string name="validate_radio_api">Validar e guardar API</string>
-    <string name="radio_api_saved">API validada e guardada.</string>
-    <string name="radio_api_error">Não foi possível validar a API.</string>
     <string name="no_enabled_radio_stations">Nenhuma rádio online está ativa. Ative uma em Configurações.</string>
     <string name="no_online_radios">Não foram encontradas rádios portuguesas.</string>
     <string name="close_app">Fechar</string>
@@ -39,6 +37,9 @@
     <string name="more_options">Mais opções</string>
     <string name="album_art">Imagem do álbum</string>
     <string name="favorite">Favorito</string>
+    <string name="add_to_favorites">Adicionar aos favoritos</string>
+    <string name="remove_from_favorites">Remover dos favoritos</string>
+    <string name="add_to_playlist">Adicionar à playlist</string>
     <string name="screen_under_construction">Funcionalidade preparada para o próximo work item.</string>
     <string name="choose_music_root">Escolher pasta de música</string>
     <string name="root_selection_failed">Não foi possível selecionar a pasta.</string>

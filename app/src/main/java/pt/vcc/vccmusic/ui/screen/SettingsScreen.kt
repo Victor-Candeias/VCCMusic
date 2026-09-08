@@ -14,22 +14,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Radio
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,17 +42,11 @@ fun SettingsScreen(
     contentPadding: PaddingValues,
     onPickRoot: () -> Unit,
     onReindex: () -> Unit,
-    onRefreshOnlineRadios: () -> Unit,
+    isDarkTheme: Boolean,
+    onToggleTheme: () -> Unit,
     onConfigureOnlineRadios: () -> Unit,
-    radioApiUrl: String,
-    onValidateRadioApiUrl: (String) -> Unit,
-    radioApiValidationMessage: String?,
 ) {
-    var editableRadioApiUrl by remember(radioApiUrl) { mutableStateOf(radioApiUrl) }
     val scrollState = rememberScrollState()
-    LaunchedEffect(radioApiUrl) {
-        editableRadioApiUrl = radioApiUrl
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -81,6 +68,11 @@ fun SettingsScreen(
                 SettingsAction(R.string.change_music_root, Icons.Default.Folder, onPickRoot),
                 SettingsAction(R.string.reindex, Icons.Default.Refresh, onReindex),
                 SettingsAction(R.string.configure_online_radios, Icons.Default.Settings, onConfigureOnlineRadios),
+                SettingsAction(
+                    if (isDarkTheme) R.string.light_mode else R.string.dark_mode,
+                    Icons.Default.Settings,
+                    onToggleTheme,
+                ),
             )
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 actions.chunked(columns).forEach { rowActions ->
@@ -97,21 +89,6 @@ fun SettingsScreen(
                     }
                 }
             }
-        }
-        OutlinedTextField(
-            value = editableRadioApiUrl,
-            onValueChange = { editableRadioApiUrl = it },
-            label = { Text(stringResource(R.string.radio_api_url)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-        )
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            ElevatedButton(onClick = { onValidateRadioApiUrl(editableRadioApiUrl) }) {
-                Text(stringResource(R.string.validate_radio_api))
-            }
-        }
-        radioApiValidationMessage?.let { message ->
-            Text(message, color = MaterialTheme.colorScheme.error)
         }
         Text(
             stringResource(R.string.online_radio_settings),

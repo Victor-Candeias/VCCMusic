@@ -52,6 +52,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
     private var controller: MediaController? = null
     private var ticker: Job? = null
     private var pendingRadio: Pair<String, String>? = null
+    private var pendingTracks: Triple<List<TrackEntity>, Long?, QueueSource>? = null
 
     init {
         controllerFuture.addListener(
@@ -62,6 +63,10 @@ class PlaybackViewModel(context: Context) : ViewModel() {
                         pendingRadio?.let { (name, streamUrl) ->
                             pendingRadio = null
                             playRadioOnController(it, name, streamUrl)
+                        }
+                        pendingTracks?.let { (tracks, selectedId, source) ->
+                            pendingTracks = null
+                            playTracks(tracks, selectedId, source)
                         }
                     ticker = viewModelScope.launch {
                         while (isActive) {
@@ -81,9 +86,22 @@ class PlaybackViewModel(context: Context) : ViewModel() {
     }
 
     fun playTracks(tracks: List<TrackEntity>, selectedId: Long? = null, source: QueueSource = QueueSource.SELECTION) {
-        val currentController = controller ?: return
         val queue = QueueBuilder.build(QueueRequest(source, tracks, selectedId))
         if (queue.isEmpty()) return
+        val selectedTrack = queue.firstOrNull { it.id == selectedId } ?: queue.first()
+        _state.update {
+            it.copy(
+                mediaId = selectedTrack.id.toString(),
+                title = selectedTrack.title,
+                artist = selectedTrack.artist,
+                artworkData = selectedTrack.artwork,
+            )
+        }
+        val currentController = controller
+        if (currentController == null) {
+            pendingTracks = Triple(tracks, selectedId, source)
+            return
+        }
         currentController.setMediaItems(queue.map(::toMediaItem))
         val selectedIndex = selectedId?.let { id -> queue.indexOfFirst { it.id == id } } ?: 0
         currentController.prepare()
@@ -183,7 +201,9 @@ class PlaybackViewModel(context: Context) : ViewModel() {
             shuffleEnabled = player.shuffleModeEnabled,
             repeatMode = player.repeatMode,
             spectrum = _state.value.spectrum,
-            artworkData = _state.value.artworkData.takeIf { _state.value.mediaId == mediaId },
+            artworkData = _state.value.artworkData
+                ?.takeIf { _state.value.mediaId == mediaId }
+                ?: metadata.artworkData,
         )
     }
 

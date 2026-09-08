@@ -40,25 +40,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.launch
 
 @Composable
 fun VccMusicApp(
@@ -66,20 +54,14 @@ fun VccMusicApp(
     musicRepository: MusicRepository,
     onPickRoot: () -> Unit = {},
     onReindex: () -> Unit = {},
+    isDarkTheme: Boolean = false,
+    onToggleTheme: () -> Unit = {},
     onExit: () -> Unit = {},
 ) {
     val context = LocalContext.current
-    val configuration = LocalConfiguration.current
-    val compactNavigation = configuration.screenWidthDp > configuration.screenHeightDp ||
-        minOf(configuration.screenWidthDp, configuration.screenHeightDp) <= 360
-    val coroutineScope = rememberCoroutineScope()
     val radioRepository = remember { RadioBrowserRepository(context) }
-    val radioApiUrl by radioRepository.apiUrl.collectAsStateWithLifecycle(
-        initialValue = pt.vcc.vccmusic.ui.screen.DEFAULT_RADIO_BROWSER_API_URL,
-    )
     val favoriteStations by radioRepository.observePortugueseStations()
         .collectAsStateWithLifecycle(initialValue = emptyList())
-    var radioApiValidationMessage by remember { mutableStateOf<String?>(null) }
     var configureOnlineRadios by remember { mutableStateOf(false) }
     val libraryViewModel: LibraryViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
@@ -88,6 +70,7 @@ fun VccMusicApp(
                 LibraryViewModel(musicRepository) as T
         },
     )
+    val favoriteTracks by libraryViewModel.favoriteTracks.collectAsStateWithLifecycle(initialValue = emptyList())
     val playlistViewModel: PlaylistViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -110,8 +93,7 @@ fun VccMusicApp(
         modifier = modifier,
         bottomBar = {
             NavigationBar(
-                modifier = Modifier.height(if (compactNavigation) 64.dp else 80.dp),
-                windowInsets = WindowInsets(0.dp),
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
             ) {
                 NavigationDestination.entries.filter { it.inMainNavigation }.forEach { destination ->
                     val selected = currentDestination?.hierarchy?.any {
@@ -126,7 +108,7 @@ fun VccMusicApp(
                     val label = stringResource(destination.labelRes)
 
                     NavigationBarItem(
-                        modifier = Modifier.testTag("bottom-${destination.route}"),
+                        modifier = Modifier.weight(1f).testTag("bottom-${destination.route}"),
                         selected = selected,
                         onClick = {
                             if (destination == NavigationDestination.MainMenu) {
@@ -144,36 +126,28 @@ fun VccMusicApp(
                             }
                         },
                         icon = {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Icon(
-                                    imageVector = when (destination) {
-                                        NavigationDestination.MainMenu -> Icons.Default.Home
-                                        NavigationDestination.MusicMenu -> Icons.Default.MusicNote
-                                        NavigationDestination.Library -> Icons.Default.LibraryMusic
-                                        NavigationDestination.Playlists -> Icons.AutoMirrored.Filled.List
-                                        NavigationDestination.Folders -> Icons.Default.Folder
-                                        NavigationDestination.NowPlaying -> Icons.Default.PlayArrow
-                                        NavigationDestination.OnlineRadio -> Icons.Default.Radio
-                                        NavigationDestination.Settings -> Icons.Default.Settings
-                                    },
-                                    contentDescription = label,
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .padding(top = 4.dp)
-                                        .width(48.dp)
-                                        .height(3.dp)
-                                        .background(
-                                            color = if (selected) {
-                                                MaterialTheme.colorScheme.primary
-                                            } else {
-                                                Color.Transparent
-                                            },
-                                            shape = RoundedCornerShape(50),
-                                        ),
-                                )
-                            }
+                            Icon(
+                                imageVector = when (destination) {
+                                    NavigationDestination.MainMenu -> Icons.Default.Home
+                                    NavigationDestination.MusicMenu -> Icons.Default.MusicNote
+                                    NavigationDestination.Library -> Icons.Default.LibraryMusic
+                                    NavigationDestination.Playlists -> Icons.AutoMirrored.Filled.List
+                                    NavigationDestination.Folders -> Icons.Default.Folder
+                                    NavigationDestination.NowPlaying -> Icons.Default.PlayArrow
+                                    NavigationDestination.OnlineRadio -> Icons.Default.Radio
+                                    NavigationDestination.Settings -> Icons.Default.Settings
+                                },
+                                contentDescription = label,
+                            )
                         },
+                        label = null,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                            indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
                     )
                 }
             }
@@ -189,7 +163,14 @@ fun VccMusicApp(
                     onMusic = { navController.navigate(NavigationDestination.Library.route) },
                     onPlaylists = { navController.navigate(NavigationDestination.Playlists.route) },
                     onOnlineRadio = { navController.navigate(NavigationDestination.OnlineRadio.route) },
+                    favoriteTracks = favoriteTracks,
                     favoriteStations = favoriteStations.filter { it.isFavorite },
+                    onFavoriteTrack = { track ->
+                        playbackViewModel.playTracks(listOf(track), track.id)
+                        navController.navigate(NavigationDestination.NowPlaying.route) {
+                            launchSingleTop = true
+                        }
+                    },
                     onFavoriteRadio = { station ->
                         playbackViewModel.playRadio(
                             station.name,
@@ -219,6 +200,11 @@ fun VccMusicApp(
                     onPickRoot,
                     onReindex,
                     start = LibraryStart.ALL_TRACKS,
+                    onTrackPlayed = {
+                        navController.navigate(NavigationDestination.NowPlaying.route) {
+                            launchSingleTop = true
+                        }
+                    },
                 )
             }
             composable(NavigationDestination.Folders.route) {
@@ -228,6 +214,11 @@ fun VccMusicApp(
                     contentPadding,
                     onPickRoot,
                     onReindex,
+                    onTrackPlayed = {
+                        navController.navigate(NavigationDestination.NowPlaying.route) {
+                            launchSingleTop = true
+                        }
+                    },
                 )
             }
             composable(NavigationDestination.Playlists.route) {
@@ -248,29 +239,12 @@ fun VccMusicApp(
                     contentPadding = contentPadding,
                     onPickRoot = onPickRoot,
                     onReindex = onReindex,
-                    onRefreshOnlineRadios = {
-                        coroutineScope.launch {
-                            radioApiValidationMessage = runCatching {
-                                radioRepository.refreshPortugueseStations()
-                            }.exceptionOrNull()?.message
-                        }
-                    },
+                    isDarkTheme = isDarkTheme,
+                    onToggleTheme = onToggleTheme,
                     onConfigureOnlineRadios = {
                         configureOnlineRadios = true
                         navController.navigate(NavigationDestination.OnlineRadio.route)
                     },
-                    radioApiUrl = radioApiUrl,
-                    onValidateRadioApiUrl = { value ->
-                        coroutineScope.launch {
-                            radioApiValidationMessage = runCatching {
-                                radioRepository.validateAndSaveApiUrl(value)
-                            }.fold(
-                                onSuccess = { context.getString(pt.vcc.vccmusic.R.string.radio_api_saved) },
-                                onFailure = { it.message ?: context.getString(pt.vcc.vccmusic.R.string.radio_api_error) },
-                            )
-                        }
-                    },
-                    radioApiValidationMessage = radioApiValidationMessage,
                 )
             }
             composable(NavigationDestination.OnlineRadio.route) {

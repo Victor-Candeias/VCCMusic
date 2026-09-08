@@ -2,13 +2,15 @@ package pt.vcc.vccmusic.ui.screen
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -25,11 +27,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import pt.vcc.vccmusic.R
+import pt.vcc.vccmusic.data.local.TrackEntity
 import pt.vcc.vccmusic.ui.screen.RadioBrowserStation
+
+private data class QuickAction(
+    val labelRes: Int,
+    val icon: ImageVector,
+    val containerColor: Color,
+    val contentColor: Color,
+    val onClick: () -> Unit,
+    val testTag: String,
+)
 
 @Composable
 fun MainMenuScreen(
@@ -37,7 +50,9 @@ fun MainMenuScreen(
     onMusic: () -> Unit,
     onPlaylists: () -> Unit,
     onOnlineRadio: () -> Unit,
+    favoriteTracks: List<TrackEntity>,
     favoriteStations: List<RadioBrowserStation>,
+    onFavoriteTrack: (TrackEntity) -> Unit,
     onFavoriteRadio: (RadioBrowserStation) -> Unit,
 ) {
     Column(
@@ -59,20 +74,60 @@ fun MainMenuScreen(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
-        ) {
-            FeatureCard(R.string.music, Icons.Default.LibraryMusic, MaterialTheme.colorScheme.primary, onMusic, "action-music")
-            FeatureCard(R.string.playlists, Icons.AutoMirrored.Filled.List, MaterialTheme.colorScheme.tertiary, onPlaylists, "action-playlists")
-            FeatureCard(R.string.online_radio, Icons.Default.Radio, MaterialTheme.colorScheme.secondary, onOnlineRadio, "action-online-radio")
+        BoxWithConstraints {
+            val actions = listOf(
+                QuickAction(
+                    R.string.music,
+                    Icons.Default.LibraryMusic,
+                    MaterialTheme.colorScheme.primaryContainer,
+                    MaterialTheme.colorScheme.onPrimaryContainer,
+                    onMusic,
+                    "action-music",
+                ),
+                QuickAction(
+                    R.string.playlists,
+                    Icons.AutoMirrored.Filled.List,
+                    MaterialTheme.colorScheme.tertiaryContainer,
+                    MaterialTheme.colorScheme.onTertiaryContainer,
+                    onPlaylists,
+                    "action-playlists",
+                ),
+                QuickAction(
+                    R.string.online_radio,
+                    Icons.Default.Radio,
+                    MaterialTheme.colorScheme.secondaryContainer,
+                    MaterialTheme.colorScheme.onSecondaryContainer,
+                    onOnlineRadio,
+                    "action-online-radio",
+                ),
+            )
+            val columns = when {
+                maxWidth >= 1100.dp -> 4
+                maxWidth >= 650.dp -> 3
+                else -> 2
+            }.coerceAtMost(actions.size)
+            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                actions.chunked(columns).forEach { rowActions ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(14.dp),
+                    ) {
+                        rowActions.forEach { action ->
+                            FeatureCard(action, Modifier.weight(1f))
+                        }
+                        repeat(columns - rowActions.size) {
+                            androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
+                        }
+                    }
+                }
+            }
         }
         Text(
             text = stringResource(R.string.favorites),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(top = 4.dp),
         )
-        if (favoriteStations.isEmpty()) {
+        if (favoriteTracks.isEmpty() && favoriteStations.isEmpty()) {
             Text(
                 text = stringResource(R.string.no_favorites),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -82,6 +137,9 @@ fun MainMenuScreen(
                 modifier = Modifier.horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(14.dp),
             ) {
+                favoriteTracks.forEach { track ->
+                    FavoriteTrackCard(track, onClick = { onFavoriteTrack(track) })
+                }
                 favoriteStations.forEach { station ->
                     FavoriteCard(station, onClick = { onFavoriteRadio(station) })
                 }
@@ -91,27 +149,46 @@ fun MainMenuScreen(
 }
 
 @Composable
-private fun FeatureCard(
-    titleRes: Int,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    color: Color,
+private fun FavoriteTrackCard(
+    track: TrackEntity,
     onClick: () -> Unit,
-    testTag: String,
 ) {
     Card(
         onClick = onClick,
-        modifier = Modifier
-            .width(160.dp)
-            .size(width = 160.dp, height = 142.dp)
-            .testTag(testTag),
-        colors = CardDefaults.cardColors(containerColor = color),
+        modifier = Modifier.size(width = 160.dp, height = 142.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
     ) {
         Column(
             modifier = Modifier.padding(18.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Icon(icon, contentDescription = null, tint = Color.White)
-            Text(stringResource(titleRes), color = Color.White, style = MaterialTheme.typography.titleLarge)
+            Icon(Icons.Default.Star, contentDescription = stringResource(R.string.favorite))
+            Text(track.title, style = MaterialTheme.typography.titleLarge, maxLines = 2)
+            track.artist?.takeIf { it.isNotBlank() }?.let {
+                Text(it, style = MaterialTheme.typography.bodySmall, maxLines = 1)
+            }
+        }
+    }
+}
+
+@Composable
+private fun FeatureCard(
+    action: QuickAction,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        onClick = action.onClick,
+        modifier = modifier
+            .height(142.dp)
+            .testTag(action.testTag),
+        colors = CardDefaults.cardColors(containerColor = action.containerColor, contentColor = action.contentColor),
+    ) {
+        Column(
+            modifier = Modifier.padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Icon(action.icon, contentDescription = null, tint = action.contentColor)
+            Text(stringResource(action.labelRes), color = action.contentColor, style = MaterialTheme.typography.titleLarge)
         }
     }
 }
