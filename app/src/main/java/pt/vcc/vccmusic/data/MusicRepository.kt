@@ -14,6 +14,7 @@ interface MusicRepository {
     fun observeFolders(rootId: Long, parentId: Long?): Flow<List<MusicFolderEntity>>
     suspend fun folder(folderId: Long): MusicFolderEntity?
     fun observeDirectTracks(folderId: Long): Flow<List<TrackEntity>>
+    fun observeRootTracks(rootId: Long, rootUri: String): Flow<List<TrackEntity>>
     suspend fun track(trackId: Long): TrackEntity?
     suspend fun setTrackFavorite(trackId: Long, isFavorite: Boolean)
     fun observeAllTracks(rootId: Long): Flow<List<TrackEntity>>
@@ -44,6 +45,9 @@ class RoomMusicRepository(
 
     override fun observeDirectTracks(folderId: Long): Flow<List<TrackEntity>> =
         database.trackDao().observeDirectTracks(folderId)
+
+    override fun observeRootTracks(rootId: Long, rootUri: String): Flow<List<TrackEntity>> =
+        database.trackDao().observeTracksInFolderUri(rootId, rootUri)
 
     override suspend fun track(trackId: Long): TrackEntity? =
         database.trackDao().findById(trackId)

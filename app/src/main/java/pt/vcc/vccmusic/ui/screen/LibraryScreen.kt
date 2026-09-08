@@ -40,7 +40,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -68,7 +67,6 @@ fun LibraryScreen(
     playbackViewModel: PlaybackViewModel,
     contentPadding: PaddingValues,
     onPickRoot: () -> Unit,
-    onReindex: () -> Unit,
     start: LibraryStart = LibraryStart.ROOT,
     onTrackPlayed: () -> Unit = {},
     modifier: Modifier = Modifier,
@@ -94,17 +92,12 @@ fun LibraryScreen(
             when (val current = location) {
                 LibraryLocation.Root -> RootContents(
                     rootId = activeRoot.id,
+                    rootUri = activeRoot.uri,
                     viewModel = viewModel,
                     onOpenFolder = {
                         folderPath = listOf(it)
                         location = LibraryLocation.Folder(it)
                     },
-                    onShowAllTracks = {
-                        folderPath = emptyList()
-                        location = LibraryLocation.AllTracks
-                    },
-                    onReindex = onReindex,
-                    onPickRoot = onPickRoot,
                     playbackViewModel = playbackViewModel,
                     onTrackPlayed = onTrackPlayed,
                 )
@@ -159,24 +152,22 @@ private fun EmptyLibrary(onPickRoot: () -> Unit) {
 @Composable
 private fun RootContents(
     rootId: Long,
+    rootUri: String,
     viewModel: LibraryViewModel,
     onOpenFolder: (MusicFolderEntity) -> Unit,
-    onShowAllTracks: () -> Unit,
-    onReindex: () -> Unit,
-    onPickRoot: () -> Unit,
     playbackViewModel: PlaybackViewModel,
     onTrackPlayed: () -> Unit,
 ) {
     val folders = viewModel.observeFolders(rootId, null)
         .collectAsStateWithLifecycle(initialValue = emptyList()).value
-    val tracks = viewModel.observeAllTracks(rootId)
+        .filter { it.uri != rootUri }
+    val tracks = viewModel.observeRootTracks(rootId, rootUri)
         .collectAsStateWithLifecycle(initialValue = emptyList()).value
     LibraryHeader(title = stringResource(R.string.library))
-    LibraryShortcuts(onShowAllTracks, onReindex, onPickRoot)
     if (folders.isEmpty() && tracks.isEmpty()) {
         EmptyContent(R.string.library_empty)
     } else {
-        LibraryItems(folders, tracks, onOpenFolder, playbackViewModel, onTrackPlayed)
+        LibraryItems(folders, tracks, onOpenFolder, viewModel, playbackViewModel, onTrackPlayed)
     }
 }
 
@@ -198,7 +189,7 @@ private fun FolderContents(
     if (folders.isEmpty() && tracks.isEmpty()) {
         EmptyContent(R.string.folder_empty)
     } else {
-        LibraryItems(folders, tracks, onOpenFolder, playbackViewModel, onTrackPlayed)
+        LibraryItems(folders, tracks, onOpenFolder, viewModel, playbackViewModel, onTrackPlayed)
     }
 }
 
@@ -293,39 +284,19 @@ private fun LibraryHeader(title: String, onBack: (() -> Unit)? = null) {
 }
 
 @Composable
-private fun LibraryShortcuts(
-    onShowAllTracks: () -> Unit,
-    onReindex: () -> Unit,
-    onPickRoot: () -> Unit,
-) {
-    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-        Button(onClick = onShowAllTracks) {
-            Icon(Icons.Default.Home, stringResource(R.string.all_music_icon))
-            Text(stringResource(R.string.all_music), modifier = Modifier.padding(start = 8.dp))
-        }
-        Button(
-            onClick = onReindex,
-            modifier = Modifier.padding(start = 8.dp),
-        ) {
-            Text(stringResource(R.string.reindex))
-        }
-        Button(
-            onClick = onPickRoot,
-            modifier = Modifier.padding(start = 8.dp),
-        ) {
-            Text(stringResource(R.string.change_music_root))
-        }
-    }
-}
-
-@Composable
 private fun LibraryItems(
     folders: List<MusicFolderEntity>,
     tracks: List<TrackEntity>,
     onOpenFolder: (MusicFolderEntity) -> Unit,
+    viewModel: LibraryViewModel,
     playbackViewModel: PlaybackViewModel,
     onTrackPlayed: () -> Unit,
 ) {
+    val playlists by viewModel.playlists.collectAsStateWithLifecycle(initialValue = emptyList())
+    var trackForPlaylist by remember { mutableStateOf<TrackEntity?>(null) }
+    var showCreatePlaylist by remember { mutableStateOf(false) }
+    var newPlaylistName by remember { mutableStateOf("") }
+
     LazyColumn {
         items(folders, key = { "folder-${it.id}" }) { folder ->
             Row(
@@ -338,20 +309,64 @@ private fun LibraryItems(
             HorizontalDivider()
         }
         items(tracks, key = { "track-${it.id}" }) { track ->
-            Column(
-                modifier = Modifier.fillMaxWidth().clickable {
-                    playbackViewModel.playTracks(tracks, track.id)
+            TrackCard(
+                track = track,
+                onPlay = {
+                    playbackViewModel.playTracks(tracks, track.id, QueueSource.ALL_TRACKS)
                     onTrackPlayed()
-                }.padding(16.dp),
-            ) {
-                Text(track.title, style = MaterialTheme.typography.titleMedium)
-                val details = listOfNotNull(track.artist, track.album).joinToString(" - ")
-                if (details.isNotBlank()) {
-                    Text(details, style = MaterialTheme.typography.bodyMedium)
-                }
-            }
-            HorizontalDivider()
+                },
+                onToggleFavorite = {
+                    viewModel.setFavorite(track.id, !track.isFavorite)
+                },
+                onAddToPlaylist = { trackForPlaylist = track },
+            )
         }
+    }
+
+    if (trackForPlaylist != null && !showCreatePlaylist) {
+        PlaylistPickerDialog(
+            playlists = playlists,
+            onDismiss = { trackForPlaylist = null },
+            onCreatePlaylist = {
+                newPlaylistName = ""
+                showCreatePlaylist = true
+            },
+            onPlaylistSelected = { playlist ->
+                viewModel.addToPlaylist(playlist.id, trackForPlaylist!!.id)
+                trackForPlaylist = null
+            },
+        )
+    }
+    if (showCreatePlaylist && trackForPlaylist != null) {
+        AlertDialog(
+            onDismissRequest = { showCreatePlaylist = false },
+            title = { Text(stringResource(R.string.create_playlist)) },
+            text = {
+                androidx.compose.material3.OutlinedTextField(
+                    value = newPlaylistName,
+                    onValueChange = { newPlaylistName = it },
+                    singleLine = true,
+                    label = { Text(stringResource(R.string.playlist_name)) },
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.createPlaylistAndAdd(newPlaylistName, trackForPlaylist!!.id)
+                        showCreatePlaylist = false
+                        trackForPlaylist = null
+                    },
+                    enabled = newPlaylistName.isNotBlank(),
+                ) {
+                    Text(stringResource(R.string.create_playlist))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showCreatePlaylist = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            },
+        )
     }
 }
 
@@ -387,7 +402,10 @@ private fun TrackCard(
             .fillMaxWidth()
             .padding(horizontal = 14.dp, vertical = 5.dp)
             .testTag("track-${track.id}"),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE96A2C)),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        ),
     ) {
         Row(
             modifier = Modifier
@@ -405,7 +423,7 @@ private fun TrackCard(
                 modifier = Modifier
                     .size(52.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color.White.copy(alpha = 0.18f)),
+                    .background(MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.18f)),
                 contentAlignment = Alignment.Center,
             ) {
                 if (artwork != null) {
@@ -416,16 +434,16 @@ private fun TrackCard(
                         contentScale = ContentScale.Crop,
                     )
                 } else {
-                    Text("♫", color = Color.White, style = MaterialTheme.typography.titleLarge)
+                    Text("♫", color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.titleLarge)
                 }
             }
             Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
-                Text(track.title, color = Color.White, style = MaterialTheme.typography.titleMedium)
+                Text(track.title, color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.titleMedium)
                 val details = listOfNotNull(track.artist, track.album).joinToString(" - ")
                 if (details.isNotBlank()) {
                     Text(
                         details,
-                        color = Color.White.copy(alpha = 0.82f),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.82f),
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
@@ -436,14 +454,14 @@ private fun TrackCard(
                     contentDescription = stringResource(
                         if (track.isFavorite) R.string.remove_from_favorites else R.string.add_to_favorites,
                     ),
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
             IconButton(onClick = onAddToPlaylist) {
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = stringResource(R.string.more_options),
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
         }

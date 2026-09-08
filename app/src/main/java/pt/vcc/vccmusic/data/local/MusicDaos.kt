@@ -93,6 +93,16 @@ interface TrackDao {
 
     @Query(
         """
+        SELECT tracks.* FROM tracks
+        INNER JOIN music_folders ON music_folders.id = tracks.folderId
+        WHERE music_folders.rootId = :rootId AND music_folders.uri = :folderUri
+        ORDER BY tracks.title COLLATE NOCASE, tracks.uri
+        """,
+    )
+    fun observeTracksInFolderUri(rootId: Long, folderUri: String): Flow<List<TrackEntity>>
+
+    @Query(
+        """
         SELECT * FROM tracks
         WHERE rootId = :rootId
         ORDER BY title COLLATE NOCASE, uri

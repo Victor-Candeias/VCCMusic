@@ -27,6 +27,9 @@ class LibraryViewModel(
     fun observeFolderTracks(folderId: Long): Flow<List<TrackEntity>> =
         repository.observeDirectTracks(folderId)
 
+    fun observeRootTracks(rootId: Long, rootUri: String): Flow<List<TrackEntity>> =
+        repository.observeRootTracks(rootId, rootUri)
+
     fun observeAllTracks(rootId: Long): Flow<List<TrackEntity>> =
         repository.observeAllTracks(rootId)
 

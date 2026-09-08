@@ -173,9 +173,14 @@ class SafMusicScanner(
     }
 
     private fun listChildren(folderUri: Uri): List<DocumentInfo> {
+        val documentId = if (folderUri.pathSegments.contains("document")) {
+            DocumentsContract.getDocumentId(folderUri)
+        } else {
+            DocumentsContract.getTreeDocumentId(folderUri)
+        }
         val childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(
             folderUri,
-            DocumentsContract.getTreeDocumentId(folderUri),
+            documentId,
         )
         val projection = arrayOf(
             DocumentsContract.Document.COLUMN_DOCUMENT_ID,

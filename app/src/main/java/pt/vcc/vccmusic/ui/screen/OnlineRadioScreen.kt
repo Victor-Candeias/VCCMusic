@@ -132,7 +132,6 @@ fun OnlineRadioScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF212121))
             .padding(contentPadding)
             .padding(horizontal = 22.dp, vertical = 22.dp)
             .testTag("screen-online-radio"),
@@ -146,13 +145,12 @@ fun OnlineRadioScreen(
             Text(
                 stringResource(R.string.online_radio),
                 style = MaterialTheme.typography.titleLarge,
-                color = Color.White,
             )
             Text(
                 text = stringResource(R.string.online_radio_description),
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.labelSmall,
-                color = Color.White.copy(alpha = 0.85f),
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.85f),
                 maxLines = 1,
             )
         }
@@ -226,7 +224,6 @@ private fun RadioSelectionScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF212121))
             .padding(contentPadding)
             .padding(horizontal = 22.dp, vertical = 22.dp)
             .testTag("screen-radio-selection"),
@@ -235,11 +232,10 @@ private fun RadioSelectionScreen(
         Text(
             text = stringResource(R.string.configure_online_radios),
             style = MaterialTheme.typography.titleLarge,
-            color = Color.White,
         )
         Text(
             text = stringResource(R.string.configure_online_radios_description),
-            color = Color.White.copy(alpha = 0.85f),
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.85f),
         )
         OutlinedTextField(
             value = searchQuery,
@@ -290,7 +286,7 @@ private fun RadioSelectionScreen(
                             }
                         },
                     )
-                    Text(station.name, color = Color.White)
+                    Text(station.name)
                 }
             }
         }

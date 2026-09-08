@@ -46,6 +46,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.Player
 import pt.vcc.vccmusic.R
+import pt.vcc.vccmusic.ui.theme.DarkBackgroundBottom
 import kotlin.math.abs
 
 @Composable
@@ -74,8 +75,8 @@ fun NowPlayingScreen(
         modifier = modifier
             .fillMaxSize()
             .background(
-                Brush.verticalGradient(
-                    listOf(Color(0xFF442E2A), Color(0xFF101015)),
+                pt.vcc.vccmusic.ui.theme.appBackgroundBrush(
+                    darkTheme = MaterialTheme.colorScheme.background == DarkBackgroundBottom,
                 ),
             )
             .padding(contentPadding)
@@ -135,7 +136,7 @@ private fun Header() {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(stringResource(R.string.now_playing), style = MaterialTheme.typography.titleMedium, color = Color.White)
+        Text(stringResource(R.string.now_playing), style = MaterialTheme.typography.titleMedium)
         IconButton(onClick = {}) {
             Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
         }
@@ -168,7 +169,7 @@ private fun Artwork(
                 contentScale = ContentScale.Crop,
             )
         } else {
-            Text("♫", color = Color.White, fontSize = 72.sp)
+            Text("♫", color = MaterialTheme.colorScheme.onPrimary, fontSize = 72.sp)
         }
     }
 }
@@ -189,8 +190,8 @@ private fun PlaybackControls(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column {
-                Text(state.title ?: stringResource(R.string.nothing_playing), style = MaterialTheme.typography.titleLarge, color = Color.White)
-                Text(state.artist.orEmpty(), style = MaterialTheme.typography.bodyMedium, color = Color.White.copy(alpha = 0.75f))
+                Text(state.title ?: stringResource(R.string.nothing_playing), style = MaterialTheme.typography.titleLarge)
+                Text(state.artist.orEmpty(), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
             }
             IconButton(onClick = {}) {
                 Icon(Icons.Default.FavoriteBorder, contentDescription = stringResource(R.string.favorite))
@@ -210,7 +211,7 @@ private fun PlaybackControls(
             listOf("60 Hz", "250 Hz", "1 kHz", "4 kHz", "16 kHz").forEach { frequency ->
                 Text(
                     text = frequency,
-                    color = Color.White.copy(alpha = 0.7f),
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                     style = MaterialTheme.typography.labelSmall,
                 )
             }
@@ -222,8 +223,8 @@ private fun PlaybackControls(
             enabled = state.durationMs > 0,
         )
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(formatTime(state.positionMs), color = Color.White)
-            Text(formatTime(state.durationMs), color = Color.White)
+            Text(formatTime(state.positionMs))
+            Text(formatTime(state.durationMs))
         }
 
         Row(
@@ -231,17 +232,17 @@ private fun PlaybackControls(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            IconButton(onClick = viewModel::toggleShuffle) { Text("⇆", color = Color.White, fontSize = 26.sp) }
-            IconButton(onClick = viewModel::skipPrevious) { Text("|◀", color = Color.White, fontSize = 22.sp) }
+            IconButton(onClick = viewModel::toggleShuffle) { Text("⇆", fontSize = 26.sp) }
+            IconButton(onClick = viewModel::skipPrevious) { Text("|◀", fontSize = 22.sp) }
             IconButton(onClick = viewModel::playPause) {
                 Text(
                     if (state.isPlaying) "Ⅱ" else "▶",
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 28.sp,
                 )
             }
-            IconButton(onClick = viewModel::skipNext) { Text("▶|", color = Color.White, fontSize = 22.sp) }
-            IconButton(onClick = viewModel::cycleRepeat) { Text("↻", color = Color.White, fontSize = 26.sp) }
+            IconButton(onClick = viewModel::skipNext) { Text("▶|", fontSize = 22.sp) }
+            IconButton(onClick = viewModel::cycleRepeat) { Text("↻", fontSize = 26.sp) }
         }
     }
 }
@@ -251,13 +252,14 @@ private fun SpectrumEqualizer(
     values: List<Float>,
     modifier: Modifier = Modifier,
 ) {
+    val equalizerColor = MaterialTheme.colorScheme.secondary
     Canvas(modifier = modifier) {
         val gap = size.width / (values.size * 3f)
         val barWidth = gap * 2f
         values.forEachIndexed { index, value ->
             val barHeight = size.height * (0.08f + value * 0.92f)
             drawRoundRect(
-                color = Color(0xFF55D6BE),
+                color = equalizerColor,
                 topLeft = androidx.compose.ui.geometry.Offset(
                     x = gap + index * (barWidth + gap),
                     y = size.height - barHeight,

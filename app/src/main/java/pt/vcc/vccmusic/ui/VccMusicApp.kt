@@ -14,7 +14,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.background
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
@@ -32,6 +34,7 @@ import pt.vcc.vccmusic.ui.screen.LibraryStart
 import pt.vcc.vccmusic.ui.screen.NowPlayingScreen
 import pt.vcc.vccmusic.ui.screen.SettingsScreen
 import pt.vcc.vccmusic.ui.screen.OnlineRadioScreen
+import pt.vcc.vccmusic.ui.theme.appBackgroundBrush
 import pt.vcc.vccmusic.ui.screen.RadioBrowserRepository
 import pt.vcc.vccmusic.data.MusicRepository
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -44,6 +47,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -90,10 +94,12 @@ fun VccMusicApp(
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.background(appBackgroundBrush(isDarkTheme)),
+        containerColor = androidx.compose.ui.graphics.Color.Transparent,
         bottomBar = {
             NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                tonalElevation = 0.dp,
             ) {
                 NavigationDestination.entries.filter { it.inMainNavigation }.forEach { destination ->
                     val selected = currentDestination?.hierarchy?.any {
@@ -153,36 +159,39 @@ fun VccMusicApp(
             }
         },
     ) { contentPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = NavigationDestination.MainMenu.route,
+        CompositionLocalProvider(
+            LocalContentColor provides MaterialTheme.colorScheme.onBackground,
         ) {
-            composable(NavigationDestination.MainMenu.route) {
-                MainMenuScreen(
-                    contentPadding = contentPadding,
-                    onMusic = { navController.navigate(NavigationDestination.Library.route) },
-                    onPlaylists = { navController.navigate(NavigationDestination.Playlists.route) },
-                    onOnlineRadio = { navController.navigate(NavigationDestination.OnlineRadio.route) },
-                    favoriteTracks = favoriteTracks,
-                    favoriteStations = favoriteStations.filter { it.isFavorite },
-                    onFavoriteTrack = { track ->
-                        playbackViewModel.playTracks(listOf(track), track.id)
-                        navController.navigate(NavigationDestination.NowPlaying.route) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onFavoriteRadio = { station ->
-                        playbackViewModel.playRadio(
-                            station.name,
-                            station.streamUrl,
-                            station.faviconLocalPath,
-                        )
-                        navController.navigate(NavigationDestination.NowPlaying.route) {
-                            launchSingleTop = true
-                        }
-                    },
-                )
-            }
+            NavHost(
+                navController = navController,
+                startDestination = NavigationDestination.MainMenu.route,
+            ) {
+                composable(NavigationDestination.MainMenu.route) {
+                    MainMenuScreen(
+                        contentPadding = contentPadding,
+                        onMusic = { navController.navigate(NavigationDestination.Library.route) },
+                        onPlaylists = { navController.navigate(NavigationDestination.Playlists.route) },
+                        onOnlineRadio = { navController.navigate(NavigationDestination.OnlineRadio.route) },
+                        favoriteTracks = favoriteTracks,
+                        favoriteStations = favoriteStations.filter { it.isFavorite },
+                        onFavoriteTrack = { track ->
+                            playbackViewModel.playTracks(listOf(track), track.id)
+                            navController.navigate(NavigationDestination.NowPlaying.route) {
+                                launchSingleTop = true
+                            }
+                        },
+                        onFavoriteRadio = { station ->
+                            playbackViewModel.playRadio(
+                                station.name,
+                                station.streamUrl,
+                                station.faviconLocalPath,
+                            )
+                            navController.navigate(NavigationDestination.NowPlaying.route) {
+                                launchSingleTop = true
+                            }
+                        },
+                    )
+                }
             composable(NavigationDestination.MusicMenu.route) {
                 MusicMenuScreen(
                     contentPadding = contentPadding,
@@ -198,7 +207,6 @@ fun VccMusicApp(
                     playbackViewModel,
                     contentPadding,
                     onPickRoot,
-                    onReindex,
                     start = LibraryStart.ALL_TRACKS,
                     onTrackPlayed = {
                         navController.navigate(NavigationDestination.NowPlaying.route) {
@@ -213,7 +221,6 @@ fun VccMusicApp(
                     playbackViewModel,
                     contentPadding,
                     onPickRoot,
-                    onReindex,
                     onTrackPlayed = {
                         navController.navigate(NavigationDestination.NowPlaying.route) {
                             launchSingleTop = true
@@ -261,6 +268,7 @@ fun VccMusicApp(
                     },
                 )
             }
+        }
         }
     }
 }

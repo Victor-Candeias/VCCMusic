@@ -25,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -113,7 +112,10 @@ private fun SettingsTile(
             .height(150.dp)
             .testTag("settings-${action.labelRes}"),
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFAD2A9F)),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+        ),
     ) {
         Column(
             modifier = Modifier
@@ -125,12 +127,12 @@ private fun SettingsTile(
             Icon(
                 imageVector = action.icon,
                 contentDescription = null,
-                tint = Color.White,
+                tint = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.padding(bottom = 10.dp),
             )
             Text(
                 text = stringResource(action.labelRes),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
                 style = MaterialTheme.typography.titleMedium,
             )
         }
