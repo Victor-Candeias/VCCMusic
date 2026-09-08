@@ -1,16 +1,16 @@
 package pt.vcc.vccmusic.ui.screen
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -64,16 +64,18 @@ fun MainMenuScreen(
             .testTag("screen-main-menu"),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
-        Text(
-            text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
-        Text(
-            text = stringResource(R.string.my_music_subtitle),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+            Text(
+                text = stringResource(R.string.my_music_subtitle),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
         BoxWithConstraints {
             val actions = listOf(
                 QuickAction(
@@ -106,17 +108,17 @@ fun MainMenuScreen(
                 maxWidth >= 650.dp -> 3
                 else -> 2
             }.coerceAtMost(actions.size)
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 actions.chunked(columns).forEach { rowActions ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(14.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
                         rowActions.forEach { action ->
                             FeatureCard(action, Modifier.weight(1f))
                         }
                         repeat(columns - rowActions.size) {
-                            androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
+                            Spacer(Modifier.weight(1f))
                         }
                     }
                 }
@@ -133,15 +135,37 @@ fun MainMenuScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         } else {
-            Row(
-                modifier = Modifier.horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(14.dp),
-            ) {
-                favoriteTracks.forEach { track ->
-                    FavoriteTrackCard(track, onClick = { onFavoriteTrack(track) })
+            BoxWithConstraints {
+                val favoriteColumns = when {
+                    maxWidth >= 900.dp -> 4
+                    maxWidth >= 560.dp -> 3
+                    else -> 2
                 }
-                favoriteStations.forEach { station ->
-                    FavoriteCard(station, onClick = { onFavoriteRadio(station) })
+                val favorites = buildList<@Composable () -> Unit> {
+                    favoriteTracks.forEach { track ->
+                        add { FavoriteTrackCard(track, onClick = { onFavoriteTrack(track) }) }
+                    }
+                    favoriteStations.forEach { station ->
+                        add { FavoriteCard(station, onClick = { onFavoriteRadio(station) }) }
+                    }
+                }
+
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    favorites.chunked(favoriteColumns).forEach { rowFavorites ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            rowFavorites.forEach { favorite ->
+                                Box(Modifier.weight(1f)) {
+                                    favorite()
+                                }
+                            }
+                            repeat(favoriteColumns - rowFavorites.size) {
+                                Spacer(Modifier.weight(1f))
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -155,15 +179,17 @@ private fun FavoriteTrackCard(
 ) {
     Card(
         onClick = onClick,
-        modifier = Modifier.size(width = 160.dp, height = 142.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(122.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
     ) {
         Column(
-            modifier = Modifier.padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Icon(Icons.Default.Star, contentDescription = stringResource(R.string.favorite))
-            Text(track.title, style = MaterialTheme.typography.titleLarge, maxLines = 2)
+            Text(track.title, style = MaterialTheme.typography.titleMedium, maxLines = 2)
             track.artist?.takeIf { it.isNotBlank() }?.let {
                 Text(it, style = MaterialTheme.typography.bodySmall, maxLines = 1)
             }
@@ -179,16 +205,16 @@ private fun FeatureCard(
     Card(
         onClick = action.onClick,
         modifier = modifier
-            .height(142.dp)
+            .height(112.dp)
             .testTag(action.testTag),
         colors = CardDefaults.cardColors(containerColor = action.containerColor, contentColor = action.contentColor),
     ) {
         Column(
-            modifier = Modifier.padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Icon(action.icon, contentDescription = null, tint = action.contentColor)
-            Text(stringResource(action.labelRes), color = action.contentColor, style = MaterialTheme.typography.titleLarge)
+            Text(stringResource(action.labelRes), color = action.contentColor, style = MaterialTheme.typography.titleMedium)
         }
     }
 }
@@ -200,15 +226,17 @@ private fun FavoriteCard(
 ) {
     Card(
         onClick = onClick,
-        modifier = Modifier.size(width = 160.dp, height = 142.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(122.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
     ) {
         Column(
-            modifier = Modifier.padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Icon(Icons.Default.Star, contentDescription = stringResource(R.string.favorite))
-            Text(station.name, style = MaterialTheme.typography.titleLarge, maxLines = 2)
+            Text(station.name, style = MaterialTheme.typography.titleMedium, maxLines = 2)
         }
     }
 }
