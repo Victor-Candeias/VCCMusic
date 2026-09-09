@@ -19,8 +19,6 @@ import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Radio
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Shuffle
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,12 +29,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.local.TrackEntity
 import pt.vcc.vccmusic.data.local.PlaylistEntity
+import pt.vcc.vccmusic.ui.theme.MainMenuCardEnd
+import pt.vcc.vccmusic.ui.theme.MainMenuCardStart
+import pt.vcc.vccmusic.ui.theme.AppGradientCard
 import pt.vcc.vccmusic.ui.screen.RadioBrowserStation
 
 private data class QuickAction(
@@ -198,12 +200,13 @@ private fun FavoritePlaylistCard(
     onClick: () -> Unit,
     onShuffle: () -> Unit,
 ) {
-    Card(
+    AppGradientCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(122.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+            .height(112.dp),
+        start = MainMenuCardStart,
+        end = MainMenuCardEnd,
     ) {
         Column(
             modifier = Modifier.padding(14.dp),
@@ -231,12 +234,13 @@ private fun FavoriteTrackCard(
     track: TrackEntity,
     onClick: () -> Unit,
 ) {
-    Card(
+    AppGradientCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(122.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+            .height(112.dp),
+        start = MainMenuCardStart,
+        end = MainMenuCardEnd,
     ) {
         Column(
             modifier = Modifier.padding(14.dp),
@@ -257,12 +261,14 @@ private fun FeatureCard(
     action: QuickAction,
     modifier: Modifier = Modifier,
 ) {
-    Card(
+    AppGradientCard(
         onClick = action.onClick,
         modifier = modifier
             .height(112.dp)
             .testTag(action.testTag),
-        colors = CardDefaults.cardColors(containerColor = action.containerColor, contentColor = action.contentColor),
+        shape = RoundedCornerShape(28.dp),
+        start = MainMenuCardStart,
+        end = MainMenuCardEnd,
     ) {
         Column(
             modifier = Modifier.padding(14.dp),
@@ -280,12 +286,13 @@ private fun FavoriteCard(
     station: RadioBrowserStation,
     onClick: () -> Unit,
 ) {
-    Card(
+    AppGradientCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(122.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+            .height(112.dp),
+        start = MainMenuCardStart,
+        end = MainMenuCardEnd,
     ) {
         Column(
             modifier = Modifier.padding(14.dp),

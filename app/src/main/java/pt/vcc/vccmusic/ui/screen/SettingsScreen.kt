@@ -10,14 +10,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,10 +23,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import pt.vcc.vccmusic.R
+import pt.vcc.vccmusic.ui.theme.AppGradientCard
+import pt.vcc.vccmusic.ui.theme.SettingsDarkCardEnd
+import pt.vcc.vccmusic.ui.theme.SettingsDarkCardStart
+import pt.vcc.vccmusic.ui.theme.SettingsLightCardEnd
+import pt.vcc.vccmusic.ui.theme.SettingsLightCardStart
 
 private data class SettingsAction(
     val labelRes: Int,
@@ -83,7 +87,7 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.spacedBy(14.dp),
                     ) {
                         rowActions.forEach { action ->
-                            SettingsTile(action, Modifier.weight(1f))
+                            SettingsTile(action, isDarkTheme, Modifier.weight(1f))
                         }
                         repeat(columns - rowActions.size) {
                             androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
@@ -108,18 +112,17 @@ fun SettingsScreen(
 /** Renderiza um cartão de ação das definições. */
 private fun SettingsTile(
     action: SettingsAction,
+    isDarkTheme: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Card(
+    AppGradientCard(
         onClick = action.onClick,
         modifier = modifier
-            .height(150.dp)
+            .height(112.dp)
             .testTag("settings-${action.labelRes}"),
-        shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-        ),
+        shape = RoundedCornerShape(28.dp),
+        start = if (isDarkTheme) SettingsDarkCardStart else SettingsLightCardStart,
+        end = if (isDarkTheme) SettingsDarkCardEnd else SettingsLightCardEnd,
     ) {
         Column(
             modifier = Modifier
@@ -131,12 +134,12 @@ private fun SettingsTile(
             Icon(
                 imageVector = action.icon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                tint = if (isDarkTheme) Color.Black else Color.White,
                 modifier = Modifier.padding(bottom = 10.dp),
             )
             Text(
                 text = stringResource(action.labelRes),
-                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                color = if (isDarkTheme) Color.Black else Color.White,
                 style = MaterialTheme.typography.titleMedium,
             )
         }

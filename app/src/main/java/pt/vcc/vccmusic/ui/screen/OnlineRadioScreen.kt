@@ -17,15 +17,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items as lazyColumnItems
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
@@ -60,6 +56,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pt.vcc.vccmusic.R
+import pt.vcc.vccmusic.ui.theme.RadioCardEnd
+import pt.vcc.vccmusic.ui.theme.RadioCardStart
+import pt.vcc.vccmusic.ui.theme.AppGradientCard
 import androidx.compose.foundation.layout.BoxWithConstraints
 
 private data class RadioGenre(val label: String, val query: String)
@@ -320,26 +319,16 @@ private fun RadioCard(
     onPlay: () -> Unit,
     onFavoriteChanged: (Boolean) -> Unit,
 ) {
-    val cardShape = RoundedCornerShape(22.dp)
-    Card(
+    val cardShape = MaterialTheme.shapes.medium
+    AppGradientCard(
         onClick = onPlay,
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(1.15f)
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = if (isPlaying) {
-                        listOf(Color(0xFF40ADD6), Color(0xFF0B4D66))
-                    } else {
-                        listOf(Color(0xFF3ACB50), Color(0xFF0D511F))
-                    },
-                ),
-                shape = cardShape,
-            ),
+            .height(112.dp)
+            ,
         shape = cardShape,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent,
-        ),
+        start = if (isPlaying) RadioCardStart else RadioCardStart.copy(alpha = 0.92f),
+        end = RadioCardEnd,
     ) {
         Column(
             modifier = Modifier

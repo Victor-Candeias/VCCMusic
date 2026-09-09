@@ -25,8 +25,6 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -54,6 +53,12 @@ import pt.vcc.vccmusic.data.local.MusicFolderEntity
 import pt.vcc.vccmusic.data.local.PlaylistEntity
 import pt.vcc.vccmusic.data.local.TrackEntity
 import pt.vcc.vccmusic.playback.QueueSource
+import pt.vcc.vccmusic.ui.theme.appCardBrush
+import pt.vcc.vccmusic.ui.theme.AppGradientCard
+import pt.vcc.vccmusic.ui.theme.FoldersCardEnd
+import pt.vcc.vccmusic.ui.theme.FoldersCardStart
+import pt.vcc.vccmusic.ui.theme.LibraryCardEnd
+import pt.vcc.vccmusic.ui.theme.LibraryCardStart
 
 private sealed interface LibraryLocation {
     data object Root : LibraryLocation
@@ -396,11 +401,27 @@ private fun LibraryItems(
     LazyColumn {
         items(folders, key = { "folder-${it.id}" }) { folder ->
             Row(
-                modifier = Modifier.fillMaxWidth().clickable { onOpenFolder(folder) }.padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .background(
+                        appCardBrush(FoldersCardStart, FoldersCardEnd),
+                        MaterialTheme.shapes.small,
+                    )
+                    .clickable { onOpenFolder(folder) }
+                    .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(Icons.Default.Home, stringResource(R.string.folder_icon))
-                Text(folder.name, modifier = Modifier.padding(start = 12.dp))
+                Icon(
+                    Icons.Default.Home,
+                    stringResource(R.string.folder_icon),
+                    tint = Color.White,
+                )
+                Text(
+                    folder.name,
+                    color = Color.White,
+                    modifier = Modifier.padding(start = 12.dp),
+                )
             }
             HorizontalDivider()
         }
@@ -494,16 +515,19 @@ private fun TrackCard(
     onToggleFavorite: () -> Unit,
     onAddToPlaylist: () -> Unit,
 ) {
-    Card(
+    AppGradientCard(
         onClick = onPlay,
         modifier = Modifier
             .fillMaxWidth()
+            .height(112.dp)
             .padding(horizontal = 14.dp, vertical = 5.dp)
+            .background(
+                appCardBrush(LibraryCardStart, LibraryCardEnd),
+                MaterialTheme.shapes.medium,
+            )
             .testTag("track-${track.id}"),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        ),
+        start = LibraryCardStart,
+        end = LibraryCardEnd,
     ) {
         Row(
             modifier = Modifier
@@ -521,7 +545,7 @@ private fun TrackCard(
                 modifier = Modifier
                     .size(52.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.18f)),
+                    .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.18f)),
                 contentAlignment = Alignment.Center,
             ) {
                 if (artwork != null) {
@@ -532,16 +556,16 @@ private fun TrackCard(
                         contentScale = ContentScale.Crop,
                     )
                 } else {
-                    Text("♫", color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.titleLarge)
+                    Text("♫", color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleLarge)
                 }
             }
             Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
-                Text(track.title, color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.titleMedium)
+                Text(track.title, color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleMedium)
                 val details = listOfNotNull(track.artist, track.album).joinToString(" - ")
                 if (details.isNotBlank()) {
                     Text(
                         details,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.82f),
+                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.82f),
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
@@ -552,14 +576,14 @@ private fun TrackCard(
                     contentDescription = stringResource(
                         if (track.isFavorite) R.string.remove_from_favorites else R.string.add_to_favorites,
                     ),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                 )
             }
             IconButton(onClick = onAddToPlaylist) {
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = stringResource(R.string.more_options),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                 )
             }
         }
