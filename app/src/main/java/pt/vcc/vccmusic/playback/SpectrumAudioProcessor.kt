@@ -27,6 +27,7 @@ object SpectrumAnalyzer {
     private var pending: PendingAnalysis? = null
     private var processing = false
 
+    /** Publica uma janela de amostras, descartando trabalho pendente obsoleto. */
     internal fun publish(samples: ShortArray, sampleRate: Int) {
         synchronized(lock) {
             pending = PendingAnalysis(samples.copyOf(), sampleRate)
@@ -46,6 +47,7 @@ object SpectrumAnalyzer {
         }
     }
 
+    /** Calcula 24 bandas normalizadas a partir das amostras PCM. */
     private fun calculate(samples: ShortArray, sampleRate: Int): List<Float> {
         val values = List(24) { band ->
             val frequency = 60.0 * (16000.0 / 60.0).pow(band / 23.0)
@@ -69,6 +71,7 @@ object SpectrumAnalyzer {
         return values
     }
 
+    /** Calcula a potência usada para distribuir as frequências das bandas. */
     private fun Double.pow(exponent: Double): Double = Math.pow(this, exponent)
 
     private data class PendingAnalysis(
@@ -81,14 +84,17 @@ class SpectrumAudioProcessor : BaseAudioProcessor() {
     private val samples = ShortArray(WINDOW_SIZE)
     private var sampleCount = 0
 
+    /** Mantém o formato de áudio e permite a recolha das amostras. */
     override fun onConfigure(
         inputAudioFormat: AudioProcessor.AudioFormat,
     ): AudioProcessor.AudioFormat {
         return inputAudioFormat
     }
 
+    /** Mantém o processador ativo para receber áudio durante a reprodução. */
     override fun isActive(): Boolean = true
 
+    /** Extrai áudio PCM, mistura canais e encaminha o buffer sem o alterar. */
     override fun queueInput(input: ByteBuffer) {
         if (inputAudioFormat.encoding != C.ENCODING_PCM_16BIT) {
             val output = replaceOutputBuffer(input.remaining())
@@ -113,10 +119,12 @@ class SpectrumAudioProcessor : BaseAudioProcessor() {
         output.flip()
     }
 
+    /** Reinicia a contagem da janela após um flush do processador. */
     override fun onFlush() {
         sampleCount = 0
     }
 
+    /** Limpa as amostras acumuladas quando o processador é reiniciado. */
     override fun onReset() {
         sampleCount = 0
     }
@@ -126,6 +134,7 @@ class SpectrumAudioProcessor : BaseAudioProcessor() {
     }
 }
 
+/** Cria o processador que observa o áudio entregue ao sink do leitor. */
 fun createSpectrumAudioProcessor(): AudioProcessor =
     TeeAudioProcessor(
         object : TeeAudioProcessor.AudioBufferSink {
@@ -134,12 +143,14 @@ fun createSpectrumAudioProcessor(): AudioProcessor =
             private val samples = ShortArray(2048)
             private var sampleCount = 0
 
+            /** Atualiza o formato da janela e reinicia a recolha de amostras. */
             override fun flush(sampleRate: Int, channelCount: Int, encoding: Int) {
                 this.sampleRate = sampleRate
                 this.channelCount = channelCount
                 sampleCount = 0
             }
 
+            /** Recolhe amostras PCM misturadas e publica janelas completas. */
             override fun handleBuffer(buffer: ByteBuffer) {
                 if (channelCount <= 0) return
                 val input = buffer.duplicate().order(ByteOrder.LITTLE_ENDIAN)
@@ -157,6 +168,7 @@ fun createSpectrumAudioProcessor(): AudioProcessor =
     )
 
 class SpectrumRenderersFactory(context: Context) : DefaultRenderersFactory(context) {
+    /** Configura o sink Media3 com o processador do espectro. */
     override fun buildAudioSink(
         context: Context,
         enableFloatOutput: Boolean,

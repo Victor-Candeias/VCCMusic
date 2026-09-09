@@ -70,6 +70,7 @@ private enum class TrackSortMode(@androidx.annotation.StringRes val labelRes: In
 }
 
 @Composable
+/** Coordena a navegação entre raiz, pastas e lista completa de faixas. */
 fun LibraryScreen(
     viewModel: LibraryViewModel,
     playbackViewModel: PlaybackViewModel,
@@ -148,6 +149,7 @@ fun LibraryScreen(
 }
 
 @Composable
+/** Apresenta o estado vazio e permite escolher uma raiz musical. */
 private fun EmptyLibrary(onPickRoot: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp),
@@ -166,6 +168,7 @@ private fun EmptyLibrary(onPickRoot: () -> Unit) {
 }
 
 @Composable
+/** Mostra as pastas e faixas diretamente sob a raiz ativa. */
 private fun RootContents(
     rootId: Long,
     rootUri: String,
@@ -192,6 +195,7 @@ private fun RootContents(
 }
 
 @Composable
+/** Mostra o conteúdo de uma pasta, incluindo subpastas e faixas. */
 private fun FolderContents(
     rootId: Long,
     folder: MusicFolderEntity,
@@ -214,6 +218,7 @@ private fun FolderContents(
 }
 
 @Composable
+/** Filtra, ordena e apresenta todas as faixas com ações de reprodução. */
 private fun TrackContents(
     title: String,
     tracks: List<TrackEntity>,
@@ -358,6 +363,7 @@ private fun TrackContents(
 }
 
 @Composable
+/** Renderiza o cabeçalho da biblioteca com navegação opcional para trás. */
 private fun LibraryHeader(title: String, onBack: (() -> Unit)? = null) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
@@ -373,6 +379,7 @@ private fun LibraryHeader(title: String, onBack: (() -> Unit)? = null) {
 }
 
 @Composable
+/** Lista pastas e faixas de uma localização da biblioteca. */
 private fun LibraryItems(
     folders: List<MusicFolderEntity>,
     tracks: List<TrackEntity>,
@@ -460,6 +467,7 @@ private fun LibraryItems(
 }
 
 @Composable
+/** Renderiza uma lista de faixas delegando ações ao cartão de cada faixa. */
 private fun TrackList(
     tracks: List<TrackEntity>,
     onPlay: (Long) -> Unit,
@@ -479,6 +487,7 @@ private fun TrackList(
 }
 
 @Composable
+/** Mostra metadados, artwork e ações de uma faixa. */
 private fun TrackCard(
     track: TrackEntity,
     onPlay: () -> Unit,
@@ -558,6 +567,7 @@ private fun TrackCard(
 }
 
 @Composable
+/** Permite escolher uma playlist existente ou iniciar a sua criação. */
 private fun PlaylistPickerDialog(
     playlists: List<PlaylistEntity>,
     onDismiss: () -> Unit,
@@ -598,6 +608,7 @@ private fun PlaylistPickerDialog(
 }
 
 @Composable
+/** Apresenta uma mensagem quando não há conteúdo para listar. */
 private fun EmptyContent(messageRes: Int) {
     Text(
         stringResource(messageRes),

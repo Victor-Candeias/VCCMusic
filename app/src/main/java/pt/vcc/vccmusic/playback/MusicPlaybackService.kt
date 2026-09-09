@@ -33,6 +33,7 @@ class MusicPlaybackService : MediaLibraryService() {
     private lateinit var libraryCallback: LibraryCallback
     private var radioHttpFallbackAttemptedFor: String? = null
 
+    /** Cria o leitor, a sessão multimédia e inicia a sincronização da biblioteca. */
     override fun onCreate() {
         super.onCreate()
         DiagnosticLogger.log(this, "PlaybackService", "Serviço multimédia iniciado")
@@ -48,6 +49,7 @@ class MusicPlaybackService : MediaLibraryService() {
             .build()
         player.addListener(
             object : Player.Listener {
+                /** Regista erros e tenta HTTP ou a próxima faixa quando aplicável. */
                 override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
                     DiagnosticLogger.log(this@MusicPlaybackService, "Player", "Erro de reprodução", error)
                     val currentItem = player.currentMediaItem
@@ -77,6 +79,7 @@ class MusicPlaybackService : MediaLibraryService() {
         loadActiveLibrary()
     }
 
+    /** Repete uma rádio trocando HTTPS por HTTP como fallback de compatibilidade. */
     private fun retryRadioOverHttp(mediaItem: MediaItem, uri: Uri) {
         player.setMediaItem(
             mediaItem.buildUpon()
@@ -87,6 +90,7 @@ class MusicPlaybackService : MediaLibraryService() {
         player.play()
     }
 
+    /** Observa a raiz ativa e mantém a fila local do leitor sincronizada. */
     private fun loadActiveLibrary() {
         serviceScope.launch(Dispatchers.IO) {
             val container = (application as VccMusicApplication).container
@@ -115,6 +119,7 @@ class MusicPlaybackService : MediaLibraryService() {
         }
     }
 
+    /** Converte uma entidade de faixa num item reproduzível da biblioteca. */
     private fun toMediaItem(track: TrackEntity): MediaItem =
         MediaItem.Builder()
             .setMediaId(trackId(track.id))
@@ -128,6 +133,7 @@ class MusicPlaybackService : MediaLibraryService() {
             )
             .build()
 
+    /** Cria um item navegável que representa uma pasta. */
     private fun toFolderItem(id: Long, name: String): MediaItem =
         MediaItem.Builder()
             .setMediaId(folderId(id))
@@ -140,6 +146,7 @@ class MusicPlaybackService : MediaLibraryService() {
             )
             .build()
 
+    /** Cria um item navegável para uma categoria da biblioteca. */
     private fun toCategoryItem(id: String, title: String): MediaItem =
         MediaItem.Builder()
             .setMediaId(id)
@@ -152,6 +159,7 @@ class MusicPlaybackService : MediaLibraryService() {
             )
             .build()
 
+    /** Cria um item navegável que representa uma playlist. */
     private fun toPlaylistItem(id: Long, name: String): MediaItem =
         MediaItem.Builder()
             .setMediaId(playlistId(id))
@@ -164,16 +172,19 @@ class MusicPlaybackService : MediaLibraryService() {
             )
             .build()
 
+    /** Devolve a sessão multimédia e regista o controlador que a solicitou. */
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? =
         mediaLibrarySession.also {
             DiagnosticLogger.log(this, "PlaybackService", "Sessão solicitada por ${controllerInfo.packageName}")
         }
 
+    /** Encerra o serviço quando a tarefa é removida e não há reprodução ativa. */
     override fun onTaskRemoved(rootIntent: Intent?) {
         if (!player.isPlaying) stopSelf()
         super.onTaskRemoved(rootIntent)
     }
 
+    /** Cancela tarefas, liberta a sessão e liberta o leitor Media3. */
     override fun onDestroy() {
         serviceScope.cancel()
         mediaLibrarySession?.release()
@@ -183,6 +194,7 @@ class MusicPlaybackService : MediaLibraryService() {
     }
 
     private inner class LibraryCallback : MediaLibrarySession.Callback {
+        /** Fornece a categoria raiz navegável da biblioteca. */
         override fun onGetLibraryRoot(
             session: MediaLibrarySession,
             browser: MediaSession.ControllerInfo,
@@ -191,6 +203,7 @@ class MusicPlaybackService : MediaLibraryService() {
             LibraryResult.ofItem(toCategoryItem(ROOT_ID, getString(R.string.app_name)), params)
         }
 
+        /** Resolve filhos de categorias, pastas e playlists com paginação. */
         override fun onGetChildren(
             session: MediaLibrarySession,
             browser: MediaSession.ControllerInfo,
@@ -247,6 +260,7 @@ class MusicPlaybackService : MediaLibraryService() {
             LibraryResult.ofItemList(page(items, page, pageSize), params)
         }
 
+        /** Resolve um item individual a partir do identificador Media3. */
         override fun onGetItem(
             session: MediaLibrarySession,
             browser: MediaSession.ControllerInfo,
@@ -274,6 +288,7 @@ class MusicPlaybackService : MediaLibraryService() {
                 ?: LibraryResult.ofError<MediaItem>(SessionError.ERROR_BAD_VALUE)
         }
 
+        /** Executa um callback suspenso fora da thread do serviço e expõe um futuro. */
         private fun <T> asyncResult(block: suspend () -> LibraryResult<T>): ListenableFuture<LibraryResult<T>> {
             val future = SettableFuture.create<LibraryResult<T>>()
             serviceScope.launch(Dispatchers.IO) {
@@ -287,6 +302,7 @@ class MusicPlaybackService : MediaLibraryService() {
             return future
         }
 
+        /** Devolve a página pedida sem ultrapassar os limites da lista. */
         private fun page(items: List<MediaItem>, page: Int, pageSize: Int): List<MediaItem> {
             if (page < 0 || pageSize <= 0) return emptyList()
             val start = (page.toLong() * pageSize).coerceAtMost(items.size.toLong()).toInt()
@@ -295,8 +311,11 @@ class MusicPlaybackService : MediaLibraryService() {
         }
     }
 
+    /** Codifica o identificador de uma faixa no formato da sessão. */
     private fun trackId(id: Long) = "$TRACK_PREFIX$id"
+    /** Codifica o identificador de uma pasta no formato da sessão. */
     private fun folderId(id: Long) = "$FOLDER_PREFIX$id"
+    /** Codifica o identificador de uma playlist no formato da sessão. */
     private fun playlistId(id: Long) = "$PLAYLIST_PREFIX$id"
 
     private companion object {

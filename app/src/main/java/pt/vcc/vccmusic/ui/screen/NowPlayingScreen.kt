@@ -50,6 +50,7 @@ import pt.vcc.vccmusic.ui.theme.DarkBackgroundBottom
 import kotlin.math.abs
 
 @Composable
+/** Apresenta a faixa atual, artwork, equalizador e controlos de reprodução. */
 fun NowPlayingScreen(
     viewModel: PlaybackViewModel,
     contentPadding: PaddingValues,
@@ -130,6 +131,7 @@ fun NowPlayingScreen(
 }
 
 @Composable
+/** Mostra o título da área e o menu de opções. */
 private fun Header() {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -144,6 +146,7 @@ private fun Header() {
 }
 
 @Composable
+/** Exibe a imagem da faixa ou um marcador musical quando não existe artwork. */
 private fun Artwork(
     state: PlaybackUiState,
     modifier: Modifier,
@@ -175,6 +178,7 @@ private fun Artwork(
 }
 
 @Composable
+/** Renderiza metadados, progresso, equalizador e comandos do leitor. */
 private fun PlaybackControls(
     state: PlaybackUiState,
     viewModel: PlaybackViewModel,
@@ -248,6 +252,7 @@ private fun PlaybackControls(
 }
 
 @Composable
+/** Desenha as barras do equalizador com base nos valores normalizados. */
 private fun SpectrumEqualizer(
     values: List<Float>,
     modifier: Modifier = Modifier,
@@ -271,12 +276,14 @@ private fun SpectrumEqualizer(
     }
 }
 
+/** Formata milissegundos como minutos e segundos para a barra de progresso. */
 private fun formatTime(milliseconds: Long): String {
     val totalSeconds = milliseconds.coerceAtLeast(0) / 1000
     return "%d:%02d".format(totalSeconds / 60, totalSeconds % 60)
 }
 
 @Composable
+/** Traduz o modo de repetição do leitor para o texto localizado. */
 private fun repeatLabel(mode: Int): String = when (mode) {
     Player.REPEAT_MODE_ONE -> stringResource(R.string.repeat_track)
     Player.REPEAT_MODE_ALL -> stringResource(R.string.repeat_queue)

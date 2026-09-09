@@ -15,6 +15,7 @@ data class QueueRequest(
 )
 
 object QueueBuilder {
+    /** Filtra, ordena e coloca a faixa selecionada no início da fila. */
     fun build(request: QueueRequest): List<TrackEntity> {
         val uniqueTracks = request.tracks
             .asSequence()

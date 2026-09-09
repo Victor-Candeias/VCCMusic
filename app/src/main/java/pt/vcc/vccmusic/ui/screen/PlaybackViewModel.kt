@@ -85,6 +85,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         )
     }
 
+    /** Constrói a fila, atualiza o estado e inicia a reprodução das faixas. */
     fun playTracks(
         tracks: List<TrackEntity>,
         selectedId: Long? = null,
@@ -122,6 +123,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         val fourth: D,
     )
 
+    /** Prepara uma rádio online e inicia-a quando o controlador estiver disponível. */
     fun playRadio(name: String, streamUrl: String, artworkPath: String? = null) {
         val mediaId = "radio:$streamUrl"
         viewModelScope.launch {
@@ -144,6 +146,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         playRadioOnController(currentController, name, streamUrl)
     }
 
+    /** Coloca uma estação no controlador Media3 e começa a reprodução. */
     private fun playRadioOnController(
         currentController: MediaController,
         name: String,
@@ -165,26 +168,32 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         currentController.play()
     }
 
+    /** Alterna entre reprodução e pausa. */
     fun playPause() {
         controller?.let { if (it.isPlaying) it.pause() else it.play() }
     }
 
+    /** Procura a posição indicada na faixa atual. */
     fun seekTo(positionMs: Long) {
         controller?.seekTo(positionMs)
     }
 
+    /** Salta para a faixa anterior da fila. */
     fun skipPrevious() {
         controller?.seekToPreviousMediaItem()
     }
 
+    /** Salta para a faixa seguinte da fila. */
     fun skipNext() {
         controller?.seekToNextMediaItem()
     }
 
+    /** Alterna o modo de reprodução aleatória. */
     fun toggleShuffle() {
         controller?.let { it.shuffleModeEnabled = !it.shuffleModeEnabled }
     }
 
+    /** Avança ciclicamente entre desligado, fila e faixa única. */
     fun cycleRepeat() {
         controller?.let {
             it.repeatMode = when (it.repeatMode) {
@@ -196,11 +205,13 @@ class PlaybackViewModel(context: Context) : ViewModel() {
     }
 
     private val listener = object : Player.Listener {
+        /** Atualiza o estado exposto quando o leitor comunica alterações. */
         override fun onEvents(player: Player, events: Player.Events) {
             updateState(player)
         }
     }
 
+    /** Copia metadados e posição do leitor para o estado da interface. */
     private fun updateState(player: Player) {
         val metadata = player.mediaMetadata
         val mediaId = player.currentMediaItem?.mediaId
@@ -220,6 +231,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         )
     }
 
+    /** Converte uma faixa persistida num item reproduzível Media3. */
     private fun toMediaItem(track: TrackEntity): MediaItem =
         MediaItem.Builder()
             .setMediaId(track.id.toString())
@@ -233,6 +245,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
             )
             .build()
 
+    /** Cancela o ticker e liberta o controlador ao destruir o ViewModel. */
     override fun onCleared() {
         ticker?.cancel()
         controller?.removeListener(listener)

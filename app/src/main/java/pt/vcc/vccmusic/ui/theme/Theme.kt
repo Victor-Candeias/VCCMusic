@@ -32,6 +32,7 @@ private val LightColors = lightColorScheme(
 )
 
 @Composable
+/** Aplica o esquema de cores e o conteúdo Compose da aplicação. */
 fun VccMusicTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
@@ -53,6 +54,7 @@ fun VccMusicTheme(
     )
 }
 
+/** Cria o gradiente de fundo correspondente ao tema selecionado. */
 fun appBackgroundBrush(darkTheme: Boolean): Brush = Brush.verticalGradient(
     colors = if (darkTheme) {
         listOf(DarkBackgroundTop, DarkBackgroundBottom)

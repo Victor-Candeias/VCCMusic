@@ -53,6 +53,7 @@ import pt.vcc.vccmusic.data.local.TrackEntity
 import pt.vcc.vccmusic.playback.QueueSource
 
 @Composable
+/** Apresenta playlists e o detalhe da playlist selecionada. */
 fun PlaylistScreen(
     viewModel: PlaylistViewModel,
     rootId: Long?,
@@ -116,6 +117,7 @@ fun PlaylistScreen(
 }
 
 @Composable
+/** Mostra uma playlist com contagem, favorito e comandos de reprodução. */
 private fun PlaylistCard(
     playlist: PlaylistEntity,
     trackCount: Int,
@@ -174,6 +176,7 @@ private fun PlaylistCard(
 }
 
 @Composable
+/** Renderiza o título da área de playlists. */
 private fun PlaylistHeader() {
     Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -184,6 +187,7 @@ private fun PlaylistHeader() {
 }
 
 @Composable
+/** Apresenta as faixas de uma playlist e ações de edição ou remoção. */
 private fun PlaylistDetail(
     playlist: PlaylistEntity,
     viewModel: PlaylistViewModel,
@@ -266,6 +270,7 @@ private fun PlaylistDetail(
 }
 
 @Composable
+/** Mostra uma faixa da playlist com a ação de a remover. */
 private fun TrackRow(
     track: TrackEntity,
     onRemove: () -> Unit,
@@ -309,6 +314,7 @@ private fun TrackRow(
 }
 
 @Composable
+/** Solicita e valida o novo nome de uma playlist. */
 private fun PlaylistNameDialog(
     title: String,
     initialName: String = "",

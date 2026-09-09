@@ -17,6 +17,7 @@ class ReindexWorker(
     appContext: Context,
     workerParams: WorkerParameters,
 ) : CoroutineWorker(appContext, workerParams) {
+    /** Reindexa a raiz ativa em segundo plano quando o acesso ainda é válido. */
     override suspend fun doWork(): Result {
         val container = (applicationContext as VccMusicApplication).container
         val rootUri = container.safRootRepository.loadActiveRoot() ?: return Result.success()
@@ -36,6 +37,7 @@ class ReindexWorker(
 }
 
 object ReindexScheduler {
+    /** Agenda uma única reindexação com restrições de bateria e rede. */
     fun enqueue(context: Context) {
         val request = OneTimeWorkRequestBuilder<ReindexWorker>()
             .setConstraints(

@@ -64,6 +64,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @Composable
+/** Monta a navegação principal, barras globais e os ViewModels da aplicação. */
 fun VccMusicApp(
     modifier: Modifier = Modifier,
     musicRepository: MusicRepository,
@@ -84,6 +85,7 @@ fun VccMusicApp(
     val libraryViewModel: LibraryViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
+            /** Cria o ViewModel responsável pela biblioteca musical. */
             override fun <T : ViewModel> create(modelClass: Class<T>): T =
                 LibraryViewModel(musicRepository) as T
         },
@@ -92,6 +94,7 @@ fun VccMusicApp(
     val playlistViewModel: PlaylistViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
+            /** Cria o ViewModel responsável pelas playlists. */
             override fun <T : ViewModel> create(modelClass: Class<T>): T =
                 PlaylistViewModel(musicRepository) as T
         },
@@ -114,6 +117,7 @@ fun VccMusicApp(
     val playbackViewModel: PlaybackViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
+            /** Cria o ViewModel que controla a reprodução multimédia. */
             override fun <T : ViewModel> create(modelClass: Class<T>): T =
                 PlaybackViewModel(context) as T
         },

@@ -25,9 +25,13 @@ sealed interface RootAccess {
 
 interface SafRootRepository {
     val activeRootUri: Flow<String?>
+    /** Valida, autoriza e persiste uma URI de árvore SAF. */
     suspend fun accept(uri: Uri): Result<Uri>
+    /** Verifica se a URI é válida, autorizada e acessível. */
     suspend fun access(uri: Uri): RootAccess
+    /** Recupera a URI da raiz guardada nas preferências. */
     suspend fun loadActiveRoot(): Uri?
+    /** Remove a raiz ativa das preferências. */
     suspend fun clear()
 }
 
@@ -40,6 +44,7 @@ class AndroidSafRootRepository(
     override val activeRootUri: Flow<String?> =
         appContext.rootPreferences.data.map { preferences -> preferences[activeRootKey] }
 
+    /** Valida a URI e guarda a permissão persistente como raiz ativa. */
     override suspend fun accept(uri: Uri): Result<Uri> {
         if (uri.scheme != ContentResolver.SCHEME_CONTENT ||
             !DocumentsContract.isTreeUri(uri)
@@ -62,6 +67,7 @@ class AndroidSafRootRepository(
         }
     }
 
+    /** Classifica o acesso à árvore SAF, distinguindo permissão e inexistência. */
     override suspend fun access(uri: Uri): RootAccess {
         if (uri.scheme != ContentResolver.SCHEME_CONTENT ||
             !DocumentsContract.isTreeUri(uri)
@@ -95,10 +101,12 @@ class AndroidSafRootRepository(
         }
     }
 
+    /** Elimina a referência persistida à raiz ativa. */
     override suspend fun clear() {
         appContext.rootPreferences.edit { preferences -> preferences.remove(activeRootKey) }
     }
 
+    /** Lê e converte a URI ativa guardada, quando disponível. */
     override suspend fun loadActiveRoot(): Uri? =
         activeRootUri.first()?.let(Uri::parse)
 }

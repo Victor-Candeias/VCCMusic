@@ -77,6 +77,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /** Inicializa a interface, preferências de tema e o trabalho de reindexação. */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DiagnosticLogger.log(this, "App", "Aplicação aberta")
@@ -105,6 +106,7 @@ class MainActivity : ComponentActivity() {
         ReindexScheduler.enqueue(this)
     }
 
+    /** Reindexa a raiz ativa, atualizando progresso e feedback conforme solicitado. */
     private fun reindexCurrentRoot(showFeedback: Boolean, showProgress: Boolean) {
         if (reindexJob?.isActive == true) return
         if (showProgress) {
@@ -170,10 +172,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /** Apresenta ao utilizador o resultado textual de uma operação de reindexação. */
     private fun showReindexMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
+    /** Abre o seletor SAF para exportar o ficheiro de diagnóstico. */
     private fun shareDiagnosticLog() {
         DiagnosticLogger.log(this, "UI", "Log exportado pelo utilizador")
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
@@ -188,6 +192,7 @@ class MainActivity : ComponentActivity() {
         diagnosticLogDestination.launch(intent)
     }
 
+    /** Obtém a instância da aplicação para aceder ao contentor de dependências. */
     private val appInstance: VccMusicApplication
         get() = super.getApplication() as VccMusicApplication
 }

@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import pt.vcc.vccmusic.R
 
 @Composable
+/** Apresenta as opções de navegação da área de música. */
 fun MusicMenuScreen(
     contentPadding: PaddingValues,
     onTracks: () -> Unit,
@@ -45,6 +46,7 @@ fun MusicMenuScreen(
 }
 
 @Composable
+/** Renderiza uma ação de menu com o texto e callback fornecidos. */
 private fun MenuAction(labelRes: Int, onClick: () -> Unit) {
     ElevatedButton(onClick = onClick) {
         Text(stringResource(labelRes))

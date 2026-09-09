@@ -39,6 +39,7 @@ data class ScanError(
 )
 
 interface MusicScanner {
+    /** Indexa a árvore SAF e comunica o progresso da leitura. */
     suspend fun scan(
         root: Uri,
         rootId: Long,
@@ -68,6 +69,7 @@ class SafMusicScanner(
 ) : MusicScanner {
     private val resolver: ContentResolver = context.applicationContext.contentResolver
 
+    /** Executa a indexação no dispatcher de IO para não bloquear a interface. */
     override suspend fun scan(
         root: Uri,
         rootId: Long,
@@ -76,6 +78,7 @@ class SafMusicScanner(
         scanOnIo(root, rootId, onProgress)
     }
 
+    /** Percorre pastas, lê metadados e substitui o índice numa transação. */
     private suspend fun scanOnIo(
         root: Uri,
         rootId: Long,
@@ -196,6 +199,7 @@ class SafMusicScanner(
         return ScanResult(true, folders.size, tracksByUri.size, errors)
     }
 
+    /** Lista os documentos filhos de uma pasta SAF. */
     private fun listChildren(folderUri: Uri): List<DocumentInfo> {
         val documentId = if (folderUri.pathSegments.contains("document")) {
             DocumentsContract.getDocumentId(folderUri)
@@ -230,6 +234,7 @@ class SafMusicScanner(
         } ?: throw IOException("O provider não devolveu documentos.")
     }
 
+    /** Determina se um documento deve ser tratado como ficheiro de áudio. */
     private fun isAudio(document: DocumentInfo): Boolean {
         val mime = document.mimeType?.lowercase()
         if (mime?.startsWith("audio/") == true) return true
@@ -237,6 +242,7 @@ class SafMusicScanner(
         return AUDIO_EXTENSIONS.any { document.name.endsWith(it, ignoreCase = true) }
     }
 
+    /** Lê metadados e artwork de uma faixa, limitando o tamanho da imagem. */
     private fun readTrack(
         document: DocumentInfo,
         rootId: Long,

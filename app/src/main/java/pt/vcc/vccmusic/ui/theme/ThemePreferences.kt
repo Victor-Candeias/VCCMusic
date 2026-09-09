@@ -12,11 +12,13 @@ private val Context.themePreferencesDataStore by preferencesDataStore(name = "th
 object ThemePreferences {
     private val darkThemeKey = booleanPreferencesKey("dark_theme")
 
+    /** Observa a preferência persistida do tema escuro, usando claro por defeito. */
     fun observeDarkTheme(context: Context): Flow<Boolean> =
         context.themePreferencesDataStore.data.map { preferences ->
             preferences[darkThemeKey] ?: false
         }
 
+    /** Persiste a preferência do tema escuro no DataStore da aplicação. */
     suspend fun setDarkTheme(context: Context, enabled: Boolean) {
         context.themePreferencesDataStore.edit { preferences ->
             preferences[darkThemeKey] = enabled

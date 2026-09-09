@@ -15,9 +15,11 @@ object DiagnosticLogger {
     private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z", Locale.US)
     private val exportFileFormatter = SimpleDateFormat("yyyyMMddHHmmss", Locale.US)
 
+    /** Gera um nome de ficheiro com timestamp para exportar o diagnóstico. */
     fun suggestedExportFileName(): String =
         "vccmusic-diagnostic-${exportFileFormatter.format(Date())}.log"
 
+    /** Acrescenta uma entrada limitada ao ficheiro de diagnóstico sem interromper a aplicação. */
     fun log(context: Context, component: String, message: String, error: Throwable? = null) {
         val line = buildString {
             append(formatter.format(Date()))
@@ -46,6 +48,7 @@ object DiagnosticLogger {
         }
     }
 
+    /** Copia o ficheiro de diagnóstico para o destino SAF fornecido. */
     fun writeTo(context: Context, destination: Uri) {
         synchronized(lock) {
             try {
@@ -59,6 +62,7 @@ object DiagnosticLogger {
         }
     }
 
+    /** Resolve o ficheiro privado utilizado para armazenar os diagnósticos. */
     private fun logFile(context: Context): File =
         File(context.filesDir, LOG_FILE_NAME)
 }

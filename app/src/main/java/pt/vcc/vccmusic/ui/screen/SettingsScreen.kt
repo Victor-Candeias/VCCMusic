@@ -37,6 +37,7 @@ private data class SettingsAction(
 )
 
 @Composable
+/** Apresenta as ações de configuração da aplicação. */
 fun SettingsScreen(
     contentPadding: PaddingValues,
     onPickRoot: () -> Unit,
@@ -104,6 +105,7 @@ fun SettingsScreen(
 }
 
 @Composable
+/** Renderiza um cartão de ação das definições. */
 private fun SettingsTile(
     action: SettingsAction,
     modifier: Modifier = Modifier,

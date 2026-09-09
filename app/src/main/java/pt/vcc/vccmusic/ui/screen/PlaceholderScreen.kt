@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import pt.vcc.vccmusic.R
 
 @Composable
+/** Mostra um ecrã de funcionalidade ainda não implementada. */
 fun PlaceholderScreen(
     @StringRes titleRes: Int,
     contentPadding: PaddingValues,

@@ -17,19 +17,25 @@ import androidx.room.RoomDatabase
     exportSchema = true,
 )
 abstract class MusicDatabase : RoomDatabase() {
+    /** Fornece o DAO das raízes de música. */
     abstract fun musicRootDao(): MusicRootDao
+    /** Fornece o DAO das pastas de música. */
     abstract fun musicFolderDao(): MusicFolderDao
+    /** Fornece o DAO das faixas. */
     abstract fun trackDao(): TrackDao
+    /** Fornece o DAO das playlists. */
     abstract fun playlistDao(): PlaylistDao
 }
 
 val MUSIC_DATABASE_MIGRATION_1_2 = object : Migration(1, 2) {
+    /** Adiciona a coluna de favoritos das faixas durante a migração. */
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE tracks ADD COLUMN isFavorite INTEGER NOT NULL DEFAULT 0")
     }
 }
 
 val MUSIC_DATABASE_MIGRATION_2_3 = object : Migration(2, 3) {
+    /** Adiciona a coluna de favoritos das playlists durante a migração. */
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE playlists ADD COLUMN isFavorite INTEGER NOT NULL DEFAULT 0")
     }

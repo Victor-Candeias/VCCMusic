@@ -23,6 +23,7 @@ const val DEFAULT_RADIO_BROWSER_API_URL =
 private const val MAX_FAVICON_SIZE_BYTES = 2 * 1024 * 1024
 
 private val RADIO_DATABASE_MIGRATION_1_2 = object : Migration(1, 2) {
+    /** Adiciona o caminho local opcional do favicon. */
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL(
             "ALTER TABLE radio_stations ADD COLUMN faviconLocalPath TEXT",
@@ -31,6 +32,7 @@ private val RADIO_DATABASE_MIGRATION_1_2 = object : Migration(1, 2) {
 }
 
 private val RADIO_DATABASE_MIGRATION_2_3 = object : Migration(2, 3) {
+    /** Limpa estações antigas após a alteração do modelo remoto. */
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("DELETE FROM radio_stations")
     }
@@ -55,9 +57,11 @@ class RadioBrowserRepository(context: Context) {
     ).addMigrations(RADIO_DATABASE_MIGRATION_1_2, RADIO_DATABASE_MIGRATION_2_3).build()
     private val dao = database.radioStationDao()
 
+    /** Observa as estações configuradas e converte-as para o modelo de domínio. */
     fun observePortugueseStations(): Flow<List<RadioBrowserStation>> =
         dao.observeAll().map { stations -> stations.map { it.toDomain() } }
 
+    /** Atualiza apenas as estações remotas que já estavam configuradas. */
     suspend fun refreshPortugueseStations() {
         val configuredIds = dao.findAll().map { it.id }.toSet()
         val stations = fetchAvailablePortugueseStations()
@@ -65,10 +69,12 @@ class RadioBrowserRepository(context: Context) {
         saveStations(stations)
     }
 
+    /** Obtém a lista atual de estações portuguesas no Radio Browser. */
     suspend fun fetchAvailablePortugueseStations(): List<RadioBrowserStation> {
         return fetchPortugueseStations(DEFAULT_RADIO_BROWSER_API_URL)
     }
 
+    /** Substitui atomicamente a configuração local de estações. */
     suspend fun replaceConfiguredStations(stations: List<RadioBrowserStation>) {
         database.withTransaction {
             dao.deleteAll()
@@ -76,6 +82,7 @@ class RadioBrowserRepository(context: Context) {
         }
     }
 
+    /** Guarda estações preservando favoritos e ícones ainda válidos. */
     private suspend fun saveStations(stations: List<RadioBrowserStation>) {
         val existingStations = dao.findAll().associateBy { it.id }
         dao.upsertAll(
@@ -90,10 +97,12 @@ class RadioBrowserRepository(context: Context) {
         )
     }
 
+    /** Atualiza o estado de favorito de uma estação configurada. */
     suspend fun setFavorite(stationId: String, isFavorite: Boolean) {
         dao.setFavorite(stationId, isFavorite)
     }
 
+    /** Descarrega e armazena localmente o favicon, respeitando o limite de tamanho. */
     suspend fun cacheFavicon(station: RadioBrowserStation): String? =
         withContext(Dispatchers.IO) {
             station.favicon ?: return@withContext null
@@ -133,6 +142,7 @@ class RadioBrowserRepository(context: Context) {
             }
         }
 
+    /** Consulta o endpoint Radio Browser e converte o JSON em estações. */
     private suspend fun fetchPortugueseStations(apiUrl: String): List<RadioBrowserStation> =
         withContext(Dispatchers.IO) {
         val connection = URL(apiUrl).openConnection() as HttpURLConnection
@@ -174,6 +184,7 @@ class RadioBrowserRepository(context: Context) {
         }
     }
 
+    /** Converte uma estação de domínio em entidade persistível. */
     private fun RadioBrowserStation.toEntity(
         isFavorite: Boolean,
         faviconLocalPath: String?,
@@ -187,6 +198,7 @@ class RadioBrowserRepository(context: Context) {
         isFavorite = isFavorite,
     )
 
+    /** Converte uma entidade persistida no modelo usado pela interface. */
     private fun RadioStationEntity.toDomain() = RadioBrowserStation(
         id = id,
         name = name,
@@ -197,6 +209,7 @@ class RadioBrowserRepository(context: Context) {
         isFavorite = isFavorite,
     )
 
+    /** Gera um nome hexadecimal estável para cache local de favicons. */
     private fun String.toSha256(): String =
         MessageDigest.getInstance("SHA-256").digest(toByteArray()).joinToString("") {
             "%02x".format(it)

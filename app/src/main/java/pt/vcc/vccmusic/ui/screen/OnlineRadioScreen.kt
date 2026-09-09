@@ -77,6 +77,7 @@ private val radioGenres = listOf(
 )
 
 @Composable
+/** Carrega, configura e apresenta as estações portuguesas disponíveis. */
 fun OnlineRadioScreen(
     playbackViewModel: PlaybackViewModel,
     contentPadding: PaddingValues,
@@ -199,6 +200,7 @@ fun OnlineRadioScreen(
 }
 
 @Composable
+/** Permite pesquisar, filtrar e guardar a seleção de estações. */
 private fun RadioSelectionScreen(
     stations: List<RadioBrowserStation>,
     initiallySelectedIds: Set<String>,
@@ -310,6 +312,7 @@ private fun RadioSelectionScreen(
 }
 
 @Composable
+/** Renderiza uma estação com estado de reprodução, favorito e favicon. */
 private fun RadioCard(
     station: RadioBrowserStation,
     repository: RadioBrowserRepository,
@@ -373,6 +376,7 @@ private fun RadioCard(
 }
 
 @Composable
+/** Carrega o favicon em cache e apresenta-o sem bloquear a composição. */
 private fun RadioFavicon(
     station: RadioBrowserStation,
     repository: RadioBrowserRepository,

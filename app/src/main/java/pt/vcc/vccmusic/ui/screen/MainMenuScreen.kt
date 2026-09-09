@@ -49,6 +49,7 @@ private data class QuickAction(
 )
 
 @Composable
+/** Apresenta atalhos principais e os favoritos de música e rádio. */
 fun MainMenuScreen(
     contentPadding: PaddingValues,
     onMusic: () -> Unit,
@@ -190,6 +191,7 @@ fun MainMenuScreen(
 }
 
 @Composable
+/** Mostra uma playlist favorita com contagem e opção de mistura. */
 private fun FavoritePlaylistCard(
     playlist: PlaylistEntity,
     trackCount: Int,
@@ -224,6 +226,7 @@ private fun FavoritePlaylistCard(
 }
 
 @Composable
+/** Mostra uma faixa favorita como cartão reproduzível. */
 private fun FavoriteTrackCard(
     track: TrackEntity,
     onClick: () -> Unit,
@@ -249,6 +252,7 @@ private fun FavoriteTrackCard(
 }
 
 @Composable
+/** Desenha um cartão de acesso a uma funcionalidade da aplicação. */
 private fun FeatureCard(
     action: QuickAction,
     modifier: Modifier = Modifier,
@@ -271,6 +275,7 @@ private fun FeatureCard(
 }
 
 @Composable
+/** Mostra uma estação de rádio favorita como cartão reproduzível. */
 private fun FavoriteCard(
     station: RadioBrowserStation,
     onClick: () -> Unit,
