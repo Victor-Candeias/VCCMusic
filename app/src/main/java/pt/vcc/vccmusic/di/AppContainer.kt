@@ -6,6 +6,7 @@ import pt.vcc.vccmusic.data.MusicRepository
 import pt.vcc.vccmusic.data.RoomMusicRepository
 import pt.vcc.vccmusic.data.local.MusicDatabase
 import pt.vcc.vccmusic.data.local.MUSIC_DATABASE_MIGRATION_1_2
+import pt.vcc.vccmusic.data.local.MUSIC_DATABASE_MIGRATION_2_3
 import pt.vcc.vccmusic.data.saf.AndroidSafRootRepository
 import pt.vcc.vccmusic.data.saf.SafRootRepository
 import pt.vcc.vccmusic.scanner.MusicScanner
@@ -24,7 +25,7 @@ class DefaultAppContainer(
 
     private val database: MusicDatabase by lazy {
         Room.databaseBuilder(appContext, MusicDatabase::class.java, "music.db")
-            .addMigrations(MUSIC_DATABASE_MIGRATION_1_2)
+            .addMigrations(MUSIC_DATABASE_MIGRATION_1_2, MUSIC_DATABASE_MIGRATION_2_3)
             .build()
     }
 

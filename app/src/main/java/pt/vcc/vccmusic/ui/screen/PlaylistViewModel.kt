@@ -27,6 +27,10 @@ class PlaylistViewModel(
         if (name.isNotBlank()) repository.renamePlaylist(playlistId, name)
     }
 
+    fun setFavorite(playlistId: Long, isFavorite: Boolean) = viewModelScope.launch {
+        repository.setPlaylistFavorite(playlistId, isFavorite)
+    }
+
     fun delete(playlistId: Long) = viewModelScope.launch {
         repository.deletePlaylist(playlistId)
     }

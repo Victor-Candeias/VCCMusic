@@ -9,6 +9,12 @@ import androidx.room.Upsert
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+data class PlaylistTrackSnapshot(
+    val playlistId: Long,
+    val trackUri: String,
+    val position: Int,
+)
+
 @Dao
 interface MusicRootDao {
     @Query("SELECT * FROM music_roots WHERE isActive = 1 LIMIT 1")
@@ -116,6 +122,9 @@ interface TrackDao {
     @Query("SELECT * FROM tracks WHERE id = :trackId LIMIT 1")
     suspend fun findById(trackId: Long): TrackEntity?
 
+    @Query("SELECT * FROM tracks WHERE rootId = :rootId AND uri IN (:uris)")
+    suspend fun findByUris(rootId: Long, uris: List<String>): List<TrackEntity>
+
     @Query("UPDATE tracks SET isFavorite = :isFavorite WHERE id = :trackId")
     suspend fun setFavorite(trackId: Long, isFavorite: Boolean)
 
@@ -134,6 +143,17 @@ interface TrackDao {
 
 @Dao
 interface PlaylistDao {
+    @Query(
+        """
+        SELECT playlist_tracks.playlistId, tracks.uri AS trackUri, playlist_tracks.position
+        FROM playlist_tracks
+        INNER JOIN tracks ON tracks.id = playlist_tracks.trackId
+        WHERE tracks.rootId = :rootId
+        ORDER BY playlist_tracks.playlistId, playlist_tracks.position
+        """,
+    )
+    suspend fun snapshotTracksForRoot(rootId: Long): List<PlaylistTrackSnapshot>
+
     @Query("SELECT * FROM playlists ORDER BY name COLLATE NOCASE, id")
     fun observeAll(): Flow<List<PlaylistEntity>>
 
@@ -145,6 +165,9 @@ interface PlaylistDao {
 
     @Update
     suspend fun update(playlist: PlaylistEntity)
+
+    @Query("UPDATE playlists SET isFavorite = :isFavorite WHERE id = :playlistId")
+    suspend fun setFavorite(playlistId: Long, isFavorite: Boolean)
 
     @Query("DELETE FROM playlists WHERE id = :playlistId")
     suspend fun delete(playlistId: Long)

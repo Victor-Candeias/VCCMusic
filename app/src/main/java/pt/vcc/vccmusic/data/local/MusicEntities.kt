@@ -89,6 +89,7 @@ data class TrackEntity(
 data class PlaylistEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
+    val isFavorite: Boolean = false,
 )
 
 @Entity(

@@ -1,10 +1,14 @@
 package pt.vcc.vccmusic.ui.screen
 
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,13 +19,17 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -32,6 +40,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -47,11 +58,11 @@ fun PlaylistScreen(
     rootId: Long?,
     contentPadding: PaddingValues,
     playbackViewModel: PlaybackViewModel,
+    onTrackPlayed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val playlists by viewModel.playlists.collectAsStateWithLifecycle(initialValue = emptyList())
     var selected by remember { mutableStateOf<PlaylistEntity?>(null) }
-    var showCreate by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -60,60 +71,115 @@ fun PlaylistScreen(
             .testTag("screen-playlists"),
     ) {
         if (selected == null) {
-            PlaylistHeader(onCreate = { showCreate = true })
+                PlaylistHeader()
             if (playlists.isEmpty()) {
                 Text(stringResource(R.string.no_playlists), modifier = Modifier.padding(24.dp))
             } else {
                 LazyColumn {
                     items(playlists, key = { it.id }) { playlist ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth().clickable { selected = playlist }.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(Icons.AutoMirrored.Filled.List, null)
-                            Text(playlist.name, modifier = Modifier.padding(start = 12.dp))
-                        }
-                        HorizontalDivider()
+                        val tracks by viewModel.observeTracks(playlist.id)
+                            .collectAsStateWithLifecycle(initialValue = emptyList())
+                        PlaylistCard(
+                            playlist = playlist,
+                            trackCount = tracks.size,
+                            onOpen = { selected = playlist },
+                            onPlay = {
+                                playbackViewModel.playTracks(tracks, source = QueueSource.SELECTION, shuffle = false)
+                                onTrackPlayed()
+                            },
+                            onShuffle = {
+                                playbackViewModel.playTracks(tracks, source = QueueSource.SELECTION, shuffle = true)
+                                onTrackPlayed()
+                            },
+                            onToggleFavorite = {
+                                viewModel.setFavorite(playlist.id, !playlist.isFavorite)
+                            },
+                        )
                     }
                 }
             }
+
         } else {
             PlaylistDetail(
                 playlist = selected!!,
                 viewModel = viewModel,
-                rootId = rootId,
                 onBack = { selected = null },
                 onDelete = {
                     viewModel.delete(selected!!.id)
                     selected = null
                 },
                 playbackViewModel = playbackViewModel,
+                onTrackPlayed = onTrackPlayed,
             )
         }
-    }
-    if (showCreate) {
-        PlaylistNameDialog(
-            title = stringResource(R.string.create_playlist),
-            onDismiss = { showCreate = false },
-            onConfirm = {
-                viewModel.create(it)
-                showCreate = false
-            },
-        )
     }
 }
 
 @Composable
-private fun PlaylistHeader(onCreate: () -> Unit) {
+private fun PlaylistCard(
+    playlist: PlaylistEntity,
+    trackCount: Int,
+    onOpen: () -> Unit,
+    onPlay: () -> Unit,
+    onShuffle: () -> Unit,
+    onToggleFavorite: () -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+            .clickable(onClick = onOpen),
+        colors = androidx.compose.material3.CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+        ),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Brush.horizontalGradient(
+                        listOf(
+                            MaterialTheme.colorScheme.primaryContainer,
+                            MaterialTheme.colorScheme.tertiaryContainer,
+                        ),
+                    ),
+                )
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
+            Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
+                Text(playlist.name, style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = "$trackCount ${if (trackCount == 1) "música" else "músicas"}",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+            IconButton(onClick = onToggleFavorite) {
+                Icon(
+                    imageVector = if (playlist.isFavorite) Icons.Default.Star else Icons.Outlined.StarBorder,
+                    contentDescription = stringResource(
+                        if (playlist.isFavorite) R.string.remove_from_favorites else R.string.add_to_favorites,
+                    ),
+                )
+            }
+            IconButton(onClick = onPlay, enabled = trackCount > 0) {
+                Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.play_playlist))
+            }
+            IconButton(onClick = onShuffle, enabled = trackCount > 0) {
+                Icon(Icons.Default.Shuffle, contentDescription = stringResource(R.string.shuffle))
+            }
+        }
+    }
+}
+
+@Composable
+private fun PlaylistHeader() {
     Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(stringResource(R.string.playlists), style = MaterialTheme.typography.headlineSmall)
-        Button(onClick = onCreate) {
-            Text(stringResource(R.string.create_playlist))
-        }
     }
 }
 
@@ -121,18 +187,14 @@ private fun PlaylistHeader(onCreate: () -> Unit) {
 private fun PlaylistDetail(
     playlist: PlaylistEntity,
     viewModel: PlaylistViewModel,
-    rootId: Long?,
     onBack: () -> Unit,
     onDelete: () -> Unit,
     playbackViewModel: PlaybackViewModel,
+    onTrackPlayed: () -> Unit,
 ) {
     val tracks by viewModel.observeTracks(playlist.id)
         .collectAsStateWithLifecycle(initialValue = emptyList())
-    val allTracks = rootId?.let {
-        viewModel.observeAllTracks(it).collectAsStateWithLifecycle(initialValue = emptyList()).value
-    } ?: emptyList()
     var showRename by remember { mutableStateOf(false) }
-    val trackIds = tracks.map { it.id }
     var confirmDelete by remember { mutableStateOf(false) }
 
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
@@ -148,7 +210,10 @@ private fun PlaylistDetail(
         }
     }
     Button(
-        onClick = { playbackViewModel.playTracks(tracks, source = QueueSource.SELECTION) },
+        onClick = {
+            playbackViewModel.playTracks(tracks, source = QueueSource.SELECTION, shuffle = false)
+            onTrackPlayed()
+        },
         enabled = tracks.isNotEmpty(),
         modifier = Modifier.padding(horizontal = 16.dp),
     ) {
@@ -158,24 +223,13 @@ private fun PlaylistDetail(
         items(tracks, key = { it.id }) { track ->
             TrackRow(
                 track = track,
-                onRemove = { viewModel.replaceTracks(playlist.id, trackIds - track.id) },
-                onMoveUp = {
-                    val index = trackIds.indexOf(track.id)
-                    if (index > 0) viewModel.replaceTracks(playlist.id, trackIds.swap(index, index - 1))
-                },
-                onMoveDown = {
-                    val index = trackIds.indexOf(track.id)
-                    if (index < trackIds.lastIndex) viewModel.replaceTracks(playlist.id, trackIds.swap(index, index + 1))
+                onRemove = {
+                    viewModel.replaceTracks(
+                        playlist.id,
+                        tracks.map { it.id }.filterNot { it == track.id },
+                    )
                 },
             )
-        }
-        items(allTracks.filterNot { it.id in trackIds }, key = { "available-${it.id}" }) { track ->
-            OutlinedButton(
-                onClick = { viewModel.replaceTracks(playlist.id, trackIds + track.id) },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-            ) {
-                Text(stringResource(R.string.add_track, track.title))
-            }
         }
     }
     if (showRename) {
@@ -215,18 +269,43 @@ private fun PlaylistDetail(
 private fun TrackRow(
     track: TrackEntity,
     onRemove: () -> Unit,
-    onMoveUp: () -> Unit,
-    onMoveDown: () -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
-        Text(track.title, style = MaterialTheme.typography.titleMedium)
-        Row {
-            TextButton(onClick = onMoveUp) { Text(stringResource(R.string.move_up)) }
-            TextButton(onClick = onMoveDown) { Text(stringResource(R.string.move_down)) }
-            TextButton(onClick = onRemove) { Text(stringResource(R.string.remove)) }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        val artwork = track.artwork?.let {
+            BitmapFactory.decodeByteArray(it, 0, it.size)?.asImageBitmap()
         }
-        HorizontalDivider()
+        if (artwork != null) {
+            Image(
+                bitmap = artwork,
+                contentDescription = track.title,
+                modifier = Modifier.size(56.dp),
+                contentScale = ContentScale.Crop,
+            )
+        } else {
+            Icon(
+                Icons.AutoMirrored.Filled.List,
+                contentDescription = null,
+                modifier = Modifier.size(56.dp),
+            )
+        }
+        Text(
+            track.title,
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 12.dp).weight(1f),
+        )
+        IconButton(onClick = onRemove) {
+            Icon(
+                Icons.Default.Delete,
+                contentDescription = stringResource(R.string.remove),
+            )
+        }
     }
+    HorizontalDivider()
 }
 
 @Composable
@@ -258,10 +337,3 @@ private fun PlaylistNameDialog(
         },
     )
 }
-
-private fun List<Long>.swap(first: Int, second: Int): List<Long> =
-    toMutableList().also { values ->
-        val value = values[first]
-        values[first] = values[second]
-        values[second] = value
-    }

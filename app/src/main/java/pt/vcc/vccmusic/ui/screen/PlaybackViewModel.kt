@@ -52,7 +52,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
     private var controller: MediaController? = null
     private var ticker: Job? = null
     private var pendingRadio: Pair<String, String>? = null
-    private var pendingTracks: Triple<List<TrackEntity>, Long?, QueueSource>? = null
+    private var pendingTracks: Quadruple<List<TrackEntity>, Long?, QueueSource, Boolean?>? = null
 
     init {
         controllerFuture.addListener(
@@ -64,9 +64,9 @@ class PlaybackViewModel(context: Context) : ViewModel() {
                             pendingRadio = null
                             playRadioOnController(it, name, streamUrl)
                         }
-                        pendingTracks?.let { (tracks, selectedId, source) ->
+                        pendingTracks?.let { (tracks, selectedId, source, shuffle) ->
                             pendingTracks = null
-                            playTracks(tracks, selectedId, source)
+                            playTracks(tracks, selectedId, source, shuffle)
                         }
                     ticker = viewModelScope.launch {
                         while (isActive) {
@@ -85,7 +85,12 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         )
     }
 
-    fun playTracks(tracks: List<TrackEntity>, selectedId: Long? = null, source: QueueSource = QueueSource.SELECTION) {
+    fun playTracks(
+        tracks: List<TrackEntity>,
+        selectedId: Long? = null,
+        source: QueueSource = QueueSource.SELECTION,
+        shuffle: Boolean? = null,
+    ) {
         val queue = QueueBuilder.build(QueueRequest(source, tracks, selectedId))
         if (queue.isEmpty()) return
         val selectedTrack = queue.firstOrNull { it.id == selectedId } ?: queue.first()
@@ -99,15 +104,23 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         }
         val currentController = controller
         if (currentController == null) {
-            pendingTracks = Triple(tracks, selectedId, source)
+            pendingTracks = Quadruple(tracks, selectedId, source, shuffle)
             return
         }
         currentController.setMediaItems(queue.map(::toMediaItem))
+        shuffle?.let { currentController.shuffleModeEnabled = it }
         val selectedIndex = selectedId?.let { id -> queue.indexOfFirst { it.id == id } } ?: 0
         currentController.prepare()
         currentController.seekTo(selectedIndex.coerceAtLeast(0), 0)
         currentController.play()
     }
+
+    private data class Quadruple<A, B, C, D>(
+        val first: A,
+        val second: B,
+        val third: C,
+        val fourth: D,
+    )
 
     fun playRadio(name: String, streamUrl: String, artworkPath: String? = null) {
         val mediaId = "radio:$streamUrl"

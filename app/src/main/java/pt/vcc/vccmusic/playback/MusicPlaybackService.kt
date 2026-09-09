@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import pt.vcc.vccmusic.VccMusicApplication
 import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.local.TrackEntity
+import pt.vcc.vccmusic.diagnostics.DiagnosticLogger
 
 class MusicPlaybackService : MediaLibraryService() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -34,6 +35,7 @@ class MusicPlaybackService : MediaLibraryService() {
 
     override fun onCreate() {
         super.onCreate()
+        DiagnosticLogger.log(this, "PlaybackService", "Serviço multimédia iniciado")
         player = ExoPlayer.Builder(this, SpectrumRenderersFactory(this))
             .setAudioAttributes(
                 AudioAttributes.Builder()
@@ -47,6 +49,7 @@ class MusicPlaybackService : MediaLibraryService() {
         player.addListener(
             object : Player.Listener {
                 override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
+                    DiagnosticLogger.log(this@MusicPlaybackService, "Player", "Erro de reprodução", error)
                     val currentItem = player.currentMediaItem
                     val currentUri = currentItem?.localConfiguration?.uri
                     if (
@@ -87,7 +90,11 @@ class MusicPlaybackService : MediaLibraryService() {
     private fun loadActiveLibrary() {
         serviceScope.launch(Dispatchers.IO) {
             val container = (application as VccMusicApplication).container
-            val root = container.musicRepository.activeRoot() ?: return@launch
+            val root = container.musicRepository.activeRoot()
+            if (root == null) {
+                DiagnosticLogger.log(this@MusicPlaybackService, "Library", "Serviço iniciado sem pasta ativa")
+                return@launch
+            }
             val tracks = container.musicRepository.observeAllTracks(root.id)
             tracks.collect { entities ->
                 val items = QueueBuilder.build(
@@ -158,7 +165,9 @@ class MusicPlaybackService : MediaLibraryService() {
             .build()
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? =
-        mediaLibrarySession
+        mediaLibrarySession.also {
+            DiagnosticLogger.log(this, "PlaybackService", "Sessão solicitada por ${controllerInfo.packageName}")
+        }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         if (!player.isPlaying) stopSelf()
@@ -190,6 +199,11 @@ class MusicPlaybackService : MediaLibraryService() {
             pageSize: Int,
             params: MediaLibraryService.LibraryParams?,
         ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> = asyncResult {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "MediaLibrary",
+                "Pedido de conteúdos: parentId=$parentId, page=$page, pageSize=$pageSize",
+            )
             val repository = (application as VccMusicApplication).container.musicRepository
             val root = repository.activeRoot()
             val items = when (parentId) {
@@ -266,6 +280,7 @@ class MusicPlaybackService : MediaLibraryService() {
                 try {
                     future.set(block())
                 } catch (error: Exception) {
+                    DiagnosticLogger.log(this@MusicPlaybackService, "MediaLibrary", "Callback falhou", error)
                     future.setException(error)
                 }
             }

@@ -23,6 +23,7 @@ interface MusicRepository {
     fun observePlaylistTracks(playlistId: Long): Flow<List<TrackEntity>>
     suspend fun createPlaylist(name: String): Long
     suspend fun renamePlaylist(playlistId: Long, name: String)
+    suspend fun setPlaylistFavorite(playlistId: Long, isFavorite: Boolean)
     suspend fun deletePlaylist(playlistId: Long)
     suspend fun replacePlaylistTracks(playlistId: Long, trackIds: List<Long>)
     suspend fun addTrackToPlaylist(playlistId: Long, trackId: Long)
@@ -75,6 +76,10 @@ class RoomMusicRepository(
         database.playlistDao().findById(playlistId)?.let {
             database.playlistDao().update(it.copy(name = name.trim()))
         }
+    }
+
+    override suspend fun setPlaylistFavorite(playlistId: Long, isFavorite: Boolean) {
+        database.playlistDao().setFavorite(playlistId, isFavorite)
     }
 
     override suspend fun deletePlaylist(playlistId: Long) {

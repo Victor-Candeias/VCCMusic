@@ -15,6 +15,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import pt.vcc.vccmusic.data.local.MusicDatabase
 import pt.vcc.vccmusic.data.local.MusicFolderEntity
+import pt.vcc.vccmusic.data.local.PlaylistTrackEntity
 import pt.vcc.vccmusic.data.local.TrackEntity
 
 private const val MAX_ARTWORK_BYTES = 512 * 1024
@@ -80,8 +81,6 @@ class SafMusicScanner(
         rootId: Long,
         onProgress: (ScanProgress) -> Unit,
     ): ScanResult {
-        val existingFolders = database.musicFolderDao().findAll(rootId).associateBy { it.uri }
-        val existingTracks = database.trackDao().findAll(rootId).associateBy { it.uri }
         val folders = mutableListOf<ScannedFolder>()
         val tracksByUri = linkedMapOf<String, ScannedTrack>()
         val errors = mutableListOf<ScanError>()
@@ -97,7 +96,8 @@ class SafMusicScanner(
                 currentCoroutineContext().ensureActive()
                 val (folder, parentUri) = pending.removeFirst()
                 if (!visited.add(folder.uri.toString())) continue
-                val folderEntity = existingFolders[folder.uri.toString()] ?: MusicFolderEntity(
+                val folderEntity = MusicFolderEntity(
+                    id = 0,
                     rootId = rootId,
                     parentId = null,
                     name = folder.name,
@@ -121,7 +121,7 @@ class SafMusicScanner(
                     if (child.mimeType == DocumentsContract.Document.MIME_TYPE_DIR) {
                         pending.add(child to folder.uri.toString())
                     } else if (isAudio(child)) {
-                        readTrack(child, rootId, existingTracks[child.uri.toString()])
+                        readTrack(child, rootId)
                             .onSuccess {
                                 tracksByUri.putIfAbsent(
                                     it.uri,
@@ -144,14 +144,14 @@ class SafMusicScanner(
         }
 
         database.withTransaction {
-            val currentFolderUris = folders.map { it.entity.uri }.toSet()
-            val currentTrackUris = tracksByUri.keys
-            database.trackDao().deleteByIds(existingTracks.values.filter { it.uri !in currentTrackUris }.map { it.id })
+            val playlistSnapshot = database.playlistDao().snapshotTracksForRoot(rootId)
+            database.trackDao().deleteForRoot(rootId)
+            database.musicFolderDao().deleteForRoot(rootId)
 
             val folderIds = mutableMapOf<String, Long>()
             folders.forEach { scanned ->
                 val id = database.musicFolderDao().insert(
-                    scanned.entity.copy(parentId = null),
+                    scanned.entity.copy(id = 0, parentId = null),
                 )
                 folderIds[scanned.entity.uri] = id
             }
@@ -160,14 +160,38 @@ class SafMusicScanner(
                 val parentId = scanned.parentUri?.let(folderIds::get)
                 database.musicFolderDao().updateParent(folderId, parentId)
             }
-            database.musicFolderDao().deleteByIds(existingFolders.values.filter { it.uri !in currentFolderUris }.map { it.id })
-            database.trackDao().insertAll(
-                tracksByUri.values.mapNotNull { scanned ->
-                    folderIds[scanned.folderUri]?.let { folderId ->
-                        scanned.entity.copy(folderId = folderId)
-                    }
-                },
-            )
+            val rebuiltTracks = tracksByUri.values.mapNotNull { scanned ->
+                folderIds[scanned.folderUri]?.let { folderId ->
+                    scanned.entity.copy(id = 0, folderId = folderId)
+                }
+            }
+            database.trackDao().insertAll(rebuiltTracks)
+
+            if (playlistSnapshot.isNotEmpty()) {
+                val rebuiltByUri = database.trackDao()
+                    .findByUris(rootId, playlistSnapshot.map { it.trackUri }.distinct())
+                    .associateBy { it.uri }
+                database.playlistDao().insertTracks(
+                    playlistSnapshot
+                        .groupBy { it.playlistId }
+                        .values
+                        .flatMap { entries ->
+                            entries
+                                .mapNotNull { snapshot ->
+                                    rebuiltByUri[snapshot.trackUri]?.let { track ->
+                                        snapshot to track.id
+                                    }
+                                }
+                                .mapIndexed { position, (snapshot, trackId) ->
+                                    PlaylistTrackEntity(
+                                        playlistId = snapshot.playlistId,
+                                        trackId = trackId,
+                                        position = position,
+                                    )
+                                }
+                        },
+                )
+            }
         }
         return ScanResult(true, folders.size, tracksByUri.size, errors)
     }
@@ -216,7 +240,6 @@ class SafMusicScanner(
     private fun readTrack(
         document: DocumentInfo,
         rootId: Long,
-        existing: TrackEntity?,
     ): Result<TrackEntity> = try {
         val retriever = MediaMetadataRetriever()
         try {
@@ -227,9 +250,9 @@ class SafMusicScanner(
                     ?: document.name.substringBeforeLast('.', document.name)
                 return Result.success(
                     TrackEntity(
-                        id = existing?.id ?: 0,
+                        id = 0,
                         rootId = rootId,
-                        folderId = existing?.folderId ?: 0,
+                        folderId = 0,
                         title = title,
                         artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST),
                         album = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM),
@@ -237,7 +260,7 @@ class SafMusicScanner(
                         uri = document.uri.toString(),
                         artworkUri = null,
                         artwork = retriever.embeddedPicture?.takeIf { it.size <= MAX_ARTWORK_BYTES },
-                        isFavorite = existing?.isFavorite == true,
+                        isFavorite = false,
                     ),
                 )
             } ?: error("O documento não está acessível.")

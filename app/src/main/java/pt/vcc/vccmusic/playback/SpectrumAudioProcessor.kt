@@ -10,6 +10,10 @@ import androidx.media3.exoplayer.audio.DefaultAudioSink
 import androidx.media3.exoplayer.audio.TeeAudioProcessor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.cos
@@ -18,8 +22,31 @@ import kotlin.math.sqrt
 object SpectrumAnalyzer {
     private val _spectrum = MutableStateFlow(List(24) { 0f })
     val spectrum: StateFlow<List<Float>> = _spectrum
+    private val analyzerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private val lock = Any()
+    private var pending: PendingAnalysis? = null
+    private var processing = false
 
     internal fun publish(samples: ShortArray, sampleRate: Int) {
+        synchronized(lock) {
+            pending = PendingAnalysis(samples.copyOf(), sampleRate)
+            if (processing) return
+            processing = true
+        }
+        analyzerScope.launch {
+            while (true) {
+                val analysis = synchronized(lock) {
+                    pending.also {
+                        pending = null
+                        if (it == null) processing = false
+                    }
+                } ?: return@launch
+                _spectrum.value = calculate(analysis.samples, analysis.sampleRate)
+            }
+        }
+    }
+
+    private fun calculate(samples: ShortArray, sampleRate: Int): List<Float> {
         val values = List(24) { band ->
             val frequency = 60.0 * (16000.0 / 60.0).pow(band / 23.0)
             val coefficient = 2.0 * cos(2.0 * Math.PI * frequency / sampleRate)
@@ -39,10 +66,15 @@ object SpectrumAnalyzer {
                 .toFloat()
                 .coerceIn(0f, 1f)
         }
-        _spectrum.value = values
+        return values
     }
 
     private fun Double.pow(exponent: Double): Double = Math.pow(this, exponent)
+
+    private data class PendingAnalysis(
+        val samples: ShortArray,
+        val sampleRate: Int,
+    )
 }
 
 class SpectrumAudioProcessor : BaseAudioProcessor() {

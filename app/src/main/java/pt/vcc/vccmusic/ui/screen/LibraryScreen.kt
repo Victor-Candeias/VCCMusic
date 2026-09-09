@@ -33,7 +33,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,6 +63,12 @@ private sealed interface LibraryLocation {
 
 enum class LibraryStart { ROOT, ALL_TRACKS }
 
+private enum class TrackSortMode(@androidx.annotation.StringRes val labelRes: Int) {
+    NAME(R.string.sort_name),
+    ARTIST(R.string.sort_artist),
+    ALBUM(R.string.sort_album),
+}
+
 @Composable
 fun LibraryScreen(
     viewModel: LibraryViewModel,
@@ -78,6 +86,14 @@ fun LibraryScreen(
         )
     }
     var folderPath by remember { mutableStateOf<List<MusicFolderEntity>>(emptyList()) }
+    LaunchedEffect(start) {
+        location = if (start == LibraryStart.ALL_TRACKS) {
+            LibraryLocation.AllTracks
+        } else {
+            folderPath = emptyList()
+            LibraryLocation.Root
+        }
+    }
 
     Column(
         modifier = modifier
@@ -102,10 +118,10 @@ fun LibraryScreen(
                     onTrackPlayed = onTrackPlayed,
                 )
                 LibraryLocation.AllTracks -> TrackContents(
-                    title = stringResource(R.string.all_music),
+                    title = stringResource(R.string.library),
                     tracks = viewModel.observeAllTracks(activeRoot.id)
                         .collectAsStateWithLifecycle(initialValue = emptyList()).value,
-                    onBack = { location = LibraryLocation.Root },
+                    onBack = null,
                     viewModel = viewModel,
                     playbackViewModel = playbackViewModel,
                     onTrackPlayed = onTrackPlayed,
@@ -158,14 +174,18 @@ private fun RootContents(
     playbackViewModel: PlaybackViewModel,
     onTrackPlayed: () -> Unit,
 ) {
-    val folders = viewModel.observeFolders(rootId, null)
+    val rootEntries = viewModel.observeFolders(rootId, null)
         .collectAsStateWithLifecycle(initialValue = emptyList()).value
-        .filter { it.uri != rootUri }
+    val indexedRoot = rootEntries.firstOrNull { it.uri == rootUri }
+    val folders = indexedRoot?.let { rootFolder ->
+        viewModel.observeFolders(rootId, rootFolder.id)
+            .collectAsStateWithLifecycle(initialValue = emptyList()).value
+    } ?: rootEntries.filter { it.uri != rootUri }
     val tracks = viewModel.observeRootTracks(rootId, rootUri)
         .collectAsStateWithLifecycle(initialValue = emptyList()).value
-    LibraryHeader(title = stringResource(R.string.library))
+    LibraryHeader(title = stringResource(R.string.folders))
     if (folders.isEmpty() && tracks.isEmpty()) {
-        EmptyContent(R.string.library_empty)
+        EmptyContent(R.string.no_folders)
     } else {
         LibraryItems(folders, tracks, onOpenFolder, viewModel, playbackViewModel, onTrackPlayed)
     }
@@ -197,7 +217,7 @@ private fun FolderContents(
 private fun TrackContents(
     title: String,
     tracks: List<TrackEntity>,
-    onBack: () -> Unit,
+    onBack: (() -> Unit)?,
     viewModel: LibraryViewModel,
     playbackViewModel: PlaybackViewModel,
     onTrackPlayed: () -> Unit,
@@ -206,14 +226,82 @@ private fun TrackContents(
     var trackForPlaylist by remember { mutableStateOf<TrackEntity?>(null) }
     var showCreatePlaylist by remember { mutableStateOf(false) }
     var newPlaylistName by remember { mutableStateOf("") }
+    var searchQuery by remember { mutableStateOf("") }
+    var sortMode by remember { mutableStateOf(TrackSortMode.NAME) }
+    val visibleTracks = tracks
+        .filter { track ->
+            searchQuery.isBlank() ||
+                listOf(track.title, track.artist.orEmpty(), track.album.orEmpty())
+                    .any { it.contains(searchQuery, ignoreCase = true) }
+        }
+        .sortedWith(
+            when (sortMode) {
+                TrackSortMode.NAME -> compareBy<TrackEntity> { it.title.lowercase() }
+                TrackSortMode.ARTIST -> compareBy<TrackEntity> { it.artist.orEmpty().lowercase() }
+                TrackSortMode.ALBUM -> compareBy<TrackEntity> { it.album.orEmpty().lowercase() }
+            }.thenBy { it.title.lowercase() },
+        )
     LibraryHeader(title, onBack)
     if (tracks.isEmpty()) {
         EmptyContent(R.string.no_tracks)
     } else {
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            singleLine = true,
+            label = { Text(stringResource(R.string.search_tracks)) },
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(stringResource(R.string.sort_by), modifier = Modifier.padding(end = 4.dp))
+            TrackSortMode.entries.forEach { mode ->
+                TextButton(onClick = { sortMode = mode }) {
+                    Text(
+                        text = stringResource(mode.labelRes),
+                        color = if (sortMode == mode) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
+                    )
+                }
+            }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Button(
+                onClick = {
+                    playbackViewModel.playTracks(visibleTracks, source = QueueSource.ALL_TRACKS)
+                    onTrackPlayed()
+                },
+                enabled = visibleTracks.isNotEmpty(),
+                modifier = Modifier.weight(1f),
+            ) {
+                Text(stringResource(R.string.play_all))
+            }
+            Button(
+                onClick = {
+                    playbackViewModel.playTracks(
+                        visibleTracks.shuffled(),
+                        source = QueueSource.ALL_TRACKS,
+                    )
+                    onTrackPlayed()
+                },
+                enabled = visibleTracks.isNotEmpty(),
+                modifier = Modifier.weight(1f),
+            ) {
+                Text(stringResource(R.string.play_all_shuffle))
+            }
+        }
         TrackList(
-            tracks = tracks,
+            tracks = visibleTracks,
             onPlay = {
-                playbackViewModel.playTracks(tracks, it, QueueSource.ALL_TRACKS)
+                playbackViewModel.playTracks(visibleTracks, it, QueueSource.ALL_TRACKS)
                 onTrackPlayed()
             },
             onToggleFavorite = { track -> viewModel.setFavorite(track.id, !track.isFavorite) },
@@ -235,6 +323,7 @@ private fun TrackContents(
             },
         )
     }
+
     if (showCreatePlaylist && trackForPlaylist != null) {
         AlertDialog(
             onDismissRequest = { showCreatePlaylist = false },

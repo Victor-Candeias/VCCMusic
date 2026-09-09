@@ -44,6 +44,7 @@ fun SettingsScreen(
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
     onConfigureOnlineRadios: () -> Unit,
+    onExportDiagnosticLog: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -67,6 +68,7 @@ fun SettingsScreen(
                 SettingsAction(R.string.change_music_root, Icons.Default.Folder, onPickRoot),
                 SettingsAction(R.string.reindex, Icons.Default.Refresh, onReindex),
                 SettingsAction(R.string.configure_online_radios, Icons.Default.Settings, onConfigureOnlineRadios),
+                SettingsAction(R.string.export_diagnostic_log, Icons.Default.Settings, onExportDiagnosticLog),
                 SettingsAction(
                     if (isDarkTheme) R.string.light_mode else R.string.dark_mode,
                     Icons.Default.Settings,

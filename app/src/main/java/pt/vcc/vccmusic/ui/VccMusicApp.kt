@@ -36,6 +36,12 @@ import pt.vcc.vccmusic.ui.screen.SettingsScreen
 import pt.vcc.vccmusic.ui.screen.OnlineRadioScreen
 import pt.vcc.vccmusic.ui.theme.appBackgroundBrush
 import pt.vcc.vccmusic.ui.screen.RadioBrowserRepository
+import pt.vcc.vccmusic.scanner.ScanProgress
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.MusicRepository
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.ViewModel
@@ -51,6 +57,11 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 @Composable
 fun VccMusicApp(
@@ -58,8 +69,11 @@ fun VccMusicApp(
     musicRepository: MusicRepository,
     onPickRoot: () -> Unit = {},
     onReindex: () -> Unit = {},
+    reindexing: Boolean = false,
+    reindexProgress: ScanProgress = ScanProgress(0, 0, 0),
     isDarkTheme: Boolean = false,
     onToggleTheme: () -> Unit = {},
+    onExportDiagnosticLog: () -> Unit = {},
     onExit: () -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -82,6 +96,21 @@ fun VccMusicApp(
                 PlaylistViewModel(musicRepository) as T
         },
     )
+    val favoritePlaylists by playlistViewModel.playlists
+        .collectAsStateWithLifecycle(initialValue = emptyList())
+    val favoritePlaylistIds = favoritePlaylists.map { it.id }
+    val favoritePlaylistTracks by remember(favoritePlaylistIds) {
+        if (favoritePlaylistIds.isEmpty()) {
+            kotlinx.coroutines.flow.flowOf(emptyMap<Long, List<pt.vcc.vccmusic.data.local.TrackEntity>>())
+        } else {
+            combine(
+                favoritePlaylistIds.map { musicRepository.observePlaylistTracks(it) },
+            ) { tracksByPlaylist ->
+                favoritePlaylistIds.zip(tracksByPlaylist).toMap()
+            }
+        }
+    }.collectAsStateWithLifecycle(initialValue = emptyMap())
+    val coroutineScope = rememberCoroutineScope()
     val playbackViewModel: PlaybackViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -173,11 +202,30 @@ fun VccMusicApp(
                         onPlaylists = { navController.navigate(NavigationDestination.Playlists.route) },
                         onOnlineRadio = { navController.navigate(NavigationDestination.OnlineRadio.route) },
                         favoriteTracks = favoriteTracks,
+                        favoritePlaylists = favoritePlaylists.filter { it.isFavorite },
+                        favoritePlaylistTrackCounts = favoritePlaylistTracks
+                            .filterKeys { id -> favoritePlaylists.any { it.id == id && it.isFavorite } }
+                            .mapValues { it.value.size },
                         favoriteStations = favoriteStations.filter { it.isFavorite },
                         onFavoriteTrack = { track ->
                             playbackViewModel.playTracks(listOf(track), track.id)
                             navController.navigate(NavigationDestination.NowPlaying.route) {
                                 launchSingleTop = true
+                            }
+                        },
+                        onFavoritePlaylist = { playlist, shuffle ->
+                            coroutineScope.launch {
+                                val tracks = musicRepository.observePlaylistTracks(playlist.id).first()
+                                if (tracks.isNotEmpty()) {
+                                    playbackViewModel.playTracks(
+                                        tracks,
+                                        source = pt.vcc.vccmusic.playback.QueueSource.SELECTION,
+                                        shuffle = shuffle,
+                                    )
+                                    navController.navigate(NavigationDestination.NowPlaying.route) {
+                                        launchSingleTop = true
+                                    }
+                                }
                             }
                         },
                         onFavoriteRadio = { station ->
@@ -236,6 +284,11 @@ fun VccMusicApp(
                     activeRoot?.id,
                     contentPadding,
                     playbackViewModel,
+                    onTrackPlayed = {
+                        navController.navigate(NavigationDestination.NowPlaying.route) {
+                            launchSingleTop = true
+                        }
+                    },
                 )
             }
             composable(NavigationDestination.NowPlaying.route) {
@@ -248,6 +301,7 @@ fun VccMusicApp(
                     onReindex = onReindex,
                     isDarkTheme = isDarkTheme,
                     onToggleTheme = onToggleTheme,
+                    onExportDiagnosticLog = onExportDiagnosticLog,
                     onConfigureOnlineRadios = {
                         configureOnlineRadios = true
                         navController.navigate(NavigationDestination.OnlineRadio.route)
@@ -268,6 +322,29 @@ fun VccMusicApp(
                     },
                 )
             }
+            }
+            if (reindexing) {
+                AlertDialog(
+                    onDismissRequest = {},
+                    title = { Text(stringResource(R.string.reindex_in_progress)) },
+                    text = {
+                        androidx.compose.foundation.layout.Column(
+                            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+                        ) {
+                            CircularProgressIndicator()
+                            Text(
+                                text = stringResource(
+                                    R.string.reindex_progress,
+                                    reindexProgress.folders,
+                                    reindexProgress.tracks,
+                                    reindexProgress.errors,
+                                ),
+                                modifier = Modifier.padding(top = 16.dp),
+                            )
+                        }
+                    },
+                    confirmButton = {},
+                )
         }
         }
     }

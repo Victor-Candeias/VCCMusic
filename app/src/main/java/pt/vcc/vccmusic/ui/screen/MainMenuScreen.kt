@@ -18,14 +18,17 @@ import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Radio
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
@@ -33,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.local.TrackEntity
+import pt.vcc.vccmusic.data.local.PlaylistEntity
 import pt.vcc.vccmusic.ui.screen.RadioBrowserStation
 
 private data class QuickAction(
@@ -51,8 +55,11 @@ fun MainMenuScreen(
     onPlaylists: () -> Unit,
     onOnlineRadio: () -> Unit,
     favoriteTracks: List<TrackEntity>,
+    favoritePlaylists: List<PlaylistEntity>,
+    favoritePlaylistTrackCounts: Map<Long, Int>,
     favoriteStations: List<RadioBrowserStation>,
     onFavoriteTrack: (TrackEntity) -> Unit,
+    onFavoritePlaylist: (PlaylistEntity, Boolean) -> Unit,
     onFavoriteRadio: (RadioBrowserStation) -> Unit,
 ) {
     Column(
@@ -129,7 +136,7 @@ fun MainMenuScreen(
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(top = 4.dp),
         )
-        if (favoriteTracks.isEmpty() && favoriteStations.isEmpty()) {
+        if (favoriteTracks.isEmpty() && favoritePlaylists.isEmpty() && favoriteStations.isEmpty()) {
             Text(
                 text = stringResource(R.string.no_favorites),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -144,6 +151,16 @@ fun MainMenuScreen(
                 val favorites = buildList<@Composable () -> Unit> {
                     favoriteTracks.forEach { track ->
                         add { FavoriteTrackCard(track, onClick = { onFavoriteTrack(track) }) }
+                    }
+                    favoritePlaylists.forEach { playlist ->
+                        add {
+                            FavoritePlaylistCard(
+                                playlist = playlist,
+                                trackCount = favoritePlaylistTrackCounts[playlist.id] ?: 0,
+                                onClick = { onFavoritePlaylist(playlist, false) },
+                                onShuffle = { onFavoritePlaylist(playlist, true) },
+                            )
+                        }
                     }
                     favoriteStations.forEach { station ->
                         add { FavoriteCard(station, onClick = { onFavoriteRadio(station) }) }
@@ -166,6 +183,40 @@ fun MainMenuScreen(
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun FavoritePlaylistCard(
+    playlist: PlaylistEntity,
+    trackCount: Int,
+    onClick: () -> Unit,
+    onShuffle: () -> Unit,
+) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(122.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+    ) {
+        Column(
+            modifier = Modifier.padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Icon(Icons.AutoMirrored.Filled.List, contentDescription = stringResource(R.string.favorite))
+            Text(playlist.name, style = MaterialTheme.typography.titleMedium, maxLines = 2)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "$trackCount ${if (trackCount == 1) "música" else "músicas"}",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.weight(1f),
+                )
+                IconButton(onClick = onShuffle, enabled = trackCount > 0) {
+                    Icon(Icons.Default.Shuffle, contentDescription = stringResource(R.string.shuffle))
                 }
             }
         }
