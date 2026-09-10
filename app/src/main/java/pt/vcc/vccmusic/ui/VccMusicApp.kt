@@ -43,6 +43,7 @@ import androidx.compose.material3.Text
 import androidx.compose.foundation.layout.padding
 import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.MusicRepository
+import pt.vcc.vccmusic.data.withoutParentheticalText
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -234,7 +235,7 @@ fun VccMusicApp(
                         },
                         onFavoriteRadio = { station ->
                             playbackViewModel.playRadio(
-                                station.name,
+                                station.name.withoutParentheticalText(),
                                 station.streamUrl,
                                 station.faviconLocalPath,
                             )

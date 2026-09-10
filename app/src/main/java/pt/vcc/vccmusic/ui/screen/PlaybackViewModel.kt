@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import pt.vcc.vccmusic.data.local.TrackEntity
+import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.playback.MusicPlaybackService
 import pt.vcc.vccmusic.playback.QueueBuilder
 import pt.vcc.vccmusic.playback.QueueRequest
@@ -158,7 +159,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
                 .setUri(streamUrl)
                 .setMediaMetadata(
                     MediaMetadata.Builder()
-                        .setTitle(name)
+                        .setTitle(name.withoutParentheticalText())
                         .setArtist("Rádio Online")
                         .build(),
                 )
@@ -238,9 +239,9 @@ class PlaybackViewModel(context: Context) : ViewModel() {
             .setUri(track.uri)
             .setMediaMetadata(
                 MediaMetadata.Builder()
-                    .setTitle(track.title)
-                    .setArtist(track.artist)
-                    .setAlbumTitle(track.album)
+                    .setTitle(track.title.withoutParentheticalText())
+                    .setArtist(track.artist?.withoutParentheticalText())
+                    .setAlbumTitle(track.album?.withoutParentheticalText())
                     .build(),
             )
             .build()

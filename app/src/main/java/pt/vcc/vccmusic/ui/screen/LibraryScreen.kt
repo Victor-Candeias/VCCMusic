@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -52,6 +51,7 @@ import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.local.MusicFolderEntity
 import pt.vcc.vccmusic.data.local.PlaylistEntity
 import pt.vcc.vccmusic.data.local.TrackEntity
+import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.playback.QueueSource
 import pt.vcc.vccmusic.ui.theme.appCardBrush
 import pt.vcc.vccmusic.ui.theme.AppGradientCard
@@ -191,8 +191,9 @@ private fun RootContents(
     } ?: rootEntries.filter { it.uri != rootUri }
     val tracks = viewModel.observeRootTracks(rootId, rootUri)
         .collectAsStateWithLifecycle(initialValue = emptyList()).value
+    val visibleFolders = folders.filterNot { it.name.startsWith(".") }
     LibraryHeader(title = stringResource(R.string.folders))
-    if (folders.isEmpty() && tracks.isEmpty()) {
+    if (visibleFolders.isEmpty() && tracks.isEmpty()) {
         EmptyContent(R.string.no_folders)
     } else {
         LibraryItems(folders, tracks, onOpenFolder, viewModel, playbackViewModel, onTrackPlayed)
@@ -214,8 +215,9 @@ private fun FolderContents(
         .collectAsStateWithLifecycle(initialValue = emptyList()).value
     val tracks = viewModel.observeFolderTracks(folder.id)
         .collectAsStateWithLifecycle(initialValue = emptyList()).value
-    LibraryHeader(folder.name, onBack)
-    if (folders.isEmpty() && tracks.isEmpty()) {
+    val visibleFolders = folders.filterNot { it.name.startsWith(".") }
+    LibraryHeader(folder.name.withoutParentheticalText(), onBack)
+    if (visibleFolders.isEmpty() && tracks.isEmpty()) {
         EmptyContent(R.string.folder_empty)
     } else {
         LibraryItems(folders, tracks, onOpenFolder, viewModel, playbackViewModel, onTrackPlayed)
@@ -393,17 +395,20 @@ private fun LibraryItems(
     playbackViewModel: PlaybackViewModel,
     onTrackPlayed: () -> Unit,
 ) {
+    val visibleFolders = folders.filterNot { it.name.startsWith(".") }
     val playlists by viewModel.playlists.collectAsStateWithLifecycle(initialValue = emptyList())
     var trackForPlaylist by remember { mutableStateOf<TrackEntity?>(null) }
     var showCreatePlaylist by remember { mutableStateOf(false) }
     var newPlaylistName by remember { mutableStateOf("") }
 
-    LazyColumn {
-        items(folders, key = { "folder-${it.id}" }) { folder ->
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(visibleFolders, key = { "folder-${it.id}" }) { folder ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp)
+                    .height(64.dp)
                     .background(
                         appCardBrush(FoldersCardStart, FoldersCardEnd),
                         MaterialTheme.shapes.small,
@@ -418,12 +423,11 @@ private fun LibraryItems(
                     tint = Color.White,
                 )
                 Text(
-                    folder.name,
+                    folder.name.withoutParentheticalText(),
                     color = Color.White,
                     modifier = Modifier.padding(start = 12.dp),
                 )
             }
-            HorizontalDivider()
         }
         items(tracks, key = { "track-${it.id}" }) { track ->
             TrackCard(
@@ -519,8 +523,8 @@ private fun TrackCard(
         onClick = onPlay,
         modifier = Modifier
             .fillMaxWidth()
-            .height(112.dp)
-            .padding(horizontal = 14.dp, vertical = 5.dp)
+            .height(92.dp)
+            .padding(horizontal = 14.dp, vertical = 4.dp)
             .background(
                 appCardBrush(LibraryCardStart, LibraryCardEnd),
                 MaterialTheme.shapes.medium,
@@ -532,7 +536,7 @@ private fun TrackCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(68.dp)
+                .height(60.dp)
                 .padding(start = 16.dp, end = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -551,7 +555,7 @@ private fun TrackCard(
                 if (artwork != null) {
                     Image(
                         bitmap = artwork,
-                        contentDescription = track.title,
+                        contentDescription = track.title.withoutParentheticalText(),
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop,
                     )
@@ -560,8 +564,10 @@ private fun TrackCard(
                 }
             }
             Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
-                Text(track.title, color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleMedium)
-                val details = listOfNotNull(track.artist, track.album).joinToString(" - ")
+                Text(track.title.withoutParentheticalText(), color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleMedium)
+                val details = listOfNotNull(track.artist, track.album)
+                    .joinToString(" - ")
+                    .withoutParentheticalText()
                 if (details.isNotBlank()) {
                     Text(
                         details,
@@ -611,7 +617,7 @@ private fun PlaylistPickerDialog(
                             onClick = { onPlaylistSelected(playlist) },
                             modifier = Modifier.fillMaxWidth(),
                         ) {
-                            Text(playlist.name, modifier = Modifier.fillMaxWidth())
+                            Text(playlist.name.withoutParentheticalText(), modifier = Modifier.fillMaxWidth())
                         }
                     }
                 }

@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import pt.vcc.vccmusic.VccMusicApplication
 import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.local.TrackEntity
+import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.diagnostics.DiagnosticLogger
 
 class MusicPlaybackService : MediaLibraryService() {
@@ -152,9 +153,9 @@ class MusicPlaybackService : MediaLibraryService() {
             .setUri(track.uri)
             .setMediaMetadata(
                 MediaMetadata.Builder()
-                    .setTitle(track.title)
-                    .setArtist(track.artist)
-                    .setAlbumTitle(track.album)
+                    .setTitle(track.title.withoutParentheticalText())
+                    .setArtist(track.artist?.withoutParentheticalText())
+                    .setAlbumTitle(track.album?.withoutParentheticalText())
                     .build(),
             )
             .build()
@@ -165,7 +166,7 @@ class MusicPlaybackService : MediaLibraryService() {
             .setMediaId(folderId(id))
             .setMediaMetadata(
                 MediaMetadata.Builder()
-                    .setTitle(name)
+                    .setTitle(name.withoutParentheticalText())
                     .setIsBrowsable(true)
                     .setIsPlayable(false)
                     .build(),
@@ -191,7 +192,7 @@ class MusicPlaybackService : MediaLibraryService() {
             .setMediaId(playlistId(id))
             .setMediaMetadata(
                 MediaMetadata.Builder()
-                    .setTitle(name)
+                    .setTitle(name.withoutParentheticalText())
                     .setIsBrowsable(true)
                     .setIsPlayable(false)
                     .build(),

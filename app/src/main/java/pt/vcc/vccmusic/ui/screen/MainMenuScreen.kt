@@ -36,10 +36,17 @@ import androidx.compose.ui.unit.dp
 import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.local.TrackEntity
 import pt.vcc.vccmusic.data.local.PlaylistEntity
+import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.ui.theme.MainMenuCardEnd
 import pt.vcc.vccmusic.ui.theme.MainMenuCardStart
 import pt.vcc.vccmusic.ui.theme.AppGradientCard
+import pt.vcc.vccmusic.ui.theme.LibraryCardEnd
+import pt.vcc.vccmusic.ui.theme.LibraryCardStart
 import pt.vcc.vccmusic.ui.screen.RadioBrowserStation
+import pt.vcc.vccmusic.ui.theme.PlaylistCardEnd
+import pt.vcc.vccmusic.ui.theme.PlaylistCardStart
+import pt.vcc.vccmusic.ui.theme.RadioCardEnd
+import pt.vcc.vccmusic.ui.theme.RadioCardStart
 
 private data class QuickAction(
     val labelRes: Int,
@@ -204,16 +211,16 @@ private fun FavoritePlaylistCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(112.dp),
-        start = MainMenuCardStart,
-        end = MainMenuCardEnd,
+            .height(96.dp),
+        start = PlaylistCardStart,
+        end = PlaylistCardEnd,
     ) {
         Column(
             modifier = Modifier.padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Icon(Icons.AutoMirrored.Filled.List, contentDescription = stringResource(R.string.favorite))
-            Text(playlist.name, style = MaterialTheme.typography.titleMedium, maxLines = 2)
+            Text(playlist.name.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium, maxLines = 2)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "$trackCount ${if (trackCount == 1) "música" else "músicas"}",
@@ -238,18 +245,18 @@ private fun FavoriteTrackCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(112.dp),
-        start = MainMenuCardStart,
-        end = MainMenuCardEnd,
+            .height(96.dp),
+        start = LibraryCardStart,
+        end = LibraryCardEnd,
     ) {
         Column(
             modifier = Modifier.padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Icon(Icons.Default.Star, contentDescription = stringResource(R.string.favorite))
-            Text(track.title, style = MaterialTheme.typography.titleMedium, maxLines = 2)
+            Text(track.title.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium, maxLines = 2)
             track.artist?.takeIf { it.isNotBlank() }?.let {
-                Text(it, style = MaterialTheme.typography.bodySmall, maxLines = 1)
+                Text(it.withoutParentheticalText(), style = MaterialTheme.typography.bodySmall, maxLines = 1)
             }
         }
     }
@@ -290,16 +297,16 @@ private fun FavoriteCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(112.dp),
-        start = MainMenuCardStart,
-        end = MainMenuCardEnd,
+            .height(96.dp),
+        start = RadioCardStart,
+        end = RadioCardEnd,
     ) {
         Column(
             modifier = Modifier.padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Icon(Icons.Default.Star, contentDescription = stringResource(R.string.favorite))
-            Text(station.name, style = MaterialTheme.typography.titleMedium, maxLines = 2)
+            Text(station.name.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium, maxLines = 2)
         }
     }
 }

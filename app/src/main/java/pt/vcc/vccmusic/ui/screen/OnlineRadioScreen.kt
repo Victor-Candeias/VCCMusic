@@ -56,6 +56,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pt.vcc.vccmusic.R
+import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.ui.theme.RadioCardEnd
 import pt.vcc.vccmusic.ui.theme.RadioCardStart
 import pt.vcc.vccmusic.ui.theme.AppGradientCard
@@ -181,7 +182,7 @@ fun OnlineRadioScreen(
                             isPlaying = playbackState.mediaId == "radio:${station.streamUrl}",
                             onPlay = {
                                 playbackViewModel.playRadio(
-                                    station.name,
+                                    station.name.withoutParentheticalText(),
                                     station.streamUrl,
                                     station.faviconLocalPath,
                                 )
@@ -287,7 +288,7 @@ private fun RadioSelectionScreen(
                             }
                         },
                     )
-                    Text(station.name)
+                    Text(station.name.withoutParentheticalText())
                 }
             }
         }
@@ -349,13 +350,14 @@ private fun RadioCard(
                 )
             }
                 Text(
-                    station.name,
+                    station.name.withoutParentheticalText(),
                     color = Color.White,
                     style = MaterialTheme.typography.labelSmall,
                     maxLines = 1,
                 )
                 Text(
-                    text = station.tags.ifBlank { stringResource(R.string.online_radio) },
+                    text = station.tags.ifBlank { stringResource(R.string.online_radio) }
+                        .withoutParentheticalText(),
                     color = Color.White.copy(alpha = 0.82f),
                     style = MaterialTheme.typography.labelSmall,
                     maxLines = 1,
@@ -394,7 +396,7 @@ private fun RadioFavicon(
         if (image != null) {
             androidx.compose.foundation.Image(
                 bitmap = image!!,
-                contentDescription = station.name,
+                contentDescription = station.name.withoutParentheticalText(),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Fit,
             )

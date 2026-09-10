@@ -46,6 +46,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.Player
 import pt.vcc.vccmusic.R
+import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.ui.theme.DarkBackgroundBottom
 import kotlin.math.abs
 
@@ -98,7 +99,7 @@ fun NowPlayingScreen(
                     state = state,
                     modifier = Modifier
                         .weight(1f)
-                        .widthIn(max = 480.dp)
+                        .widthIn(max = 360.dp)
                         .aspectRatio(1f),
                 )
                 Column(
@@ -121,7 +122,7 @@ fun NowPlayingScreen(
                 Artwork(
                     state = state,
                     modifier = Modifier
-                        .fillMaxWidth(0.78f)
+                        .fillMaxWidth(0.62f)
                         .aspectRatio(1f),
                 )
                 PlaybackControls(state = state, viewModel = viewModel)
@@ -167,7 +168,7 @@ private fun Artwork(
         if (artwork != null) {
             Image(
                 bitmap = artwork,
-                contentDescription = state.title,
+                contentDescription = state.title?.withoutParentheticalText(),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
             )
@@ -194,8 +195,15 @@ private fun PlaybackControls(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column {
-                Text(state.title ?: stringResource(R.string.nothing_playing), style = MaterialTheme.typography.titleLarge)
-                Text(state.artist.orEmpty(), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f))
+                Text(
+                    state.title?.withoutParentheticalText() ?: stringResource(R.string.nothing_playing),
+                    style = MaterialTheme.typography.titleLarge,
+                )
+                Text(
+                    state.artist.orEmpty().withoutParentheticalText(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f),
+                )
             }
             IconButton(onClick = {}) {
                 Icon(Icons.Default.FavoriteBorder, contentDescription = stringResource(R.string.favorite))

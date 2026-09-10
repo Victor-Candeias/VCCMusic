@@ -47,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.local.PlaylistEntity
 import pt.vcc.vccmusic.data.local.TrackEntity
+import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.playback.QueueSource
 import pt.vcc.vccmusic.ui.theme.AppGradientCard
 import pt.vcc.vccmusic.ui.theme.PlaylistCardEnd
@@ -130,20 +131,20 @@ private fun PlaylistCard(
         onClick = onOpen,
         modifier = Modifier
             .fillMaxWidth()
-            .height(112.dp)
-            .padding(horizontal = 16.dp, vertical = 6.dp),
+            .height(92.dp)
+            .padding(horizontal = 16.dp, vertical = 5.dp),
         start = PlaylistCardStart,
         end = PlaylistCardEnd,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
             Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
-                Text(playlist.name, style = MaterialTheme.typography.titleMedium)
+                Text(playlist.name.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium)
                 Text(
                     text = "$trackCount ${if (trackCount == 1) "música" else "músicas"}",
                     style = MaterialTheme.typography.bodyMedium,
@@ -197,7 +198,7 @@ private fun PlaylistDetail(
         IconButton(onClick = onBack) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
         }
-        Text(playlist.name, style = MaterialTheme.typography.headlineSmall)
+        Text(playlist.name.withoutParentheticalText(), style = MaterialTheme.typography.headlineSmall)
         IconButton(onClick = { showRename = true }) {
             Icon(Icons.Default.Edit, stringResource(R.string.rename_playlist))
         }
@@ -279,7 +280,7 @@ private fun TrackRow(
         if (artwork != null) {
             Image(
                 bitmap = artwork,
-                contentDescription = track.title,
+                contentDescription = track.title.withoutParentheticalText(),
                 modifier = Modifier.size(56.dp),
                 contentScale = ContentScale.Crop,
             )
@@ -291,7 +292,7 @@ private fun TrackRow(
             )
         }
         Text(
-            track.title,
+            track.title.withoutParentheticalText(),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 12.dp).weight(1f),
         )
