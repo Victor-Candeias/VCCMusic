@@ -68,6 +68,32 @@ class MusicPlaybackService : MediaLibraryService() {
                         player.stop()
                     }
                 }
+
+                /** Regista alterações do estado do leitor para diagnosticar bloqueios de reprodução. */
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    val state = when (playbackState) {
+                        Player.STATE_IDLE -> "IDLE"
+                        Player.STATE_BUFFERING -> "BUFFERING"
+                        Player.STATE_READY -> "READY"
+                        Player.STATE_ENDED -> "ENDED"
+                        else -> playbackState.toString()
+                    }
+                    DiagnosticLogger.log(this@MusicPlaybackService, "Player", "Estado alterado: $state")
+                }
+
+                /** Regista o início e a paragem efetiva da reprodução. */
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    DiagnosticLogger.log(this@MusicPlaybackService, "Player", "A reproduzir: $isPlaying")
+                }
+
+                /** Regista a faixa selecionada pelo Android Auto ou pela aplicação. */
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    DiagnosticLogger.log(
+                        this@MusicPlaybackService,
+                        "Player",
+                        "Faixa alterada: mediaId=${mediaItem?.mediaId}, motivo=$reason",
+                    )
+                }
             },
         )
         libraryCallback = LibraryCallback()
@@ -180,12 +206,14 @@ class MusicPlaybackService : MediaLibraryService() {
 
     /** Encerra o serviço quando a tarefa é removida e não há reprodução ativa. */
     override fun onTaskRemoved(rootIntent: Intent?) {
+        DiagnosticLogger.log(this, "PlaybackService", "Tarefa removida; a reproduzir=${player.isPlaying}")
         if (!player.isPlaying) stopSelf()
         super.onTaskRemoved(rootIntent)
     }
 
     /** Cancela tarefas, liberta a sessão e liberta o leitor Media3. */
     override fun onDestroy() {
+        DiagnosticLogger.log(this, "PlaybackService", "Serviço multimédia terminado")
         serviceScope.cancel()
         mediaLibrarySession?.release()
         player.release()
@@ -194,6 +222,32 @@ class MusicPlaybackService : MediaLibraryService() {
     }
 
     private inner class LibraryCallback : MediaLibrarySession.Callback {
+        /** Regista a ligação de cada controlador, incluindo o Android Auto. */
+        override fun onConnect(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+        ): MediaSession.ConnectionResult {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "MediaSession",
+                "Controlador ligado: ${controller.packageName}, uid=${controller.uid}",
+            )
+            return super.onConnect(session, controller)
+        }
+
+        /** Regista a desconexão de cada controlador da sessão multimédia. */
+        override fun onDisconnected(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+        ) {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "MediaSession",
+                "Controlador desligado: ${controller.packageName}, uid=${controller.uid}",
+            )
+            super.onDisconnected(session, controller)
+        }
+
         /** Fornece a categoria raiz navegável da biblioteca. */
         override fun onGetLibraryRoot(
             session: MediaLibrarySession,

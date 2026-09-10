@@ -18,7 +18,7 @@ import pt.vcc.vccmusic.data.local.RadioDatabase
 import pt.vcc.vccmusic.data.local.RadioStationEntity
 
 const val DEFAULT_RADIO_BROWSER_API_URL =
-    "https://de1.api.radio-browser.info/json/stations/bycountrycodeexact/PT?hidebroken=true&limit=100"
+    "https://de1.api.radio-browser.info/json/stations/search?countrycode=PT&hidebroken=true&order=clickcount&reverse=true"
 
 private const val MAX_FAVICON_SIZE_BYTES = 2 * 1024 * 1024
 
