@@ -137,6 +137,7 @@ fun VccMusicApp(
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T =
                 PodcastViewModel(
+                    context,
                     podcastRepository,
                     (context.applicationContext as pt.vcc.vccmusic.VccMusicApplication).container.podcastStore,
                 ) as T

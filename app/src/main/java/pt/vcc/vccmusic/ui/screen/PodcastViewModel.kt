@@ -1,7 +1,9 @@
 package pt.vcc.vccmusic.ui.screen
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.JsonParseException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -10,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
 import retrofit2.HttpException
 import java.io.IOException
+import pt.vcc.vccmusic.diagnostics.DiagnosticLogger
 import pt.vcc.vccmusic.podcast.model.PodcastEpisode
 import pt.vcc.vccmusic.podcast.model.PodcastFeed
 import pt.vcc.vccmusic.podcast.repository.PodcastRepository
@@ -26,9 +29,11 @@ data class PodcastUiState(
 )
 
 class PodcastViewModel(
+    context: Context,
     private val repository: PodcastRepository,
     private val store: PodcastStore,
 ) : ViewModel() {
+    private val applicationContext = context.applicationContext
     private val _state = MutableStateFlow(PodcastUiState())
     val state: StateFlow<PodcastUiState> = _state.asStateFlow()
 
@@ -63,18 +68,72 @@ class PodcastViewModel(
 
     fun search() {
         val query = state.value.query.trim()
+
         if (query.isBlank()) {
-            _state.update { it.copy(error = "Escreva um termo para pesquisar podcasts.") }
+            DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa recusada: termo vazio")
+            _state.update {
+                it.copy(error = "Escreva um termo para pesquisar podcasts.")
+            }
             return
         }
+
         viewModelScope.launch {
-            _state.update { it.copy(loading = true, error = null, selectedFeed = null, episodes = emptyList()) }
+            DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa iniciada")
+            _state.update {
+                it.copy(
+                    loading = true,
+                    error = null,
+                    selectedFeed = null,
+                    episodes = emptyList(),
+                )
+            }
+
             try {
-                _state.update { it.copy(feeds = repository.search(query), loading = false) }
+                val feeds = repository.search(query)
+
+                _state.update {
+                    it.copy(
+                        feeds = feeds,
+                        loading = false,
+                    )
+                }
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Pesquisa concluída: resultados=${feeds.size}",
+                )
             } catch (error: IOException) {
-                _state.update { it.copy(loading = false, error = "Não foi possível ligar à Podcast Index.") }
+                DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa falhou: rede", error)
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        error = "Não foi possível ligar à Podcast Index.",
+                    )
+                }
             } catch (error: HttpException) {
-                _state.update { it.copy(loading = false, error = "A Podcast Index devolveu HTTP ${error.code()}.") }
+                DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa falhou: HTTP", error)
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        error = "A Podcast Index devolveu HTTP ${error.code()}.",
+                    )
+                }
+            } catch (error: JsonParseException) {
+                DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa falhou: resposta inválida", error)
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        error = "A Podcast Index devolveu uma resposta inválida.",
+                    )
+                }
+            } catch (error: IllegalArgumentException) {
+                DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa falhou: configuração inválida", error)
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        error = "A configuração da Podcast Index é inválida.",
+                    )
+                }
             }
         }
     }
@@ -88,6 +147,20 @@ class PodcastViewModel(
                 _state.update { it.copy(loading = false, error = "Não foi possível carregar os episódios.") }
             } catch (error: HttpException) {
                 _state.update { it.copy(loading = false, error = "A Podcast Index devolveu HTTP ${error.code()}.") }
+            } catch (error: JsonParseException) {
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        error = "A Podcast Index devolveu uma resposta inválida.",
+                    )
+                }
+            } catch (error: IllegalArgumentException) {
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        error = "A configuração da Podcast Index é inválida.",
+                    )
+                }
             }
 
         }
