@@ -29,6 +29,8 @@ Este diretório transforma os requisitos do `README.md` num backlog ordenado par
 | 13 | [Qualidade e robustez](13-qualidade-robustez.md) | Cobertura, acessibilidade e resiliência | 06–12 |
 | 14 | [Entrega do MVP](14-entrega-mvp.md) | Build de release validado | 13 |
 | 15 | [Menus e navegação](15-menus-e-navegacao.md) | Fluxo de ecrãs e menus conforme o layout | 03, 04, 05–10 |
+| 16 | [Consistência dos IDs de reprodução](16-consistencia-ids-reproducao.md) | IDs de faixa estáveis entre UI e serviço Media3 | 07, 10 |
+| 17 | [Podcasts e Podcast Index](17-podcasts-podcast-index.md) | Pesquisa, reprodução e Android Auto para podcasts | 07, 10, 12 |
 
 ## Caminho crítico
 

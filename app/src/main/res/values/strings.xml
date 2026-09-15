@@ -16,6 +16,12 @@
     <string name="light_mode">Ativar modo claro</string>
     <string name="dark_mode">Ativar modo escuro</string>
     <string name="online_radio">Rádios Online</string>
+    <string name="podcasts">Podcasts</string>
+    <string name="search_podcasts">Pesquisar podcasts</string>
+    <string name="search_podcasts_hint">Pesquise por nome, autor ou tema.</string>
+    <string name="no_podcast_episodes">Não foram encontrados episódios.</string>
+    <string name="favorite_podcasts">Podcasts favoritos</string>
+    <string name="search">Pesquisar</string>
     <string name="online_radio_description">Escolha uma estação para iniciar a reprodução online.</string>
     <string name="online_radio_settings">Configuração das rádios online</string>
     <string name="refresh_online_radios">Atualizar rádios online</string>

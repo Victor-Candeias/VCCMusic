@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Podcasts
 import androidx.compose.material.icons.filled.Radio
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -34,6 +35,8 @@ import pt.vcc.vccmusic.ui.screen.LibraryStart
 import pt.vcc.vccmusic.ui.screen.NowPlayingScreen
 import pt.vcc.vccmusic.ui.screen.SettingsScreen
 import pt.vcc.vccmusic.ui.screen.OnlineRadioScreen
+import pt.vcc.vccmusic.ui.screen.PodcastScreen
+import pt.vcc.vccmusic.ui.screen.PodcastViewModel
 import pt.vcc.vccmusic.ui.theme.appBackgroundBrush
 import pt.vcc.vccmusic.ui.screen.RadioBrowserRepository
 import pt.vcc.vccmusic.scanner.ScanProgress
@@ -120,10 +123,26 @@ fun VccMusicApp(
             @Suppress("UNCHECKED_CAST")
             /** Cria o ViewModel que controla a reprodução multimédia. */
             override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                PlaybackViewModel(context) as T
+                PlaybackViewModel(
+                    context,
+                    (context.applicationContext as pt.vcc.vccmusic.VccMusicApplication).container.podcastStore,
+                ) as T
         },
     )
     val playbackState by playbackViewModel.state.collectAsStateWithLifecycle()
+    val podcastRepository = (context.applicationContext as pt.vcc.vccmusic.VccMusicApplication)
+        .container.podcastRepository
+    val podcastViewModel: PodcastViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                PodcastViewModel(
+                    podcastRepository,
+                    (context.applicationContext as pt.vcc.vccmusic.VccMusicApplication).container.podcastStore,
+                ) as T
+        },
+    )
+    val podcastState by podcastViewModel.state.collectAsStateWithLifecycle()
     val navController = rememberNavController()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
@@ -175,6 +194,7 @@ fun VccMusicApp(
                                     NavigationDestination.Folders -> Icons.Default.Folder
                                     NavigationDestination.NowPlaying -> Icons.Default.PlayArrow
                                     NavigationDestination.OnlineRadio -> Icons.Default.Radio
+                                    NavigationDestination.Podcasts -> Icons.Default.Podcasts
                                     NavigationDestination.Settings -> Icons.Default.Settings
                                 },
                                 contentDescription = label,
@@ -206,12 +226,14 @@ fun VccMusicApp(
                         onMusic = { navController.navigate(NavigationDestination.Library.route) },
                         onPlaylists = { navController.navigate(NavigationDestination.Playlists.route) },
                         onOnlineRadio = { navController.navigate(NavigationDestination.OnlineRadio.route) },
+                        onPodcasts = { navController.navigate(NavigationDestination.Podcasts.route) },
                         favoriteTracks = favoriteTracks,
                         favoritePlaylists = favoritePlaylists.filter { it.isFavorite },
                         favoritePlaylistTrackCounts = favoritePlaylistTracks
                             .filterKeys { id -> favoritePlaylists.any { it.id == id && it.isFavorite } }
                             .mapValues { it.value.size },
                         favoriteStations = favoriteStations.filter { it.isFavorite },
+                        favoritePodcasts = podcastState.favorites,
                         onFavoriteTrack = { track ->
                             playbackViewModel.playTracks(listOf(track), track.id)
                             navController.navigate(NavigationDestination.NowPlaying.route) {
@@ -321,6 +343,18 @@ fun VccMusicApp(
                     forceConfiguration = configureOnlineRadios,
                     onConfigurationFinished = { configureOnlineRadios = false },
                     onStationPlayed = {
+                        navController.navigate(NavigationDestination.NowPlaying.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                )
+            }
+            composable(NavigationDestination.Podcasts.route) {
+                PodcastScreen(
+                    viewModel = podcastViewModel,
+                    playbackViewModel = playbackViewModel,
+                    contentPadding = contentPadding,
+                    onEpisodePlayed = {
                         navController.navigate(NavigationDestination.NowPlaying.route) {
                             launchSingleTop = true
                         }

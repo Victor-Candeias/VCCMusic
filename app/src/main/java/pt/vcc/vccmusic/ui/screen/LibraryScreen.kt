@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Star
@@ -26,6 +26,7 @@ import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -54,11 +55,8 @@ import pt.vcc.vccmusic.data.local.TrackEntity
 import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.playback.QueueSource
 import pt.vcc.vccmusic.ui.theme.appCardBrush
-import pt.vcc.vccmusic.ui.theme.AppGradientCard
 import pt.vcc.vccmusic.ui.theme.FoldersCardEnd
 import pt.vcc.vccmusic.ui.theme.FoldersCardStart
-import pt.vcc.vccmusic.ui.theme.LibraryCardEnd
-import pt.vcc.vccmusic.ui.theme.LibraryCardStart
 
 private sealed interface LibraryLocation {
     data object Root : LibraryLocation
@@ -519,25 +517,19 @@ private fun TrackCard(
     onToggleFavorite: () -> Unit,
     onAddToPlaylist: () -> Unit,
 ) {
-    AppGradientCard(
-        onClick = onPlay,
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(92.dp)
-            .padding(horizontal = 14.dp, vertical = 4.dp)
-            .background(
-                appCardBrush(LibraryCardStart, LibraryCardEnd),
-                MaterialTheme.shapes.medium,
-            )
+            .height(56.dp)
+            .background(Color.Black.copy(alpha = 0.16f))
+            .clickable(onClick = onPlay)
             .testTag("track-${track.id}"),
-        start = LibraryCardStart,
-        end = LibraryCardEnd,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp)
-                .padding(start = 16.dp, end = 4.dp),
+                .weight(1f)
+                .padding(start = 14.dp, end = 2.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val artwork = remember(track.id, track.artwork) {
@@ -545,54 +537,50 @@ private fun TrackCard(
                     BitmapFactory.decodeByteArray(bytes, 0, bytes.size)?.asImageBitmap()
                 }
             }
-            Box(
+            if (artwork != null) {
+                Image(
+                    bitmap = artwork,
+                    contentDescription = track.title.withoutParentheticalText(),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(4.dp)),
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.List,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.88f),
+                    modifier = Modifier.size(25.dp),
+                )
+            }
+            Text(
+                text = track.title.withoutParentheticalText(),
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.92f),
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 1,
                 modifier = Modifier
-                    .size(52.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.18f)),
-                contentAlignment = Alignment.Center,
-            ) {
-                if (artwork != null) {
-                    Image(
-                        bitmap = artwork,
-                        contentDescription = track.title.withoutParentheticalText(),
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop,
-                    )
-                } else {
-                    Text("♫", color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleLarge)
-                }
-            }
-            Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
-                Text(track.title.withoutParentheticalText(), color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleMedium)
-                val details = listOfNotNull(track.artist, track.album)
-                    .joinToString(" - ")
-                    .withoutParentheticalText()
-                if (details.isNotBlank()) {
-                    Text(
-                        details,
-                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.82f),
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                }
-            }
+                    .weight(1f)
+                    .padding(start = 10.dp),
+            )
             IconButton(onClick = onToggleFavorite) {
                 Icon(
                     imageVector = if (track.isFavorite) Icons.Default.Star else Icons.Outlined.StarBorder,
                     contentDescription = stringResource(
                         if (track.isFavorite) R.string.remove_from_favorites else R.string.add_to_favorites,
                     ),
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.76f),
                 )
             }
             IconButton(onClick = onAddToPlaylist) {
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = stringResource(R.string.more_options),
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.76f),
                 )
             }
         }
+        HorizontalDivider(color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.18f))
     }
 }
 

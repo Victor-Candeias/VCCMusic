@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Radio
+import androidx.compose.material.icons.filled.Podcasts
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.ElevatedButton
@@ -37,6 +38,7 @@ import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.local.TrackEntity
 import pt.vcc.vccmusic.data.local.PlaylistEntity
 import pt.vcc.vccmusic.data.withoutParentheticalText
+import pt.vcc.vccmusic.podcast.model.PodcastFeed
 import pt.vcc.vccmusic.ui.theme.MainMenuCardEnd
 import pt.vcc.vccmusic.ui.theme.MainMenuCardStart
 import pt.vcc.vccmusic.ui.theme.AppGradientCard
@@ -64,10 +66,12 @@ fun MainMenuScreen(
     onMusic: () -> Unit,
     onPlaylists: () -> Unit,
     onOnlineRadio: () -> Unit,
+    onPodcasts: () -> Unit,
     favoriteTracks: List<TrackEntity>,
     favoritePlaylists: List<PlaylistEntity>,
     favoritePlaylistTrackCounts: Map<Long, Int>,
     favoriteStations: List<RadioBrowserStation>,
+    favoritePodcasts: List<PodcastFeed>,
     onFavoriteTrack: (TrackEntity) -> Unit,
     onFavoritePlaylist: (PlaylistEntity, Boolean) -> Unit,
     onFavoriteRadio: (RadioBrowserStation) -> Unit,
@@ -119,6 +123,14 @@ fun MainMenuScreen(
                     onOnlineRadio,
                     "action-online-radio",
                 ),
+                QuickAction(
+                    R.string.podcasts,
+                    Icons.Default.Podcasts,
+                    MaterialTheme.colorScheme.primaryContainer,
+                    MaterialTheme.colorScheme.onPrimaryContainer,
+                    onPodcasts,
+                    "action-podcasts",
+                ),
             )
             val columns = when {
                 maxWidth >= 1100.dp -> 4
@@ -146,7 +158,7 @@ fun MainMenuScreen(
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(top = 4.dp),
         )
-        if (favoriteTracks.isEmpty() && favoritePlaylists.isEmpty() && favoriteStations.isEmpty()) {
+        if (favoriteTracks.isEmpty() && favoritePlaylists.isEmpty() && favoriteStations.isEmpty() && favoritePodcasts.isEmpty()) {
             Text(
                 text = stringResource(R.string.no_favorites),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -174,6 +186,9 @@ fun MainMenuScreen(
                     }
                     favoriteStations.forEach { station ->
                         add { FavoriteCard(station, onClick = { onFavoriteRadio(station) }) }
+                    }
+                    favoritePodcasts.forEach { podcast ->
+                        add { FavoritePodcastCard(podcast, onClick = onPodcasts) }
                     }
                 }
 
@@ -307,6 +322,33 @@ private fun FavoriteCard(
         ) {
             Icon(Icons.Default.Star, contentDescription = stringResource(R.string.favorite))
             Text(station.name.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium, maxLines = 2)
+        }
+    }
+}
+
+@Composable
+/** Mostra um podcast favorito e abre a respetiva área de podcasts. */
+private fun FavoritePodcastCard(
+    podcast: PodcastFeed,
+    onClick: () -> Unit,
+) {
+    AppGradientCard(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(96.dp),
+        start = MainMenuCardStart,
+        end = MainMenuCardEnd,
+    ) {
+        Column(
+            modifier = Modifier.padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Icon(Icons.Default.Podcasts, contentDescription = stringResource(R.string.favorite))
+            Text(podcast.title, style = MaterialTheme.typography.titleMedium, maxLines = 2)
+            podcast.author?.takeIf { it.isNotBlank() }?.let {
+                Text(it, style = MaterialTheme.typography.bodySmall, maxLines = 1)
+            }
         }
     }
 }

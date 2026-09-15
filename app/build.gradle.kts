@@ -14,6 +14,16 @@ val keystoreProperties = Properties().apply {
     }
 }
 
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use { load(it) }
+    }
+}
+
+fun String.toBuildConfigString(): String =
+    "\"${replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")}\""
+
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
@@ -71,6 +81,20 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+
+    defaultConfig {
+        buildConfigField(
+            "String",
+            "PODCAST_INDEX_API_KEY",
+            (localProperties.getProperty("PODCAST_INDEX_API_KEY") ?: "").toBuildConfigString(),
+        )
+        buildConfigField(
+            "String",
+            "PODCAST_INDEX_API_SECRET",
+            (localProperties.getProperty("PODCAST_INDEX_API_SECRET") ?: "").toBuildConfigString(),
+        )
     }
 
     packaging {
@@ -108,6 +132,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp)
     implementation(libs.androidx.documentfile)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.room.runtime)

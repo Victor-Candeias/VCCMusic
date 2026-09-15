@@ -25,10 +25,13 @@ import kotlinx.coroutines.launch
 import pt.vcc.vccmusic.data.local.TrackEntity
 import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.playback.MusicPlaybackService
+import pt.vcc.vccmusic.playback.MediaIds
 import pt.vcc.vccmusic.playback.QueueBuilder
 import pt.vcc.vccmusic.playback.QueueRequest
 import pt.vcc.vccmusic.playback.QueueSource
 import pt.vcc.vccmusic.playback.SpectrumAnalyzer
+import pt.vcc.vccmusic.podcast.model.PodcastEpisode
+import pt.vcc.vccmusic.podcast.repository.PodcastStore
 
 data class PlaybackUiState(
     val mediaId: String? = null,
@@ -43,7 +46,10 @@ data class PlaybackUiState(
     val spectrum: List<Float> = List(24) { 0f },
 )
 
-class PlaybackViewModel(context: Context) : ViewModel() {
+class PlaybackViewModel(
+    context: Context,
+    private val podcastStore: PodcastStore? = null,
+) : ViewModel() {
     private val _state = MutableStateFlow(PlaybackUiState())
     val state: StateFlow<PlaybackUiState> = _state.asStateFlow()
     private val controllerFuture = MediaController.Builder(
@@ -54,6 +60,8 @@ class PlaybackViewModel(context: Context) : ViewModel() {
     private var ticker: Job? = null
     private var pendingRadio: Pair<String, String>? = null
     private var pendingTracks: Quadruple<List<TrackEntity>, Long?, QueueSource, Boolean?>? = null
+    private var pendingPodcast: PodcastEpisode? = null
+    private var lastPodcastProgressWriteMs = 0L
 
     init {
         controllerFuture.addListener(
@@ -61,17 +69,22 @@ class PlaybackViewModel(context: Context) : ViewModel() {
                 controller = controllerFuture.get().also {
                     it.addListener(listener)
                     updateState(it)
-                        pendingRadio?.let { (name, streamUrl) ->
-                            pendingRadio = null
-                            playRadioOnController(it, name, streamUrl)
-                        }
-                        pendingTracks?.let { (tracks, selectedId, source, shuffle) ->
-                            pendingTracks = null
-                            playTracks(tracks, selectedId, source, shuffle)
-                        }
+                    pendingRadio?.let { (name, streamUrl) ->
+                        pendingRadio = null
+                        playRadioOnController(it, name, streamUrl)
+                    }
+                    pendingTracks?.let { (tracks, selectedId, source, shuffle) ->
+                        pendingTracks = null
+                        playTracks(tracks, selectedId, source, shuffle)
+                    }
+                    pendingPodcast?.let { episode ->
+                        pendingPodcast = null
+                        playPodcast(episode)
+                    }
                     ticker = viewModelScope.launch {
                         while (isActive) {
                             updateState(it)
+                            persistPodcastProgress(it)
                             delay(500)
                         }
                     }
@@ -86,6 +99,22 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         )
     }
 
+    private suspend fun persistPodcastProgress(currentController: MediaController) {
+        val mediaId = currentController.currentMediaItem?.mediaId ?: return
+        if (!mediaId.startsWith(MediaIds.PODCAST_EPISODE_PREFIX) || !currentController.isPlaying) return
+        val now = System.currentTimeMillis()
+        if (now - lastPodcastProgressWriteMs < 5_000) return
+        val episodeId = mediaId.removePrefix(MediaIds.PODCAST_EPISODE_PREFIX).toLongOrNull() ?: return
+        podcastStore?.saveProgress(
+            episodeId = episodeId,
+            feedId = null,
+            title = currentController.mediaMetadata.title?.toString() ?: return,
+            positionMs = currentController.currentPosition.coerceAtLeast(0),
+            durationMs = currentController.duration.takeIf { it != C.TIME_UNSET }?.coerceAtLeast(0),
+        )
+        lastPodcastProgressWriteMs = now
+    }
+
     /** Constrói a fila, atualiza o estado e inicia a reprodução das faixas. */
     fun playTracks(
         tracks: List<TrackEntity>,
@@ -98,7 +127,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
         val selectedTrack = queue.firstOrNull { it.id == selectedId } ?: queue.first()
         _state.update {
             it.copy(
-                mediaId = selectedTrack.id.toString(),
+                mediaId = MediaIds.track(selectedTrack.id),
                 title = selectedTrack.title,
                 artist = selectedTrack.artist,
                 artworkData = selectedTrack.artwork,
@@ -161,6 +190,57 @@ class PlaybackViewModel(context: Context) : ViewModel() {
                     MediaMetadata.Builder()
                         .setTitle(name.withoutParentheticalText())
                         .setArtist("Rádio Online")
+                        .build(),
+                )
+                .build(),
+        )
+        currentController.prepare()
+        currentController.play()
+    }
+
+    /** Coloca um episódio de podcast no player multimédia existente. */
+    fun playPodcast(episode: PodcastEpisode) {
+        require(!episode.enclosureUrl.isNullOrBlank()) {
+            "Podcast episode has no playable enclosure URL."
+        }
+        _state.update {
+            it.copy(
+                mediaId = MediaIds.podcastEpisode(episode.id),
+                title = episode.title,
+                artist = episode.feedTitle ?: episode.feedAuthor ?: "Podcast",
+                artworkData = null,
+            )
+        }
+        val currentController = controller
+        if (currentController == null) {
+            pendingPodcast = episode
+            return
+        }
+        playPodcastOnController(currentController, episode)
+        viewModelScope.launch {
+            val progress = podcastStore?.progress(episode.id)?.positionMs ?: return@launch
+            if (progress > 0) currentController.seekTo(progress)
+        }
+    }
+
+    private fun playPodcastOnController(
+        currentController: MediaController,
+        episode: PodcastEpisode,
+    ) {
+        val streamUrl = episode.enclosureUrl
+            ?: error("Podcast episode has no playable enclosure URL.")
+        currentController.setMediaItem(
+            MediaItem.Builder()
+                .setMediaId(MediaIds.podcastEpisode(episode.id))
+                .setUri(streamUrl)
+                .setMediaMetadata(
+                    MediaMetadata.Builder()
+                        .setTitle(episode.title.withoutParentheticalText())
+                        .setArtist(
+                            (episode.feedTitle ?: episode.feedAuthor ?: "Podcast")
+                                .withoutParentheticalText(),
+                        )
+                        .setAlbumTitle(episode.feedTitle?.withoutParentheticalText())
                         .build(),
                 )
                 .build(),
@@ -235,7 +315,7 @@ class PlaybackViewModel(context: Context) : ViewModel() {
     /** Converte uma faixa persistida num item reproduzível Media3. */
     private fun toMediaItem(track: TrackEntity): MediaItem =
         MediaItem.Builder()
-            .setMediaId(track.id.toString())
+            .setMediaId(MediaIds.track(track.id))
             .setUri(track.uri)
             .setMediaMetadata(
                 MediaMetadata.Builder()
