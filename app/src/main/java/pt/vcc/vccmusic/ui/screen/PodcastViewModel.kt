@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.TimeoutCancellationException
 import retrofit2.HttpException
 import java.io.IOException
 import pt.vcc.vccmusic.diagnostics.DiagnosticLogger
@@ -89,7 +90,9 @@ class PodcastViewModel(
             }
 
             try {
-                val feeds = repository.search(query)
+                val feeds = kotlinx.coroutines.withTimeout(30_000) {
+                    repository.search(query)
+                }
 
                 _state.update {
                     it.copy(
@@ -132,6 +135,14 @@ class PodcastViewModel(
                     it.copy(
                         loading = false,
                         error = "A configuração da Podcast Index é inválida.",
+                    )
+                }
+            } catch (error: TimeoutCancellationException) {
+                DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa excedeu o tempo limite", error)
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        error = "A pesquisa demorou demasiado tempo. Tente novamente.",
                     )
                 }
             }
