@@ -37,4 +37,23 @@ class PodcastIndexResponseParserTest {
         assertEquals(1, episodes.size)
         assertTrue(episodes.single().id == 10L)
     }
+
+    @Test
+    fun parsesDiscoveryFeedsManuallyIncludingLanguage() {
+        val feeds = PodcastIndexResponseParser.parseFeeds(
+            """{"feeds":[{"id":42,"title":"Portuguese podcast","language":"pt"}]}""",
+        )
+
+        assertEquals(1, feeds.size)
+        assertEquals("pt", feeds.single().language)
+    }
+
+    @Test
+    fun rejectsDiscoveryResponseWithWrongArrayType() {
+        val error = runCatching {
+            PodcastIndexResponseParser.parseFeeds("""{"feeds":{}}""")
+        }.exceptionOrNull()
+
+        assertTrue(error is com.google.gson.JsonParseException)
+    }
 }

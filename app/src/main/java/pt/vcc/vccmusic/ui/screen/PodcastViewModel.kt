@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonParseException
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,6 +28,9 @@ data class PodcastUiState(
     val selectedFeed: PodcastFeed? = null,
     val episodes: List<PodcastEpisode> = emptyList(),
     val favorites: List<PodcastFeed> = emptyList(),
+    val trending: List<PodcastFeed> = emptyList(),
+    val recent: List<PodcastFeed> = emptyList(),
+    val discoveryLoading: Boolean = false,
     val loading: Boolean = false,
     val error: String? = null,
 )
@@ -39,6 +43,7 @@ class PodcastViewModel(
     private val applicationContext = context.applicationContext
     private val _state = MutableStateFlow(PodcastUiState())
     val state: StateFlow<PodcastUiState> = _state.asStateFlow()
+    private var searchJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -63,6 +68,7 @@ class PodcastViewModel(
                 }
             }
         }
+        loadDiscovery()
     }
 
     fun setQuery(query: String) {
@@ -72,10 +78,10 @@ class PodcastViewModel(
     fun search() {
         val query = state.value.query.trim()
 
-        if (query.isBlank()) {
+        if (query.length < 2) {
             DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa recusada: termo vazio")
             _state.update {
-                it.copy(error = "Escreva um termo para pesquisar podcasts.")
+                it.copy(error = "Escreva pelo menos dois caracteres para pesquisar podcasts.")
             }
             return
         }
@@ -85,7 +91,8 @@ class PodcastViewModel(
             "Podcast",
             "Pesquisa solicitada: termo=${query.take(80)}",
         )
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
             val startedAt = SystemClock.elapsedRealtime()
             DiagnosticLogger.log(
                 applicationContext,
@@ -204,6 +211,29 @@ class PodcastViewModel(
                 )
                 throw error
             }
+        }
+
+    }
+
+    /** Carrega listas curtas de descoberta para a aplicação e o Android Auto. */
+    fun loadDiscovery() {
+        viewModelScope.launch {
+            _state.update { it.copy(discoveryLoading = true) }
+            try {
+                val trending = repository.trending(max = 30, language = "pt")
+                _state.update { it.copy(trending = trending) }
+            } catch (error: Exception) {
+                if (error is CancellationException) throw error
+                DiagnosticLogger.log(applicationContext, "Podcast", "Trending falhou", error)
+            }
+            try {
+                val recent = repository.recent(max = 30, language = "pt")
+                _state.update { it.copy(recent = recent) }
+            } catch (error: Exception) {
+                if (error is CancellationException) throw error
+                DiagnosticLogger.log(applicationContext, "Podcast", "Podcasts recentes falharam", error)
+            }
+            _state.update { it.copy(discoveryLoading = false) }
         }
     }
 

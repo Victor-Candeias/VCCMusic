@@ -34,7 +34,14 @@ internal object PodcastIndexResponseParser {
         }
     }
 
-    private fun parseFeed(json: JsonObject, index: Int): PodcastFeed? {
+    fun parseFeeds(body: String, field: String = "feeds"): List<PodcastFeed> {
+        val root = parseObject(body)
+        return root.array(field).mapNotNull { element ->
+            if (!element.isJsonObject) null else parseFeed(element.asJsonObject)
+        }
+    }
+
+    private fun parseFeed(json: JsonObject, index: Int = 0): PodcastFeed? {
         val id = json.number("id")
         val title = json.string("title")
         if (id == null || id <= 0L || title.isNullOrBlank()) {
@@ -51,6 +58,7 @@ internal object PodcastIndexResponseParser {
             image = json.string("image"),
             artwork = json.string("artwork"),
             episodeCount = json.number("episodeCount")?.toInt(),
+            language = json.string("language"),
         )
     }
 

@@ -14,6 +14,24 @@ interface PodcastIndexApi {
     @GET("search/byterm")
     suspend fun searchByTerm(@Query("q") query: String): retrofit2.Response<ResponseBody>
 
+    @GET("search/byperson")
+    suspend fun searchByPerson(@Query("q") query: String): retrofit2.Response<ResponseBody>
+
+    @GET("search/bytitle")
+    suspend fun searchByTitle(@Query("q") query: String): retrofit2.Response<ResponseBody>
+
+    @GET("podcasts/trending")
+    suspend fun trending(
+        @Query("max") max: Int,
+        @Query("lang") language: String? = null,
+    ): retrofit2.Response<ResponseBody>
+
+    @GET("recent/feeds")
+    suspend fun recentFeeds(
+        @Query("max") max: Int,
+        @Query("lang") language: String? = null,
+    ): retrofit2.Response<ResponseBody>
+
     @GET("episodes/byfeedid")
     suspend fun episodesByFeedId(@Query("id") feedId: Long): retrofit2.Response<ResponseBody>
 }

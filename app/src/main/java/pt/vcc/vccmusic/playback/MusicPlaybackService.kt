@@ -28,6 +28,7 @@ import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.diagnostics.DiagnosticLogger
 import pt.vcc.vccmusic.data.local.PodcastFavoriteEntity
 import pt.vcc.vccmusic.podcast.model.PodcastEpisode
+import pt.vcc.vccmusic.podcast.model.PodcastFeed
 
 class MusicPlaybackService : MediaLibraryService() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -219,6 +220,19 @@ class MusicPlaybackService : MediaLibraryService() {
             )
             .build()
 
+    private fun toPodcastFeedItem(feed: PodcastFeed): MediaItem =
+        MediaItem.Builder()
+            .setMediaId(MediaIds.podcastFeed(feed.id))
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(feed.title)
+                    .setArtist(feed.author ?: "Podcast")
+                    .setIsBrowsable(true)
+                    .setIsPlayable(false)
+                    .build(),
+            )
+            .build()
+
     private fun toPodcastEpisodeItem(episode: PodcastEpisode): MediaItem =
         MediaItem.Builder()
             .setMediaId(MediaIds.podcastEpisode(episode.id))
@@ -236,7 +250,11 @@ class MusicPlaybackService : MediaLibraryService() {
     /** Devolve a sessão multimédia e regista o controlador que a solicitou. */
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? =
         mediaLibrarySession.also {
-            DiagnosticLogger.log(this, "PlaybackService", "Sessão solicitada por ${controllerInfo.packageName}")
+            DiagnosticLogger.log(
+                this,
+                "AndroidAuto",
+                "Sessão solicitada: ${controllerDescription(controllerInfo)}",
+            )
         }
 
     /** Encerra o serviço quando a tarefa é removida e não há reprodução ativa. */
@@ -256,6 +274,12 @@ class MusicPlaybackService : MediaLibraryService() {
         super.onDestroy()
     }
 
+    /** Identifica o cliente que iniciou cada operação da sessão multimédia. */
+    private fun controllerDescription(controller: MediaSession.ControllerInfo): String {
+        val origin = if (controller.packageName == packageName) "local" else "externa"
+        return "origem=$origin, package=${controller.packageName}, uid=${controller.uid}"
+    }
+
     private inner class LibraryCallback : MediaLibrarySession.Callback {
         /** Regista a ligação de cada controlador, incluindo o Android Auto. */
         override fun onConnect(
@@ -264,8 +288,8 @@ class MusicPlaybackService : MediaLibraryService() {
         ): MediaSession.ConnectionResult {
             DiagnosticLogger.log(
                 this@MusicPlaybackService,
-                "MediaSession",
-                "Controlador ligado: ${controller.packageName}, uid=${controller.uid}",
+                "AndroidAuto",
+                "Controlador ligado: ${controllerDescription(controller)}",
             )
             return super.onConnect(session, controller)
         }
@@ -277,8 +301,8 @@ class MusicPlaybackService : MediaLibraryService() {
         ) {
             DiagnosticLogger.log(
                 this@MusicPlaybackService,
-                "MediaSession",
-                "Controlador desligado: ${controller.packageName}, uid=${controller.uid}",
+                "AndroidAuto",
+                "Controlador desligado: ${controllerDescription(controller)}",
             )
             super.onDisconnected(session, controller)
         }
@@ -289,6 +313,12 @@ class MusicPlaybackService : MediaLibraryService() {
             browser: MediaSession.ControllerInfo,
             params: MediaLibraryService.LibraryParams?,
         ): ListenableFuture<LibraryResult<MediaItem>> = asyncResult {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "AndroidAuto",
+                "Pedido de raiz: ${controllerDescription(browser)}, " +
+                    "params=${params?.extras?.keySet()?.joinToString(",") ?: "nenhum"}",
+            )
             LibraryResult.ofItem(toCategoryItem(ROOT_ID, getString(R.string.app_name)), params)
         }
 
@@ -303,8 +333,10 @@ class MusicPlaybackService : MediaLibraryService() {
         ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> = asyncResult {
             DiagnosticLogger.log(
                 this@MusicPlaybackService,
-                "MediaLibrary",
-                "Pedido de conteúdos: parentId=$parentId, page=$page, pageSize=$pageSize",
+                "AndroidAuto",
+                "Pedido de conteúdos: ${controllerDescription(browser)}, " +
+                    "parentId=$parentId, page=$page, pageSize=$pageSize, " +
+                    "params=${params?.extras?.keySet()?.joinToString(",") ?: "nenhum"}",
             )
             val repository = (application as VccMusicApplication).container.musicRepository
             val podcastStore = (application as VccMusicApplication).container.podcastStore
@@ -317,6 +349,8 @@ class MusicPlaybackService : MediaLibraryService() {
                     toCategoryItem(PLAYLISTS_ID, getString(R.string.playlists)),
                     toCategoryItem(SHUFFLE_ID, getString(R.string.shuffle)),
                     toCategoryItem(PODCASTS_ID, getString(R.string.podcasts)),
+                    toCategoryItem(TRENDING_PODCASTS_ID, getString(R.string.trending_podcasts)),
+                    toCategoryItem(RECENT_PODCASTS_ID, getString(R.string.recent_podcasts)),
                 )
                 FOLDERS_ID -> root?.let {
                     repository.observeFolders(it.id, null).first().map { folder ->
@@ -333,6 +367,8 @@ class MusicPlaybackService : MediaLibraryService() {
                     repository.observeAllTracks(it.id).first().shuffled().map(::toMediaItem)
                 }.orEmpty()
                 PODCASTS_ID -> podcastStore.observeFavorites().first().map(::toPodcastFeedItem)
+                TRENDING_PODCASTS_ID -> podcastRepository.trending(30, "pt").map(::toPodcastFeedItem)
+                RECENT_PODCASTS_ID -> podcastRepository.recent(30, "pt").map(::toPodcastFeedItem)
                 else -> when {
                     parentId.startsWith(FOLDER_PREFIX) -> {
                         val folder = repository.folder(parentId.removePrefix(FOLDER_PREFIX).toLongOrNull() ?: -1)
@@ -364,8 +400,14 @@ class MusicPlaybackService : MediaLibraryService() {
             browser: MediaSession.ControllerInfo,
             mediaId: String,
         ): ListenableFuture<LibraryResult<MediaItem>> = asyncResult {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "AndroidAuto",
+                "Pedido de item: ${controllerDescription(browser)}, mediaId=$mediaId",
+            )
             val repository = (application as VccMusicApplication).container.musicRepository
             val podcastStore = (application as VccMusicApplication).container.podcastStore
+            val podcastRepository = (application as VccMusicApplication).container.podcastRepository
             val item = when {
                 mediaId == ROOT_ID -> toCategoryItem(ROOT_ID, getString(R.string.app_name))
                 mediaId == FOLDERS_ID -> toCategoryItem(FOLDERS_ID, getString(R.string.folders))
@@ -373,11 +415,17 @@ class MusicPlaybackService : MediaLibraryService() {
                 mediaId == PLAYLISTS_ID -> toCategoryItem(PLAYLISTS_ID, getString(R.string.playlists))
                 mediaId == SHUFFLE_ID -> toCategoryItem(SHUFFLE_ID, getString(R.string.shuffle))
                 mediaId == PODCASTS_ID -> toCategoryItem(PODCASTS_ID, getString(R.string.podcasts))
+                mediaId == TRENDING_PODCASTS_ID ->
+                    toCategoryItem(TRENDING_PODCASTS_ID, getString(R.string.trending_podcasts))
+                mediaId == RECENT_PODCASTS_ID ->
+                    toCategoryItem(RECENT_PODCASTS_ID, getString(R.string.recent_podcasts))
                 mediaId.startsWith(MediaIds.PODCAST_FEED_PREFIX) -> podcastStore.observeFavorites().first()
                     .firstOrNull {
                         MediaIds.podcastFeed(it.feedId) == mediaId
-                    }
-                    ?.let(::toPodcastFeedItem)
+                    }?.let(::toPodcastFeedItem)
+                    ?: (
+                        podcastRepository.trending(30, "pt") + podcastRepository.recent(30, "pt")
+                    ).firstOrNull { MediaIds.podcastFeed(it.id) == mediaId }?.let(::toPodcastFeedItem)
                 mediaId.startsWith(FOLDER_PREFIX) -> repository.folder(
                     mediaId.removePrefix(FOLDER_PREFIX).toLongOrNull() ?: -1,
                 )?.let { toFolderItem(it.id, it.name) }
@@ -430,6 +478,8 @@ class MusicPlaybackService : MediaLibraryService() {
         const val PLAYLISTS_ID = "playlists"
         const val SHUFFLE_ID = "shuffle"
         const val PODCASTS_ID = "podcasts"
+        const val TRENDING_PODCASTS_ID = "podcasts_trending"
+        const val RECENT_PODCASTS_ID = "podcasts_recent"
         const val FOLDER_PREFIX = "folder:"
         const val PLAYLIST_PREFIX = "playlist:"
     }

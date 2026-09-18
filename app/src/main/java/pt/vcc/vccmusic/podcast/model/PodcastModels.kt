@@ -23,6 +23,8 @@ data class PodcastFeed(
     val artwork: String?,
     @field:SerializedName("episodeCount")
     val episodeCount: Int?,
+    @field:SerializedName("language")
+    val language: String? = null,
 )
 
 data class PodcastEpisode(

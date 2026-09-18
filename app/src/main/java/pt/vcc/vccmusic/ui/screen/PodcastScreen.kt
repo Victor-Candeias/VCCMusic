@@ -57,15 +57,42 @@ fun PodcastScreen(
             if (state.loading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else if (state.feeds.isEmpty()) {
-                if (state.favorites.isEmpty()) {
-                    Text(stringResource(R.string.search_podcasts_hint), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                if (state.favorites.isEmpty() && state.trending.isEmpty() && state.recent.isEmpty()) {
+                    Text(
+                        stringResource(R.string.search_podcasts_hint),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 } else {
-                    Text(stringResource(R.string.favorite_podcasts), style = MaterialTheme.typography.titleMedium)
                     LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        if (state.favorites.isNotEmpty()) {
+                            item { Text(stringResource(R.string.favorite_podcasts), style = MaterialTheme.typography.titleMedium) }
+                        }
                         items(state.favorites, key = { "favorite-${it.id}" }) { feed ->
                             PodcastFeedRow(
                                 feed = feed,
                                 isFavorite = true,
+                                onFavorite = { viewModel.toggleFavorite(feed) },
+                                onClick = { viewModel.openFeed(feed) },
+                            )
+                        }
+                        if (state.trending.isNotEmpty()) {
+                            item { Text(stringResource(R.string.trending_podcasts), style = MaterialTheme.typography.titleMedium) }
+                        }
+                        items(state.trending, key = { "trending-${it.id}" }) { feed ->
+                            PodcastFeedRow(
+                                feed = feed,
+                                isFavorite = state.favorites.any { it.id == feed.id },
+                                onFavorite = { viewModel.toggleFavorite(feed) },
+                                onClick = { viewModel.openFeed(feed) },
+                            )
+                        }
+                        if (state.recent.isNotEmpty()) {
+                            item { Text(stringResource(R.string.recent_podcasts), style = MaterialTheme.typography.titleMedium) }
+                        }
+                        items(state.recent, key = { "recent-${it.id}" }) { feed ->
+                            PodcastFeedRow(
+                                feed = feed,
+                                isFavorite = state.favorites.any { it.id == feed.id },
                                 onFavorite = { viewModel.toggleFavorite(feed) },
                                 onClick = { viewModel.openFeed(feed) },
                             )
