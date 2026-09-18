@@ -49,7 +49,7 @@ class DefaultAppContainer(
     }
 
     override val podcastRepository: PodcastRepository by lazy {
-        PodcastRepository(PodcastIndexClient.api)
+        PodcastRepository(PodcastIndexClient.api, appContext)
     }
 
     override val podcastStore: PodcastStore by lazy {

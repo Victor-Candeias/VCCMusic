@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import java.io.File
 import java.io.IOException
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -32,6 +34,8 @@ object DiagnosticLogger {
                 append(it::class.java.simpleName)
                 append(": ")
                 append(it.message ?: "sem mensagem")
+                append('\n')
+                append(stackTrace(it))
             }
             append('\n')
         }
@@ -65,4 +69,9 @@ object DiagnosticLogger {
     /** Resolve o ficheiro privado utilizado para armazenar os diagnósticos. */
     private fun logFile(context: Context): File =
         File(context.filesDir, LOG_FILE_NAME)
+
+    private fun stackTrace(error: Throwable): String =
+        StringWriter().also { writer ->
+            error.printStackTrace(PrintWriter(writer))
+        }.toString().trimEnd()
 }

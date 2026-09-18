@@ -1,9 +1,11 @@
 package pt.vcc.vccmusic.ui.screen
 
+import android.os.SystemClock
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonParseException
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -78,8 +80,18 @@ class PodcastViewModel(
             return
         }
 
+        DiagnosticLogger.log(
+            applicationContext,
+            "Podcast",
+            "Pesquisa solicitada: termo=${query.take(80)}",
+        )
         viewModelScope.launch {
-            DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa iniciada")
+            val startedAt = SystemClock.elapsedRealtime()
+            DiagnosticLogger.log(
+                applicationContext,
+                "Podcast",
+                "Pesquisa iniciada: termo=${query.take(80)}",
+            )
             _state.update {
                 it.copy(
                     loading = true,
@@ -103,10 +115,15 @@ class PodcastViewModel(
                 DiagnosticLogger.log(
                     applicationContext,
                     "Podcast",
-                    "Pesquisa concluída: resultados=${feeds.size}",
+                    "Pesquisa concluída: resultados=${feeds.size}, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
                 )
             } catch (error: IOException) {
-                DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa falhou: rede", error)
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Pesquisa falhou: rede, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
                 _state.update {
                     it.copy(
                         loading = false,
@@ -114,7 +131,12 @@ class PodcastViewModel(
                     )
                 }
             } catch (error: HttpException) {
-                DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa falhou: HTTP", error)
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Pesquisa falhou: HTTP, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
                 _state.update {
                     it.copy(
                         loading = false,
@@ -122,7 +144,12 @@ class PodcastViewModel(
                     )
                 }
             } catch (error: JsonParseException) {
-                DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa falhou: resposta inválida", error)
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Pesquisa falhou: resposta inválida, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
                 _state.update {
                     it.copy(
                         loading = false,
@@ -130,35 +157,95 @@ class PodcastViewModel(
                     )
                 }
             } catch (error: IllegalArgumentException) {
-                DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa falhou: configuração inválida", error)
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Pesquisa falhou: configuração inválida, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
                 _state.update {
                     it.copy(
                         loading = false,
                         error = "A configuração da Podcast Index é inválida.",
                     )
                 }
+            } catch (error: ClassCastException) {
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Pesquisa falhou: tipo de resposta incompatível, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        error = "A Podcast Index devolveu um formato incompatível.",
+                    )
+                }
             } catch (error: TimeoutCancellationException) {
-                DiagnosticLogger.log(applicationContext, "Podcast", "Pesquisa excedeu o tempo limite", error)
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Pesquisa excedeu o tempo limite, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
                 _state.update {
                     it.copy(
                         loading = false,
                         error = "A pesquisa demorou demasiado tempo. Tente novamente.",
                     )
                 }
+            } catch (error: CancellationException) {
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Pesquisa cancelada, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
+                throw error
             }
         }
     }
 
     fun openFeed(feed: PodcastFeed) {
         viewModelScope.launch {
+            val startedAt = SystemClock.elapsedRealtime()
+            DiagnosticLogger.log(
+                applicationContext,
+                "Podcast",
+                "Episódios iniciados: feedId=${feed.id}",
+            )
             _state.update { it.copy(selectedFeed = feed, loading = true, error = null, episodes = emptyList()) }
             try {
                 _state.update { it.copy(episodes = repository.episodes(feed.id), loading = false) }
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Episódios concluídos: feedId=${feed.id}, resultados=${state.value.episodes.size}, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                )
             } catch (error: IOException) {
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Episódios falharam: rede, feedId=${feed.id}, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
                 _state.update { it.copy(loading = false, error = "Não foi possível carregar os episódios.") }
             } catch (error: HttpException) {
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Episódios falharam: HTTP, feedId=${feed.id}, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
                 _state.update { it.copy(loading = false, error = "A Podcast Index devolveu HTTP ${error.code()}.") }
             } catch (error: JsonParseException) {
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Episódios falharam: resposta inválida, feedId=${feed.id}, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
                 _state.update {
                     it.copy(
                         loading = false,
@@ -166,12 +253,39 @@ class PodcastViewModel(
                     )
                 }
             } catch (error: IllegalArgumentException) {
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Episódios falharam: configuração inválida, feedId=${feed.id}, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
                 _state.update {
                     it.copy(
                         loading = false,
                         error = "A configuração da Podcast Index é inválida.",
                     )
                 }
+            } catch (error: ClassCastException) {
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Episódios falharam: tipo de resposta incompatível, feedId=${feed.id}, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        error = "A Podcast Index devolveu um formato incompatível.",
+                    )
+                }
+            } catch (error: CancellationException) {
+                DiagnosticLogger.log(
+                    applicationContext,
+                    "Podcast",
+                    "Episódios cancelados: feedId=${feed.id}, duraçãoMs=${SystemClock.elapsedRealtime() - startedAt}",
+                    error,
+                )
+                throw error
             }
 
         }
