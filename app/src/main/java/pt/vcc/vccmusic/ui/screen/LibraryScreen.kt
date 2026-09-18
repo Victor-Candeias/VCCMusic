@@ -54,9 +54,6 @@ import pt.vcc.vccmusic.data.local.PlaylistEntity
 import pt.vcc.vccmusic.data.local.TrackEntity
 import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.playback.QueueSource
-import pt.vcc.vccmusic.ui.theme.appCardBrush
-import pt.vcc.vccmusic.ui.theme.FoldersCardEnd
-import pt.vcc.vccmusic.ui.theme.FoldersCardStart
 
 private sealed interface LibraryLocation {
     data object Root : LibraryLocation
@@ -406,26 +403,28 @@ private fun LibraryItems(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(64.dp)
-                    .background(
-                        appCardBrush(FoldersCardStart, FoldersCardEnd),
-                        MaterialTheme.shapes.small,
-                    )
+                    .height(56.dp)
                     .clickable { onOpenFolder(folder) }
-                    .padding(horizontal = 16.dp),
+                    .background(Color.Black.copy(alpha = 0.16f))
+                    .padding(horizontal = 14.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     Icons.Default.Home,
                     stringResource(R.string.folder_icon),
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.88f),
                 )
                 Text(
                     folder.name.withoutParentheticalText(),
-                    color = Color.White,
-                    modifier = Modifier.padding(start = 12.dp),
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.92f),
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 10.dp),
                 )
             }
+            HorizontalDivider(color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.18f))
         }
         items(tracks, key = { "track-${it.id}" }) { track ->
             TrackCard(

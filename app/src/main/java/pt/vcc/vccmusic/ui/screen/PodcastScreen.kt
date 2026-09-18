@@ -164,7 +164,11 @@ private fun PodcastFeedRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(Icons.Default.Podcasts, contentDescription = null)
-        Column(modifier = Modifier.padding(start = 12.dp)) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 12.dp),
+        ) {
             Text(feed.title, style = MaterialTheme.typography.titleMedium, maxLines = 2)
             feed.author?.takeIf { it.isNotBlank() }?.let {
                 Text(it, style = MaterialTheme.typography.bodySmall, maxLines = 1)

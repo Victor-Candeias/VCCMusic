@@ -296,6 +296,11 @@ class PlaybackViewModel(
     private fun updateState(player: Player) {
         val metadata = player.mediaMetadata
         val mediaId = player.currentMediaItem?.mediaId
+        val previousState = _state.value
+        val artworkData = metadata.artworkData
+            ?: previousState.artworkData?.takeIf {
+                previousState.mediaId == mediaId && mediaId?.startsWith(MediaIds.TRACK_PREFIX) == true
+            }
         _state.value = PlaybackUiState(
             mediaId = mediaId,
             title = metadata.title?.toString(),
@@ -306,9 +311,7 @@ class PlaybackViewModel(
             shuffleEnabled = player.shuffleModeEnabled,
             repeatMode = player.repeatMode,
             spectrum = _state.value.spectrum,
-            artworkData = _state.value.artworkData
-                ?.takeIf { _state.value.mediaId == mediaId }
-                ?: metadata.artworkData,
+            artworkData = artworkData,
         )
     }
 

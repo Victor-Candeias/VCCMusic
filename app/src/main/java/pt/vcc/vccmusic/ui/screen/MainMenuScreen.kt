@@ -19,12 +19,10 @@ import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Radio
 import androidx.compose.material.icons.filled.Podcasts
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Shuffle
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
@@ -234,7 +232,6 @@ private fun FavoritePlaylistCard(
             modifier = Modifier.padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Icon(Icons.AutoMirrored.Filled.List, contentDescription = stringResource(R.string.favorite))
             Text(playlist.name.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium, maxLines = 2)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -242,8 +239,8 @@ private fun FavoritePlaylistCard(
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.weight(1f),
                 )
-                IconButton(onClick = onShuffle, enabled = trackCount > 0) {
-                    Icon(Icons.Default.Shuffle, contentDescription = stringResource(R.string.shuffle))
+                TextButton(onClick = onShuffle, enabled = trackCount > 0) {
+                    Text(stringResource(R.string.shuffle))
                 }
             }
         }
@@ -268,7 +265,6 @@ private fun FavoriteTrackCard(
             modifier = Modifier.padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Icon(Icons.Default.Star, contentDescription = stringResource(R.string.favorite))
             Text(track.title.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium, maxLines = 2)
             track.artist?.takeIf { it.isNotBlank() }?.let {
                 Text(it.withoutParentheticalText(), style = MaterialTheme.typography.bodySmall, maxLines = 1)
@@ -286,7 +282,7 @@ private fun FeatureCard(
     AppGradientCard(
         onClick = action.onClick,
         modifier = modifier
-            .height(112.dp)
+            .height(88.dp)
             .testTag(action.testTag),
         shape = RoundedCornerShape(28.dp),
         start = MainMenuCardStart,
@@ -320,7 +316,6 @@ private fun FavoriteCard(
             modifier = Modifier.padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Icon(Icons.Default.Star, contentDescription = stringResource(R.string.favorite))
             Text(station.name.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium, maxLines = 2)
         }
     }
@@ -344,7 +339,6 @@ private fun FavoritePodcastCard(
             modifier = Modifier.padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Icon(Icons.Default.Podcasts, contentDescription = stringResource(R.string.favorite))
             Text(podcast.title, style = MaterialTheme.typography.titleMedium, maxLines = 2)
             podcast.author?.takeIf { it.isNotBlank() }?.let {
                 Text(it, style = MaterialTheme.typography.bodySmall, maxLines = 1)
