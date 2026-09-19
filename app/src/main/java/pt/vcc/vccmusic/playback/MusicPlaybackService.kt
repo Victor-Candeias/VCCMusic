@@ -2,6 +2,7 @@ package pt.vcc.vccmusic.playback
 
 import android.content.Intent
 import android.net.Uri
+import android.os.IBinder
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -90,6 +91,29 @@ class MusicPlaybackService : MediaLibraryService() {
                     DiagnosticLogger.log(this@MusicPlaybackService, "Player", "A reproduzir: $isPlaying")
                 }
 
+                /** Regista a decisão de reprodução e a razão de cada alteração. */
+                override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                    DiagnosticLogger.log(
+                        this@MusicPlaybackService,
+                        "Player",
+                        "Reprodução solicitada: playWhenReady=$playWhenReady, motivo=$reason",
+                    )
+                }
+
+                /** Regista bloqueios de reprodução impostos pelo sistema ou pela sessão. */
+                override fun onPlaybackSuppressionReasonChanged(playbackSuppressionReason: Int) {
+                    DiagnosticLogger.log(
+                        this@MusicPlaybackService,
+                        "Player",
+                        "Reprodução suprimida: motivo=$playbackSuppressionReason",
+                    )
+                }
+
+                /** Regista quando o leitor começa ou termina de carregar dados. */
+                override fun onIsLoadingChanged(isLoading: Boolean) {
+                    DiagnosticLogger.log(this@MusicPlaybackService, "Player", "A carregar: $isLoading")
+                }
+
                 /** Regista a faixa selecionada pelo Android Auto ou pela aplicação. */
                 override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                     DiagnosticLogger.log(
@@ -107,6 +131,26 @@ class MusicPlaybackService : MediaLibraryService() {
             libraryCallback,
         ).build()
         loadActiveLibrary()
+    }
+
+    /** Regista os pedidos de ligação ao serviço, incluindo os feitos pelo Android Auto. */
+    override fun onBind(intent: Intent?): IBinder? {
+        DiagnosticLogger.log(
+            this,
+            "PlaybackService",
+            "Serviço ligado: ação=${intent?.action ?: "nenhuma"}",
+        )
+        return super.onBind(intent)
+    }
+
+    /** Regista o fim de cada ligação ao serviço antes da limpeza do estado. */
+    override fun onUnbind(intent: Intent?): Boolean {
+        DiagnosticLogger.log(
+            this,
+            "PlaybackService",
+            "Serviço desligado: ação=${intent?.action ?: "nenhuma"}",
+        )
+        return super.onUnbind(intent)
     }
 
     /** Repete uma rádio trocando HTTPS por HTTP como fallback de compatibilidade. */
