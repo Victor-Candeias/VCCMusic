@@ -21,6 +21,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import pt.vcc.vccmusic.VccMusicApplication
 import pt.vcc.vccmusic.R
@@ -37,11 +39,17 @@ class MusicPlaybackService : MediaLibraryService() {
     private var mediaLibrarySession: MediaLibrarySession? = null
     private lateinit var libraryCallback: LibraryCallback
     private var radioHttpFallbackAttemptedFor: String? = null
+    private var heartbeatJob: kotlinx.coroutines.Job? = null
+    private var connectedControllers = 0
 
     /** Cria o leitor, a sessão multimédia e inicia a sincronização da biblioteca. */
     override fun onCreate() {
         super.onCreate()
-        DiagnosticLogger.log(this, "PlaybackService", "Serviço multimédia iniciado")
+        DiagnosticLogger.log(
+            this,
+            "PlaybackService",
+            "Serviço multimédia iniciado: thread=${Thread.currentThread().name}",
+        )
         player = ExoPlayer.Builder(this, SpectrumRenderersFactory(this))
             .setAudioAttributes(
                 AudioAttributes.Builder()
@@ -56,9 +64,16 @@ class MusicPlaybackService : MediaLibraryService() {
             object : Player.Listener {
                 /** Regista erros e tenta HTTP ou a próxima faixa quando aplicável. */
                 override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
-                    DiagnosticLogger.log(this@MusicPlaybackService, "Player", "Erro de reprodução", error)
                     val currentItem = player.currentMediaItem
                     val currentUri = currentItem?.localConfiguration?.uri
+                    DiagnosticLogger.log(
+                        this@MusicPlaybackService,
+                        "Player",
+                        "Erro de reprodução: code=${error.errorCode}, " +
+                            "name=${error.errorCodeName}, mediaId=${currentItem?.mediaId}, " +
+                            "uri=$currentUri, state=${playerStateDescription()}",
+                        error,
+                    )
                     if (
                         currentItem?.mediaId?.startsWith("radio:") == true &&
                         currentUri != null &&
@@ -122,6 +137,14 @@ class MusicPlaybackService : MediaLibraryService() {
                         "Faixa alterada: mediaId=${mediaItem?.mediaId}, motivo=$reason",
                     )
                 }
+
+                override fun onEvents(player: Player, events: Player.Events) {
+                    DiagnosticLogger.log(
+                        this@MusicPlaybackService,
+                        "Player",
+                        "Eventos agrupados: flags=${events}, state=${playerStateDescription()}",
+                    )
+                }
             },
         )
         libraryCallback = LibraryCallback()
@@ -130,7 +153,27 @@ class MusicPlaybackService : MediaLibraryService() {
             player,
             libraryCallback,
         ).build()
+        heartbeatJob = serviceScope.launch {
+            while (isActive) {
+                delay(30_000)
+                DiagnosticLogger.log(
+                    this@MusicPlaybackService,
+                    "Heartbeat",
+                    "Serviço vivo: controllers=$connectedControllers, ${playerStateDescription()}",
+                )
+            }
+        }
         loadActiveLibrary()
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        DiagnosticLogger.log(
+            this,
+            "PlaybackService",
+            "onStartCommand: action=${intent?.action ?: "nenhuma"}, " +
+                "flags=$flags, startId=$startId, ${playerStateDescription()}",
+        )
+        return super.onStartCommand(intent, flags, startId)
     }
 
     /** Regista os pedidos de ligação ao serviço, incluindo os feitos pelo Android Auto. */
@@ -138,7 +181,8 @@ class MusicPlaybackService : MediaLibraryService() {
         DiagnosticLogger.log(
             this,
             "PlaybackService",
-            "Serviço ligado: ação=${intent?.action ?: "nenhuma"}",
+            "Serviço ligado: ação=${intent?.action ?: "nenhuma"}, " +
+                "component=${intent?.component}, ${playerStateDescription()}",
         )
         return super.onBind(intent)
     }
@@ -148,13 +192,19 @@ class MusicPlaybackService : MediaLibraryService() {
         DiagnosticLogger.log(
             this,
             "PlaybackService",
-            "Serviço desligado: ação=${intent?.action ?: "nenhuma"}",
+            "Serviço desligado: ação=${intent?.action ?: "nenhuma"}, " +
+                "component=${intent?.component}, ${playerStateDescription()}",
         )
         return super.onUnbind(intent)
     }
 
     /** Repete uma rádio trocando HTTPS por HTTP como fallback de compatibilidade. */
     private fun retryRadioOverHttp(mediaItem: MediaItem, uri: Uri) {
+        DiagnosticLogger.log(
+            this,
+            "Player",
+            "Fallback rádio HTTPS->HTTP: mediaId=${mediaItem.mediaId}, uri=$uri",
+        )
         player.setMediaItem(
             mediaItem.buildUpon()
                 .setUri(uri.buildUpon().scheme("http").build())
@@ -297,20 +347,32 @@ class MusicPlaybackService : MediaLibraryService() {
             DiagnosticLogger.log(
                 this,
                 "AndroidAuto",
-                "Sessão solicitada: ${controllerDescription(controllerInfo)}",
+                "Sessão solicitada: ${controllerDescription(controllerInfo)}, " +
+                    "sessionAvailable=${it != null}",
             )
         }
 
     /** Encerra o serviço quando a tarefa é removida e não há reprodução ativa. */
     override fun onTaskRemoved(rootIntent: Intent?) {
-        DiagnosticLogger.log(this, "PlaybackService", "Tarefa removida; a reproduzir=${player.isPlaying}")
+        DiagnosticLogger.log(
+            this,
+            "PlaybackService",
+            "Tarefa removida: intent=$rootIntent, controllers=$connectedControllers, " +
+                "${playerStateDescription()}",
+        )
         if (!player.isPlaying) stopSelf()
         super.onTaskRemoved(rootIntent)
     }
 
     /** Cancela tarefas, liberta a sessão e liberta o leitor Media3. */
     override fun onDestroy() {
-        DiagnosticLogger.log(this, "PlaybackService", "Serviço multimédia terminado")
+        DiagnosticLogger.log(
+            this,
+            "PlaybackService",
+            "Serviço multimédia terminado: controllers=$connectedControllers, " +
+                "${playerStateDescription()}",
+        )
+        heartbeatJob?.cancel()
         serviceScope.cancel()
         mediaLibrarySession?.release()
         player.release()
@@ -321,19 +383,190 @@ class MusicPlaybackService : MediaLibraryService() {
     /** Identifica o cliente que iniciou cada operação da sessão multimédia. */
     private fun controllerDescription(controller: MediaSession.ControllerInfo): String {
         val origin = if (controller.packageName == packageName) "local" else "externa"
-        return "origem=$origin, package=${controller.packageName}, uid=${controller.uid}"
+        val hints = controller.connectionHints.keySet().joinToString(",")
+        return "origem=$origin, package=${controller.packageName}, uid=${controller.uid}, " +
+            "hints=${if (hints.isEmpty()) "nenhumas" else hints}"
+    }
+
+    private fun playerStateDescription(): String =
+        "state=${player.playbackState}, isPlaying=${player.isPlaying}, " +
+            "playWhenReady=${player.playWhenReady}, loading=${player.isLoading}, " +
+            "suppression=${player.playbackSuppressionReason}, " +
+            "mediaId=${player.currentMediaItem?.mediaId}, position=${player.currentPosition}"
+
+    private fun mediaItemsDescription(items: List<MediaItem>): String =
+        items.joinToString(prefix = "[", postfix = "]") { it.mediaId }
+
+    private fun logLibraryResult(
+        operation: String,
+        startNanos: Long,
+        result: LibraryResult<*>,
+    ) {
+        val durationMs = (System.nanoTime() - startNanos) / 1_000_000
+        DiagnosticLogger.log(
+            this@MusicPlaybackService,
+            "MediaLibrary",
+            "$operation concluído: duraçãoMs=$durationMs, resultCode=${result.resultCode}",
+        )
     }
 
     private inner class LibraryCallback : MediaLibrarySession.Callback {
+        override fun onPlayerCommandRequest(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            playerCommand: Int,
+        ): Int {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "AndroidAuto",
+                "Comando de reprodução: ${controllerDescription(controller)}, " +
+                    "command=$playerCommand, ${playerStateDescription()}",
+            )
+            return super.onPlayerCommandRequest(session, controller, playerCommand)
+        }
+
+        override fun onMediaButtonEvent(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            mediaButtonEvent: Intent,
+        ): Boolean {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "AndroidAuto",
+                "Evento de botão: ${controllerDescription(controller)}, " +
+                    "action=${mediaButtonEvent.action}, extras=${mediaButtonEvent.extras?.keySet()?.joinToString(",")}",
+            )
+            return super.onMediaButtonEvent(session, controller, mediaButtonEvent)
+        }
+
+        override fun onSetMediaItems(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            mediaItems: List<MediaItem>,
+            startIndex: Int,
+            startPositionMs: Long,
+        ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "AndroidAuto",
+                "Definir faixas: ${controllerDescription(controller)}, " +
+                    "items=${mediaItemsDescription(mediaItems)}, startIndex=$startIndex, " +
+                    "startPositionMs=$startPositionMs",
+            )
+            return super.onSetMediaItems(session, controller, mediaItems, startIndex, startPositionMs)
+        }
+
+        override fun onAddMediaItems(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            mediaItems: List<MediaItem>,
+        ): ListenableFuture<List<MediaItem>> {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "AndroidAuto",
+                "Adicionar faixas: ${controllerDescription(controller)}, " +
+                    "items=${mediaItemsDescription(mediaItems)}",
+            )
+            return super.onAddMediaItems(session, controller, mediaItems)
+        }
+
+        override fun onPlaybackResumption(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+        ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "AndroidAuto",
+                "Retomar reprodução: ${controllerDescription(controller)}, ${playerStateDescription()}",
+            )
+            return super.onPlaybackResumption(session, controller)
+        }
+
+        override fun onPlayerInteractionFinished(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            playerCommands: Player.Commands,
+        ) {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "AndroidAuto",
+                "Interação terminada: ${controllerDescription(controller)}, " +
+                    "commands=$playerCommands, ${playerStateDescription()}",
+            )
+            super.onPlayerInteractionFinished(session, controller, playerCommands)
+        }
+
+        override fun onSubscribe(
+            session: MediaLibrarySession,
+            browser: MediaSession.ControllerInfo,
+            parentId: String,
+            params: MediaLibraryService.LibraryParams?,
+        ): ListenableFuture<LibraryResult<Void>> {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "AndroidAuto",
+                "Subscrever conteúdos: ${controllerDescription(browser)}, " +
+                    "parentId=$parentId, params=${params?.extras?.keySet()?.joinToString(",")}",
+            )
+            return super.onSubscribe(session, browser, parentId, params)
+        }
+
+        override fun onUnsubscribe(
+            session: MediaLibrarySession,
+            browser: MediaSession.ControllerInfo,
+            parentId: String,
+        ): ListenableFuture<LibraryResult<Void>> {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "AndroidAuto",
+                "Cancelar subscrição: ${controllerDescription(browser)}, parentId=$parentId",
+            )
+            return super.onUnsubscribe(session, browser, parentId)
+        }
+
+        override fun onSearch(
+            session: MediaLibrarySession,
+            browser: MediaSession.ControllerInfo,
+            query: String,
+            params: MediaLibraryService.LibraryParams?,
+        ): ListenableFuture<LibraryResult<Void>> {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "AndroidAuto",
+                "Pesquisar biblioteca: ${controllerDescription(browser)}, " +
+                    "query=${query.take(80)}, params=${params?.extras?.keySet()?.joinToString(",")}",
+            )
+            return super.onSearch(session, browser, query, params)
+        }
+
+        override fun onGetSearchResult(
+            session: MediaLibrarySession,
+            browser: MediaSession.ControllerInfo,
+            query: String,
+            page: Int,
+            pageSize: Int,
+            params: MediaLibraryService.LibraryParams?,
+        ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
+            DiagnosticLogger.log(
+                this@MusicPlaybackService,
+                "AndroidAuto",
+                "Resultados de pesquisa: ${controllerDescription(browser)}, " +
+                    "query=${query.take(80)}, page=$page, pageSize=$pageSize",
+            )
+            return super.onGetSearchResult(session, browser, query, page, pageSize, params)
+        }
+
         /** Regista a ligação de cada controlador, incluindo o Android Auto. */
         override fun onConnect(
             session: MediaSession,
             controller: MediaSession.ControllerInfo,
         ): MediaSession.ConnectionResult {
+            connectedControllers++
             DiagnosticLogger.log(
                 this@MusicPlaybackService,
                 "AndroidAuto",
-                "Controlador ligado: ${controllerDescription(controller)}",
+                "Controlador ligado: ${controllerDescription(controller)}, " +
+                    "controllers=$connectedControllers",
             )
             return super.onConnect(session, controller)
         }
@@ -343,10 +576,12 @@ class MusicPlaybackService : MediaLibraryService() {
             session: MediaSession,
             controller: MediaSession.ControllerInfo,
         ) {
+            connectedControllers = (connectedControllers - 1).coerceAtLeast(0)
             DiagnosticLogger.log(
                 this@MusicPlaybackService,
                 "AndroidAuto",
-                "Controlador desligado: ${controllerDescription(controller)}",
+                "Controlador desligado: ${controllerDescription(controller)}, " +
+                    "controllers=$connectedControllers, ${playerStateDescription()}",
             )
             super.onDisconnected(session, controller)
         }
@@ -357,13 +592,17 @@ class MusicPlaybackService : MediaLibraryService() {
             browser: MediaSession.ControllerInfo,
             params: MediaLibraryService.LibraryParams?,
         ): ListenableFuture<LibraryResult<MediaItem>> = asyncResult {
+            val startNanos = System.nanoTime()
             DiagnosticLogger.log(
                 this@MusicPlaybackService,
                 "AndroidAuto",
                 "Pedido de raiz: ${controllerDescription(browser)}, " +
                     "params=${params?.extras?.keySet()?.joinToString(",") ?: "nenhum"}",
             )
-            LibraryResult.ofItem(toCategoryItem(ROOT_ID, getString(R.string.app_name)), params)
+            return@asyncResult LibraryResult.ofItem(
+                toCategoryItem(ROOT_ID, getString(R.string.app_name)),
+                params,
+            ).also { result -> logLibraryResult("getLibraryRoot", startNanos, result) }
         }
 
         /** Resolve filhos de categorias, pastas e playlists com paginação. */
@@ -375,6 +614,7 @@ class MusicPlaybackService : MediaLibraryService() {
             pageSize: Int,
             params: MediaLibraryService.LibraryParams?,
         ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> = asyncResult {
+            val startNanos = System.nanoTime()
             DiagnosticLogger.log(
                 this@MusicPlaybackService,
                 "AndroidAuto",
@@ -435,7 +675,13 @@ class MusicPlaybackService : MediaLibraryService() {
                     else -> emptyList()
                 }
             }
-            LibraryResult.ofItemList(page(items, page, pageSize), params)
+            return@asyncResult LibraryResult.ofItemList(page(items, page, pageSize), params).also { result ->
+                logLibraryResult(
+                    "getChildren parentId=$parentId page=$page pageSize=$pageSize items=${items.size}",
+                    startNanos,
+                    result,
+                )
+            }
         }
 
         /** Resolve um item individual a partir do identificador Media3. */
@@ -444,6 +690,7 @@ class MusicPlaybackService : MediaLibraryService() {
             browser: MediaSession.ControllerInfo,
             mediaId: String,
         ): ListenableFuture<LibraryResult<MediaItem>> = asyncResult {
+            val startNanos = System.nanoTime()
             DiagnosticLogger.log(
                 this@MusicPlaybackService,
                 "AndroidAuto",
@@ -481,18 +728,28 @@ class MusicPlaybackService : MediaLibraryService() {
                 )?.let(::toMediaItem)
                 else -> null
             }
-            item?.let { LibraryResult.ofItem(it, null) }
+            return@asyncResult (item?.let { LibraryResult.ofItem(it, null) }
                 ?: LibraryResult.ofError<MediaItem>(SessionError.ERROR_BAD_VALUE)
+                ).also { result -> logLibraryResult("getItem mediaId=$mediaId", startNanos, result) }
         }
 
         /** Executa um callback suspenso fora da thread do serviço e expõe um futuro. */
-        private fun <T> asyncResult(block: suspend () -> LibraryResult<T>): ListenableFuture<LibraryResult<T>> {
+        private fun <T> asyncResult(
+            block: suspend () -> LibraryResult<T>,
+        ): ListenableFuture<LibraryResult<T>> {
             val future = SettableFuture.create<LibraryResult<T>>()
+            val startNanos = System.nanoTime()
             serviceScope.launch(Dispatchers.IO) {
                 try {
                     future.set(block())
                 } catch (error: Exception) {
-                    DiagnosticLogger.log(this@MusicPlaybackService, "MediaLibrary", "Callback falhou", error)
+                    val durationMs = (System.nanoTime() - startNanos) / 1_000_000
+                    DiagnosticLogger.log(
+                        this@MusicPlaybackService,
+                        "MediaLibrary",
+                        "Callback falhou: duraçãoMs=$durationMs",
+                        error,
+                    )
                     future.setException(error)
                 }
             }

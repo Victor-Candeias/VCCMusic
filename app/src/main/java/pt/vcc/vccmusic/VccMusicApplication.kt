@@ -9,6 +9,11 @@ class VccMusicApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        pt.vcc.vccmusic.diagnostics.DiagnosticLogger.log(
+            applicationContext,
+            "App",
+            "Processo criado: pid=${android.os.Process.myPid()}, thread=${Thread.currentThread().name}",
+        )
         val previousHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { thread, error ->
             pt.vcc.vccmusic.diagnostics.DiagnosticLogger.log(

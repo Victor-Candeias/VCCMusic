@@ -31,9 +31,17 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.StartActivityForResult(),
     ) { result ->
         val destination = result.data?.data
-        if (destination == null) return@registerForActivityResult
+        if (destination == null) {
+            DiagnosticLogger.log(this, "UI", "Exportação cancelada ou sem destino")
+            return@registerForActivityResult
+        }
         try {
-            DiagnosticLogger.writeTo(this, destination)
+            val bytes = DiagnosticLogger.writeTo(this, destination)
+            DiagnosticLogger.log(
+                this,
+                "UI",
+                "Exportação concluída: bytes=$bytes, destino=${destination.lastPathSegment}",
+            )
             Toast.makeText(
                 this,
                 getString(R.string.diagnostic_log_saved, destination.lastPathSegment ?: destination.toString()),
@@ -80,7 +88,12 @@ class MainActivity : ComponentActivity() {
     /** Inicializa a interface, preferências de tema e o trabalho de reindexação. */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DiagnosticLogger.log(this, "App", "Aplicação aberta")
+        DiagnosticLogger.log(
+            this,
+            "App",
+            "Aplicação aberta: savedInstanceState=${savedInstanceState != null}, " +
+                "intentAction=${intent?.action}, flags=${intent?.flags}",
+        )
         enableEdgeToEdge()
         setContent {
             val darkTheme by ThemePreferences.observeDarkTheme(this@MainActivity)
@@ -104,6 +117,45 @@ class MainActivity : ComponentActivity() {
             }
         }
         ReindexScheduler.enqueue(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        DiagnosticLogger.log(this, "App", "onStart: intentAction=${intent?.action}")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        DiagnosticLogger.log(this, "App", "onResume: intentAction=${intent?.action}")
+    }
+
+    override fun onPause() {
+        DiagnosticLogger.log(this, "App", "onPause: isFinishing=$isFinishing")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        DiagnosticLogger.log(
+            this,
+            "App",
+            "onStop: isFinishing=$isFinishing, changingConfigurations=$isChangingConfigurations",
+        )
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        DiagnosticLogger.log(
+            this,
+            "App",
+            "onDestroy: isFinishing=$isFinishing, changingConfigurations=$isChangingConfigurations",
+        )
+        super.onDestroy()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        DiagnosticLogger.log(this, "App", "onNewIntent: action=${intent.action}, flags=${intent.flags}")
     }
 
     /** Reindexa a raiz ativa, atualizando progresso e feedback conforme solicitado. */
@@ -179,7 +231,11 @@ class MainActivity : ComponentActivity() {
 
     /** Abre o seletor SAF para exportar o ficheiro de diagnóstico. */
     private fun shareDiagnosticLog() {
-        DiagnosticLogger.log(this, "UI", "Log exportado pelo utilizador")
+        DiagnosticLogger.log(
+            this,
+            "UI",
+            "Exportação iniciada: tamanhoAtual=${filesDir.resolve("vccmusic.log").length()}",
+        )
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "text/plain"

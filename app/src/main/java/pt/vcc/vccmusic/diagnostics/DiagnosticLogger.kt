@@ -53,12 +53,12 @@ object DiagnosticLogger {
     }
 
     /** Copia o ficheiro de diagnóstico para o destino SAF fornecido. */
-    fun writeTo(context: Context, destination: Uri) {
+    fun writeTo(context: Context, destination: Uri): Long {
         synchronized(lock) {
             try {
                 val source = logFile(context)
                 context.contentResolver.openOutputStream(destination)?.use { output ->
-                    source.inputStream().use { input -> input.copyTo(output) }
+                    return source.inputStream().use { input -> input.copyTo(output) }
                 } ?: throw IOException("Não foi possível abrir o destino do log.")
             } catch (error: IOException) {
                 throw error
