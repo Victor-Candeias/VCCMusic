@@ -635,7 +635,10 @@ class MusicPlaybackService : MediaLibraryService() {
                 // Se esta versão abrir corretamente no carro, adiciona as restantes
                 // categorias novamente, uma a uma, para identificar a que causa o bloqueio.
                 ROOT_ID -> listOf(
+                    toCategoryItem(FOLDERS_ID, getString(R.string.folders)),
                     toCategoryItem(ALL_TRACKS_ID, getString(R.string.all_music)),
+                    toCategoryItem(PODCASTS_ID, getString(R.string.podcasts)),
+                    toCategoryItem(PLAYLISTS_ID, getString(R.string.playlists)),
                 )
                 FOLDERS_ID -> root?.let {
                     repository.observeFolders(it.id, null).first().map { folder ->
