@@ -325,6 +325,8 @@ class PlaybackViewModel(
                     .setTitle(track.title.withoutParentheticalText())
                     .setArtist(track.artist?.withoutParentheticalText())
                     .setAlbumTitle(track.album?.withoutParentheticalText())
+                    .setIsBrowsable(false)
+                    .setIsPlayable(true)
                     .build(),
             )
             .build()

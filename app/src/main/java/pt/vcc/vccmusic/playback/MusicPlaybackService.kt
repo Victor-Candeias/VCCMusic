@@ -14,6 +14,7 @@ import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import androidx.media3.session.SessionError
 import com.google.common.collect.ImmutableList
+import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.SettableFuture
 import kotlinx.coroutines.CoroutineScope
@@ -586,12 +587,12 @@ class MusicPlaybackService : MediaLibraryService() {
             super.onDisconnected(session, controller)
         }
 
-        /** Fornece a categoria raiz navegável da biblioteca. */
+        /** Fornece imediatamente a categoria raiz navegável da biblioteca. */
         override fun onGetLibraryRoot(
             session: MediaLibrarySession,
             browser: MediaSession.ControllerInfo,
             params: MediaLibraryService.LibraryParams?,
-        ): ListenableFuture<LibraryResult<MediaItem>> = asyncResult {
+        ): ListenableFuture<LibraryResult<MediaItem>> {
             val startNanos = System.nanoTime()
             DiagnosticLogger.log(
                 this@MusicPlaybackService,
@@ -599,10 +600,13 @@ class MusicPlaybackService : MediaLibraryService() {
                 "Pedido de raiz: ${controllerDescription(browser)}, " +
                     "params=${params?.extras?.keySet()?.joinToString(",") ?: "nenhum"}",
             )
-            return@asyncResult LibraryResult.ofItem(
+
+            val result = LibraryResult.ofItem(
                 toCategoryItem(ROOT_ID, getString(R.string.app_name)),
                 params,
-            ).also { result -> logLibraryResult("getLibraryRoot", startNanos, result) }
+            )
+            logLibraryResult("getLibraryRoot", startNanos, result)
+            return Futures.immediateFuture(result)
         }
 
         /** Resolve filhos de categorias, pastas e playlists com paginação. */
@@ -627,14 +631,11 @@ class MusicPlaybackService : MediaLibraryService() {
             val podcastRepository = (application as VccMusicApplication).container.podcastRepository
             val root = repository.activeRoot()
             val items = when (parentId) {
+                // Teste de compatibilidade Android Auto: raiz mínima.
+                // Se esta versão abrir corretamente no carro, adiciona as restantes
+                // categorias novamente, uma a uma, para identificar a que causa o bloqueio.
                 ROOT_ID -> listOf(
-                    toCategoryItem(FOLDERS_ID, getString(R.string.folders)),
                     toCategoryItem(ALL_TRACKS_ID, getString(R.string.all_music)),
-                    toCategoryItem(PLAYLISTS_ID, getString(R.string.playlists)),
-                    toCategoryItem(SHUFFLE_ID, getString(R.string.shuffle)),
-                    toCategoryItem(PODCASTS_ID, getString(R.string.podcasts)),
-                    toCategoryItem(TRENDING_PODCASTS_ID, getString(R.string.trending_podcasts)),
-                    toCategoryItem(RECENT_PODCASTS_ID, getString(R.string.recent_podcasts)),
                 )
                 FOLDERS_ID -> root?.let {
                     repository.observeFolders(it.id, null).first().map { folder ->

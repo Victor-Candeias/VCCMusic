@@ -1,0 +1,1822 @@
+2026-09-10 22:33:42.354 +0100 [App] Aplicação aberta
+2026-09-10 22:33:42.462 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-10 22:33:42.473 +0100 [Library] Serviço iniciado sem pasta ativa
+2026-09-10 22:33:42.481 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-10 22:33:42.481 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-10 22:33:42.482 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-10 22:33:51.499 +0100 [UI] Pasta de música selecionada: content
+2026-09-10 22:33:51.595 +0100 [Reindex] Reindexação iniciada
+2026-09-10 22:33:51.675 +0100 [Reindex] Progresso: pastas=1, faixas=0, erros=0
+2026-09-10 22:33:51.697 +0100 [Reindex] Progresso: pastas=2, faixas=0, erros=0
+2026-09-10 22:33:52.598 +0100 [Reindex] Progresso: pastas=3, faixas=27, erros=0
+2026-09-10 22:33:54.696 +0100 [Reindex] Progresso: pastas=4, faixas=86, erros=0
+2026-09-10 22:33:55.403 +0100 [Reindex] Progresso: pastas=5, faixas=103, erros=0
+2026-09-10 22:33:55.982 +0100 [Reindex] Progresso: pastas=6, faixas=118, erros=0
+2026-09-10 22:33:56.000 +0100 [Reindex] Progresso: pastas=7, faixas=118, erros=0
+2026-09-10 22:33:56.011 +0100 [Reindex] Progresso: pastas=8, faixas=118, erros=0
+2026-09-10 22:33:56.362 +0100 [Reindex] Progresso: pastas=9, faixas=128, erros=0
+2026-09-10 22:33:56.373 +0100 [Reindex] Progresso: pastas=10, faixas=128, erros=0
+2026-09-10 22:33:56.384 +0100 [Reindex] Progresso: pastas=11, faixas=128, erros=0
+2026-09-10 22:33:56.726 +0100 [Reindex] Progresso: pastas=12, faixas=139, erros=0
+2026-09-10 22:33:56.744 +0100 [Reindex] Progresso: pastas=13, faixas=139, erros=0
+2026-09-10 22:33:56.754 +0100 [Reindex] Progresso: pastas=14, faixas=139, erros=0
+2026-09-10 22:33:56.763 +0100 [Reindex] Progresso: pastas=15, faixas=139, erros=0
+2026-09-10 22:33:56.771 +0100 [Reindex] Progresso: pastas=16, faixas=139, erros=0
+2026-09-10 22:33:56.777 +0100 [Reindex] Progresso: pastas=17, faixas=139, erros=0
+2026-09-10 22:33:56.786 +0100 [Reindex] Progresso: pastas=18, faixas=139, erros=0
+2026-09-10 22:33:56.800 +0100 [Reindex] Progresso: pastas=19, faixas=139, erros=0
+2026-09-10 22:33:56.806 +0100 [Reindex] Progresso: pastas=20, faixas=139, erros=0
+2026-09-10 22:33:56.814 +0100 [Reindex] Progresso: pastas=21, faixas=139, erros=0
+2026-09-10 22:33:57.433 +0100 [Reindex] Progresso: pastas=22, faixas=155, erros=0
+2026-09-10 22:33:58.193 +0100 [Reindex] Progresso: pastas=23, faixas=173, erros=0
+2026-09-10 22:33:58.543 +0100 [Reindex] Progresso: pastas=24, faixas=186, erros=0
+2026-09-10 22:33:58.746 +0100 [Reindex] Progresso: pastas=25, faixas=193, erros=0
+2026-09-10 22:33:58.826 +0100 [Reindex] Progresso: pastas=26, faixas=195, erros=0
+2026-09-10 22:33:58.834 +0100 [Reindex] Progresso: pastas=27, faixas=195, erros=0
+2026-09-10 22:33:58.841 +0100 [Reindex] Progresso: pastas=28, faixas=195, erros=0
+2026-09-10 22:33:58.850 +0100 [Reindex] Progresso: pastas=29, faixas=195, erros=0
+2026-09-10 22:33:59.300 +0100 [Reindex] Progresso: pastas=30, faixas=207, erros=0
+2026-09-10 22:33:59.600 +0100 [Reindex] Progresso: pastas=31, faixas=215, erros=0
+2026-09-10 22:33:59.920 +0100 [Reindex] Progresso: pastas=32, faixas=223, erros=0
+2026-09-10 22:34:00.343 +0100 [Reindex] Progresso: pastas=33, faixas=235, erros=0
+2026-09-10 22:34:00.830 +0100 [Reindex] Progresso: pastas=34, faixas=248, erros=0
+2026-09-10 22:34:01.136 +0100 [Reindex] Progresso: pastas=35, faixas=256, erros=0
+2026-09-10 22:34:02.120 +0100 [Reindex] Progresso: pastas=36, faixas=282, erros=0
+2026-09-10 22:34:02.348 +0100 [Reindex] Progresso: pastas=37, faixas=287, erros=0
+2026-09-10 22:34:02.401 +0100 [Reindex] Reindexação terminada: completa=true, pastas=37, faixas=287, erros=0
+2026-09-10 22:37:42.680 +0100 [Player] Faixa alterada: mediaId=118, motivo=3
+2026-09-10 22:37:42.687 +0100 [Player] Estado alterado: BUFFERING
+2026-09-10 22:37:43.040 +0100 [Player] Estado alterado: READY
+2026-09-10 22:37:43.043 +0100 [Player] A reproduzir: true
+2026-09-10 22:40:16.534 +0100 [Player] Faixa alterada: mediaId=105, motivo=2
+2026-09-10 22:40:16.539 +0100 [Player] Estado alterado: BUFFERING
+2026-09-10 22:40:16.540 +0100 [Player] A reproduzir: false
+2026-09-10 22:40:16.625 +0100 [Player] Estado alterado: READY
+2026-09-10 22:40:16.626 +0100 [Player] A reproduzir: true
+2026-09-10 22:40:21.128 +0100 [Player] Faixa alterada: mediaId=106, motivo=2
+2026-09-10 22:40:21.130 +0100 [Player] Estado alterado: BUFFERING
+2026-09-10 22:40:21.130 +0100 [Player] A reproduzir: false
+2026-09-10 22:40:21.199 +0100 [Player] Estado alterado: READY
+2026-09-10 22:40:21.204 +0100 [Player] A reproduzir: true
+2026-09-10 22:40:24.375 +0100 [Player] Faixa alterada: mediaId=115, motivo=2
+2026-09-10 22:40:24.381 +0100 [Player] Estado alterado: BUFFERING
+2026-09-10 22:40:24.382 +0100 [Player] A reproduzir: false
+2026-09-10 22:40:24.443 +0100 [Player] Estado alterado: READY
+2026-09-10 22:40:24.444 +0100 [Player] A reproduzir: true
+2026-09-10 22:40:25.991 +0100 [Player] Faixa alterada: mediaId=113, motivo=2
+2026-09-10 22:40:25.993 +0100 [Player] Estado alterado: BUFFERING
+2026-09-10 22:40:25.994 +0100 [Player] A reproduzir: false
+2026-09-10 22:40:26.063 +0100 [Player] Estado alterado: READY
+2026-09-10 22:40:26.064 +0100 [Player] A reproduzir: true
+2026-09-10 22:40:28.683 +0100 [Player] Faixa alterada: mediaId=116, motivo=2
+2026-09-10 22:40:28.687 +0100 [Player] Estado alterado: BUFFERING
+2026-09-10 22:40:28.688 +0100 [Player] A reproduzir: false
+2026-09-10 22:40:28.774 +0100 [Player] Estado alterado: READY
+2026-09-10 22:40:28.775 +0100 [Player] A reproduzir: true
+2026-09-10 22:41:18.252 +0100 [Player] A reproduzir: false
+2026-09-10 22:41:21.160 +0100 [Player] Faixa alterada: mediaId=radio:https://directo.tsf.pt/tsfdirecto.mp3, motivo=3
+2026-09-10 22:41:21.163 +0100 [Player] Estado alterado: BUFFERING
+2026-09-10 22:41:21.920 +0100 [Player] Estado alterado: READY
+2026-09-10 22:41:21.923 +0100 [Player] A reproduzir: true
+2026-09-10 22:41:32.843 +0100 [Player] A reproduzir: false
+2026-09-10 22:41:34.175 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-10 22:41:34.179 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-10 22:41:34.203 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-11 09:04:40.295 +0100 [App] Aplicação aberta
+2026-09-11 09:04:40.361 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-11 09:04:40.383 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-11 09:04:40.383 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 09:04:40.384 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 09:04:40.417 +0100 [Player] Faixa alterada: mediaId=track:119, motivo=3
+2026-09-11 09:04:40.418 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 09:04:40.525 +0100 [Player] Estado alterado: READY
+2026-09-11 09:04:51.325 +0100 [Player] Faixa alterada: mediaId=radio:https://directo.tsf.pt/tsfdirecto.mp3, motivo=3
+2026-09-11 09:04:51.328 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 09:04:52.117 +0100 [Player] Estado alterado: READY
+2026-09-11 09:04:52.120 +0100 [Player] A reproduzir: true
+2026-09-11 09:05:01.203 +0100 [Player] A reproduzir: false
+2026-09-11 09:05:11.701 +0100 [Player] Faixa alterada: mediaId=405, motivo=3
+2026-09-11 09:05:11.703 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 09:05:11.878 +0100 [Player] Estado alterado: READY
+2026-09-11 09:05:11.879 +0100 [Player] A reproduzir: true
+2026-09-11 09:05:27.174 +0100 [Player] A reproduzir: false
+2026-09-11 09:05:28.608 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 09:05:28.612 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-11 09:05:28.627 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-11 09:08:32.804 +0100 [App] Aplicação aberta
+2026-09-11 09:08:32.846 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-11 09:08:32.872 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-11 09:08:32.873 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 09:08:32.874 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 09:08:32.899 +0100 [Player] Faixa alterada: mediaId=track:406, motivo=3
+2026-09-11 09:08:32.904 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 09:08:32.990 +0100 [Player] Estado alterado: READY
+2026-09-11 09:08:40.986 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 10:39:31.353 +0100 [App] Aplicação aberta
+2026-09-11 10:39:31.419 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-11 10:39:31.436 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-11 10:39:31.436 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 10:39:31.437 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 10:39:31.468 +0100 [Player] Faixa alterada: mediaId=track:693, motivo=3
+2026-09-11 10:39:31.469 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 10:39:31.655 +0100 [Player] Estado alterado: READY
+2026-09-11 10:39:40.965 +0100 [Player] Faixa alterada: mediaId=radio:https://directo.tsf.pt/tsfdirecto.mp3, motivo=3
+2026-09-11 10:39:40.967 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 10:39:41.566 +0100 [Player] Estado alterado: READY
+2026-09-11 10:39:41.567 +0100 [Player] A reproduzir: true
+2026-09-11 10:40:14.411 +0100 [Player] Faixa alterada: mediaId=radio:https://directo.tsf.pt/tsfdirecto.mp3, motivo=3
+2026-09-11 10:40:14.413 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 10:40:14.414 +0100 [Player] A reproduzir: false
+2026-09-11 10:40:14.751 +0100 [Player] Estado alterado: READY
+2026-09-11 10:40:14.752 +0100 [Player] A reproduzir: true
+2026-09-11 10:40:22.332 +0100 [Player] Faixa alterada: mediaId=radio:http://stream-icy.bauermedia.pt/m80.mp3, motivo=3
+2026-09-11 10:40:22.333 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 10:40:22.333 +0100 [Player] A reproduzir: false
+2026-09-11 10:40:23.719 +0100 [Player] Estado alterado: READY
+2026-09-11 10:40:23.722 +0100 [Player] A reproduzir: true
+2026-09-11 10:46:16.454 +0100 [Player] A reproduzir: false
+2026-09-11 10:46:18.617 +0100 [Player] A reproduzir: true
+2026-09-11 10:46:19.464 +0100 [Player] A reproduzir: false
+2026-09-11 10:46:21.866 +0100 [Player] A reproduzir: true
+2026-09-11 10:51:39.331 +0100 [Player] A reproduzir: false
+2026-09-11 10:51:46.605 +0100 [Player] A reproduzir: true
+2026-09-11 10:54:21.203 +0100 [Player] A reproduzir: false
+2026-09-11 10:54:24.298 +0100 [Player] A reproduzir: true
+2026-09-11 10:54:25.038 +0100 [Player] A reproduzir: false
+2026-09-11 10:54:32.115 +0100 [Player] A reproduzir: true
+2026-09-11 11:19:07.222 +0100 [Player] Faixa alterada: mediaId=radio:https://directo.tsf.pt/tsfdirecto.mp3, motivo=3
+2026-09-11 11:19:07.224 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 11:19:07.224 +0100 [Player] A reproduzir: false
+2026-09-11 11:19:07.867 +0100 [Player] Estado alterado: READY
+2026-09-11 11:19:07.869 +0100 [Player] A reproduzir: true
+2026-09-11 11:19:11.665 +0100 [Player] Faixa alterada: mediaId=radio:https://stream-icy.bauermedia.pt/smooth.aac, motivo=3
+2026-09-11 11:19:11.666 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 11:19:11.667 +0100 [Player] A reproduzir: false
+2026-09-11 11:19:13.618 +0100 [Player] Estado alterado: READY
+2026-09-11 11:19:13.620 +0100 [Player] A reproduzir: true
+2026-09-11 11:19:24.665 +0100 [Player] Faixa alterada: mediaId=radio:http://195.23.85.126:8455/stream, motivo=3
+2026-09-11 11:19:24.667 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 11:19:24.667 +0100 [Player] A reproduzir: false
+2026-09-11 11:19:31.539 +0100 [Player] Faixa alterada: mediaId=radio:http://streaming-live-app.rtp.pt/liveradio/antena180a/playlist.m3u8, motivo=3
+2026-09-11 11:19:31.824 +0100 [Player] Estado alterado: READY
+2026-09-11 11:19:31.825 +0100 [Player] A reproduzir: true
+2026-09-11 11:40:13.910 +0100 [Player] A reproduzir: false
+2026-09-11 11:40:17.271 +0100 [Player] A reproduzir: true
+2026-09-11 11:40:25.364 +0100 [Player] Faixa alterada: mediaId=radio:http://stream-icy.bauermedia.pt/m80.mp3, motivo=3
+2026-09-11 11:40:25.366 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 11:40:25.367 +0100 [Player] A reproduzir: false
+2026-09-11 11:40:26.826 +0100 [Player] Estado alterado: READY
+2026-09-11 11:40:26.830 +0100 [Player] A reproduzir: true
+2026-09-11 11:46:59.281 +0100 [Player] A reproduzir: false
+2026-09-11 11:55:22.450 +0100 [Player] A reproduzir: true
+2026-09-11 11:56:08.731 +0100 [Player] A reproduzir: false
+2026-09-11 11:56:14.286 +0100 [Player] A reproduzir: true
+2026-09-11 11:57:42.789 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 11:57:42.794 +0100 [Player] A reproduzir: false
+2026-09-11 11:57:42.864 +0100 [Player] Estado alterado: READY
+2026-09-11 11:57:42.866 +0100 [Player] A reproduzir: true
+2026-09-11 11:57:49.934 +0100 [Player] A reproduzir: false
+2026-09-11 11:57:51.062 +0100 [Player] A reproduzir: true
+2026-09-11 12:20:11.539 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 12:20:11.551 +0100 [Player] A reproduzir: false
+2026-09-11 12:20:11.620 +0100 [Player] Estado alterado: READY
+2026-09-11 12:20:11.622 +0100 [Player] A reproduzir: true
+2026-09-11 12:22:30.755 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 12:22:30.760 +0100 [PlaybackService] Tarefa removida; a reproduzir=true
+2026-09-11 12:22:49.835 +0100 [Player] A reproduzir: false
+2026-09-11 12:24:20.761 +0100 [Player] A reproduzir: true
+2026-09-11 12:24:22.199 +0100 [Player] A reproduzir: false
+2026-09-11 12:24:24.531 +0100 [Player] A reproduzir: true
+2026-09-11 12:30:37.317 +0100 [Player] A reproduzir: false
+2026-09-11 12:30:47.347 +0100 [Player] A reproduzir: true
+2026-09-11 12:37:29.923 +0100 [Player] A reproduzir: false
+2026-09-11 12:53:44.959 +0100 [Player] A reproduzir: true
+2026-09-11 12:58:39.950 +0100 [Player] Estado alterado: ENDED
+2026-09-11 12:58:39.955 +0100 [Player] A reproduzir: false
+2026-09-11 12:58:48.101 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 12:58:50.323 +0100 [Player] Estado alterado: READY
+2026-09-11 12:58:50.347 +0100 [Player] A reproduzir: true
+2026-09-11 13:12:40.648 +0100 [Player] A reproduzir: false
+2026-09-11 13:13:08.272 +0100 [Player] A reproduzir: true
+2026-09-11 13:13:13.656 +0100 [Player] A reproduzir: false
+2026-09-11 13:13:22.430 +0100 [Player] A reproduzir: true
+2026-09-11 13:13:23.550 +0100 [Player] A reproduzir: false
+2026-09-11 13:13:32.496 +0100 [Player] A reproduzir: true
+2026-09-11 13:15:24.896 +0100 [Player] A reproduzir: false
+2026-09-11 13:15:58.180 +0100 [Player] A reproduzir: true
+2026-09-11 13:15:58.447 +0100 [Player] A reproduzir: false
+2026-09-11 13:16:22.573 +0100 [Player] A reproduzir: true
+2026-09-11 13:16:22.654 +0100 [Player] A reproduzir: false
+2026-09-11 13:16:23.604 +0100 [Player] A reproduzir: true
+2026-09-11 13:16:23.777 +0100 [Player] A reproduzir: false
+2026-09-11 13:16:24.835 +0100 [Player] A reproduzir: true
+2026-09-11 13:16:28.115 +0100 [Player] A reproduzir: false
+2026-09-11 13:16:37.672 +0100 [Player] A reproduzir: true
+2026-09-11 13:22:10.344 +0100 [Player] A reproduzir: false
+2026-09-11 13:38:36.557 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-11 14:36:38.229 +0100 [App] Aplicação aberta
+2026-09-11 14:36:38.283 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-11 14:36:38.299 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-11 14:36:38.299 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 14:36:38.300 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 14:36:38.342 +0100 [Player] Faixa alterada: mediaId=track:980, motivo=3
+2026-09-11 14:36:38.343 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 14:36:38.446 +0100 [Player] Estado alterado: READY
+2026-09-11 14:36:42.962 +0100 [Player] Faixa alterada: mediaId=radio:https://23603.live.streamtheworld.com/RFMAAC.aac, motivo=3
+2026-09-11 14:36:42.964 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 14:36:44.720 +0100 [Player] Estado alterado: READY
+2026-09-11 14:36:44.722 +0100 [Player] A reproduzir: true
+2026-09-11 14:46:45.553 +0100 [Player] Faixa alterada: mediaId=radio:http://stream-icy.bauermedia.pt/m80.mp3, motivo=3
+2026-09-11 14:46:45.559 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 14:46:45.561 +0100 [Player] A reproduzir: false
+2026-09-11 14:46:47.024 +0100 [Player] Estado alterado: READY
+2026-09-11 14:46:47.027 +0100 [Player] A reproduzir: true
+2026-09-11 14:54:35.324 +0100 [Player] A reproduzir: false
+2026-09-11 14:54:44.890 +0100 [Player] A reproduzir: true
+2026-09-11 14:54:45.455 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 14:54:45.475 +0100 [PlaybackService] Tarefa removida; a reproduzir=true
+2026-09-11 15:03:28.953 +0100 [Player] A reproduzir: false
+2026-09-11 15:03:44.432 +0100 [Player] A reproduzir: true
+2026-09-11 15:03:44.744 +0100 [Player] A reproduzir: false
+2026-09-11 15:03:46.681 +0100 [Player] A reproduzir: true
+2026-09-11 15:35:36.056 +0100 [App] Aplicação aberta
+2026-09-11 15:35:36.098 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-11 15:35:36.098 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 15:35:39.874 +0100 [Player] Faixa alterada: mediaId=1267, motivo=3
+2026-09-11 15:35:39.876 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 15:35:39.877 +0100 [Player] A reproduzir: false
+2026-09-11 15:35:39.980 +0100 [Player] Estado alterado: READY
+2026-09-11 15:35:39.981 +0100 [Player] A reproduzir: true
+2026-09-11 15:35:47.758 +0100 [Player] Faixa alterada: mediaId=track:1554, motivo=3
+2026-09-11 15:35:47.760 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 15:35:47.760 +0100 [Player] A reproduzir: false
+2026-09-11 15:35:47.959 +0100 [Player] Estado alterado: READY
+2026-09-11 15:35:47.979 +0100 [Player] A reproduzir: true
+2026-09-11 15:37:56.135 +0100 [Player] Faixa alterada: mediaId=track:1555, motivo=1
+2026-09-11 15:42:00.100 +0100 [Player] Faixa alterada: mediaId=track:1556, motivo=1
+2026-09-11 15:44:27.585 +0100 [Player] Faixa alterada: mediaId=track:1687, motivo=1
+2026-09-11 15:51:01.513 +0100 [Player] Faixa alterada: mediaId=track:1557, motivo=1
+2026-09-11 15:55:49.073 +0100 [Player] A reproduzir: false
+2026-09-11 15:56:53.184 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 15:56:53.194 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-11 15:56:53.202 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-11 17:45:05.046 +0100 [App] Aplicação aberta
+2026-09-11 17:45:05.102 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-11 17:45:05.123 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-11 17:45:05.123 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 17:45:05.124 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 17:45:05.160 +0100 [Player] Faixa alterada: mediaId=track:1554, motivo=3
+2026-09-11 17:45:05.163 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 17:45:05.274 +0100 [Player] Estado alterado: READY
+2026-09-11 17:45:08.993 +0100 [UI] Log exportado pelo utilizador
+2026-09-11 17:45:16.272 +0100 [Player] Faixa alterada: mediaId=track:1841, motivo=3
+2026-09-11 17:45:16.276 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 17:45:16.359 +0100 [Player] Estado alterado: READY
+2026-09-11 19:01:30.971 +0100 [App] Aplicação aberta
+2026-09-11 19:01:31.053 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-11 19:01:31.084 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-11 19:01:31.084 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 19:01:31.086 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 19:01:31.121 +0100 [Player] Faixa alterada: mediaId=track:1841, motivo=3
+2026-09-11 19:01:31.125 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 19:01:31.502 +0100 [Player] Estado alterado: READY
+2026-09-11 19:01:34.445 +0100 [Player] A reproduzir: true
+2026-09-11 19:01:34.901 +0100 [MediaSession] Controlador ligado: com.google.android.bluetooth, uid=1002
+2026-09-11 19:01:36.193 +0100 [Player] Faixa alterada: mediaId=1840, motivo=3
+2026-09-11 19:01:36.195 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 19:01:36.196 +0100 [Player] A reproduzir: false
+2026-09-11 19:01:36.330 +0100 [Player] Estado alterado: READY
+2026-09-11 19:01:36.331 +0100 [Player] A reproduzir: true
+2026-09-11 19:01:41.346 +0100 [Player] Faixa alterada: mediaId=1827, motivo=2
+2026-09-11 19:01:41.348 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 19:01:41.349 +0100 [Player] A reproduzir: false
+2026-09-11 19:01:41.481 +0100 [Player] Estado alterado: READY
+2026-09-11 19:01:41.482 +0100 [Player] A reproduzir: true
+2026-09-11 19:01:44.368 +0100 [Player] Faixa alterada: mediaId=track:2129, motivo=3
+2026-09-11 19:01:44.369 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 19:01:44.370 +0100 [Player] A reproduzir: false
+2026-09-11 19:01:44.468 +0100 [Player] Estado alterado: READY
+2026-09-11 19:01:44.469 +0100 [Player] A reproduzir: true
+2026-09-11 19:01:55.079 +0100 [Player] Faixa alterada: mediaId=2127, motivo=3
+2026-09-11 19:01:55.081 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 19:01:55.082 +0100 [Player] A reproduzir: false
+2026-09-11 19:01:55.182 +0100 [Player] Estado alterado: READY
+2026-09-11 19:01:55.183 +0100 [Player] A reproduzir: true
+2026-09-11 19:01:58.249 +0100 [Player] Faixa alterada: mediaId=2114, motivo=2
+2026-09-11 19:01:58.251 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 19:01:58.252 +0100 [Player] A reproduzir: false
+2026-09-11 19:01:58.342 +0100 [Player] Estado alterado: READY
+2026-09-11 19:01:58.343 +0100 [Player] A reproduzir: true
+2026-09-11 19:01:59.225 +0100 [Player] Faixa alterada: mediaId=2115, motivo=2
+2026-09-11 19:01:59.227 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 19:01:59.228 +0100 [Player] A reproduzir: false
+2026-09-11 19:01:59.306 +0100 [Player] Estado alterado: READY
+2026-09-11 19:01:59.308 +0100 [Player] A reproduzir: true
+2026-09-11 19:02:02.341 +0100 [Player] Faixa alterada: mediaId=2124, motivo=2
+2026-09-11 19:02:02.343 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 19:02:02.345 +0100 [Player] A reproduzir: false
+2026-09-11 19:02:02.423 +0100 [Player] Estado alterado: READY
+2026-09-11 19:02:02.424 +0100 [Player] A reproduzir: true
+2026-09-11 19:02:03.640 +0100 [Player] Faixa alterada: mediaId=2122, motivo=2
+2026-09-11 19:02:03.643 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 19:02:03.645 +0100 [Player] A reproduzir: false
+2026-09-11 19:02:03.733 +0100 [Player] Estado alterado: READY
+2026-09-11 19:02:03.735 +0100 [Player] A reproduzir: true
+2026-09-11 19:02:04.806 +0100 [Player] Faixa alterada: mediaId=2125, motivo=2
+2026-09-11 19:02:04.809 +0100 [Player] Estado alterado: BUFFERING
+2026-09-11 19:02:04.809 +0100 [Player] A reproduzir: false
+2026-09-11 19:02:04.895 +0100 [Player] Estado alterado: READY
+2026-09-11 19:02:04.896 +0100 [Player] A reproduzir: true
+2026-09-11 19:04:43.183 +0100 [Player] A reproduzir: false
+2026-09-11 19:05:21.969 +0100 [Player] A reproduzir: true
+2026-09-11 19:06:44.302 +0100 [Player] Faixa alterada: mediaId=2117, motivo=1
+2026-09-11 19:06:47.600 +0100 [MediaSession] Controlador desligado: com.google.android.bluetooth, uid=1002
+2026-09-11 19:06:52.410 +0100 [Player] A reproduzir: false
+2026-09-11 19:07:02.365 +0100 [Player] Estado alterado: IDLE
+2026-09-11 19:08:43.450 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-11 19:08:43.455 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-11 19:08:43.459 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-13 10:52:18.000 +0100 [App] Aplicação aberta
+2026-09-13 10:52:18.057 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-13 10:52:18.077 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-13 10:52:18.077 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-13 10:52:18.078 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-13 10:52:18.124 +0100 [Player] Faixa alterada: mediaId=track:2128, motivo=3
+2026-09-13 10:52:18.126 +0100 [Player] Estado alterado: BUFFERING
+2026-09-13 10:52:18.382 +0100 [Player] Estado alterado: READY
+2026-09-13 10:52:30.134 +0100 [Player] Faixa alterada: mediaId=track:2415, motivo=3
+2026-09-13 10:52:30.136 +0100 [Player] Estado alterado: BUFFERING
+2026-09-13 10:52:30.212 +0100 [Player] Estado alterado: READY
+2026-09-13 10:52:34.843 +0100 [Player] Faixa alterada: mediaId=2415, motivo=3
+2026-09-13 10:52:34.844 +0100 [Player] Estado alterado: BUFFERING
+2026-09-13 10:52:34.976 +0100 [Player] Estado alterado: READY
+2026-09-13 10:52:34.977 +0100 [Player] A reproduzir: true
+2026-09-13 10:52:35.717 +0100 [MediaSession] Controlador ligado: com.google.android.bluetooth, uid=1002
+2026-09-13 10:54:50.250 +0100 [Player] Faixa alterada: mediaId=2416, motivo=1
+2026-09-13 10:55:49.460 +0100 [Player] Faixa alterada: mediaId=2414, motivo=3
+2026-09-13 10:55:49.464 +0100 [Player] Estado alterado: BUFFERING
+2026-09-13 10:55:49.465 +0100 [Player] A reproduzir: false
+2026-09-13 10:55:49.555 +0100 [Player] Estado alterado: READY
+2026-09-13 10:55:49.557 +0100 [Player] A reproduzir: true
+2026-09-13 10:57:35.785 +0100 [MediaSession] Controlador desligado: com.google.android.bluetooth, uid=1002
+2026-09-13 10:58:37.588 +0100 [Player] A reproduzir: false
+2026-09-13 11:00:03.143 +0100 [Player] A reproduzir: true
+2026-09-13 11:00:06.777 +0100 [Player] A reproduzir: false
+2026-09-13 11:02:28.829 +0100 [Player] A reproduzir: true
+2026-09-13 11:02:34.574 +0100 [Player] Faixa alterada: mediaId=2401, motivo=1
+2026-09-13 11:05:51.227 +0100 [Player] A reproduzir: false
+2026-09-13 11:05:57.451 +0100 [Player] A reproduzir: true
+2026-09-13 11:05:59.856 +0100 [Player] Faixa alterada: mediaId=2402, motivo=1
+2026-09-13 11:09:03.881 +0100 [Player] Faixa alterada: mediaId=2411, motivo=1
+2026-09-13 11:12:34.682 +0100 [Player] Faixa alterada: mediaId=2409, motivo=1
+2026-09-13 11:15:21.957 +0100 [Player] A reproduzir: false
+2026-09-13 11:15:31.924 +0100 [Player] Estado alterado: IDLE
+2026-09-13 11:19:06.591 +0100 [Player] Estado alterado: BUFFERING
+2026-09-13 11:19:06.754 +0100 [Player] Estado alterado: READY
+2026-09-13 11:19:06.754 +0100 [Player] A reproduzir: true
+2026-09-13 11:19:18.948 +0100 [Player] A reproduzir: false
+2026-09-13 11:21:10.738 +0100 [Player] A reproduzir: true
+2026-09-13 11:21:42.612 +0100 [Player] Faixa alterada: mediaId=2412, motivo=1
+2026-09-13 11:23:16.643 +0100 [MediaSession] Controlador ligado: com.xiaomi.wearable, uid=10363
+2026-09-13 11:23:38.434 +0100 [Player] A reproduzir: false
+2026-09-13 11:23:40.957 +0100 [Player] A reproduzir: true
+2026-09-13 11:25:45.709 +0100 [Player] Faixa alterada: mediaId=2404, motivo=1
+2026-09-13 11:27:57.140 +0100 [Player] Faixa alterada: mediaId=2405, motivo=2
+2026-09-13 11:27:57.144 +0100 [Player] Estado alterado: BUFFERING
+2026-09-13 11:27:57.146 +0100 [Player] A reproduzir: false
+2026-09-13 11:27:57.221 +0100 [Player] Estado alterado: READY
+2026-09-13 11:27:57.222 +0100 [Player] A reproduzir: true
+2026-09-13 11:28:00.307 +0100 [Player] Faixa alterada: mediaId=2413, motivo=2
+2026-09-13 11:28:00.311 +0100 [Player] Estado alterado: BUFFERING
+2026-09-13 11:28:00.313 +0100 [Player] A reproduzir: false
+2026-09-13 11:28:00.410 +0100 [Player] Estado alterado: READY
+2026-09-13 11:28:00.411 +0100 [Player] A reproduzir: true
+2026-09-13 11:28:03.266 +0100 [Player] Faixa alterada: mediaId=2405, motivo=2
+2026-09-13 11:28:03.271 +0100 [Player] Estado alterado: BUFFERING
+2026-09-13 11:28:03.272 +0100 [Player] A reproduzir: false
+2026-09-13 11:28:03.362 +0100 [Player] Estado alterado: READY
+2026-09-13 11:28:03.364 +0100 [Player] A reproduzir: true
+2026-09-13 11:28:03.533 +0100 [Player] Faixa alterada: mediaId=2404, motivo=2
+2026-09-13 11:28:03.534 +0100 [Player] Estado alterado: BUFFERING
+2026-09-13 11:28:03.535 +0100 [Player] A reproduzir: false
+2026-09-13 11:28:03.621 +0100 [Player] Estado alterado: READY
+2026-09-13 11:28:03.623 +0100 [Player] A reproduzir: true
+2026-09-13 11:28:19.959 +0100 [Player] Faixa alterada: mediaId=2405, motivo=2
+2026-09-13 11:28:19.962 +0100 [Player] Estado alterado: BUFFERING
+2026-09-13 11:28:19.964 +0100 [Player] A reproduzir: false
+2026-09-13 11:28:20.029 +0100 [Player] Estado alterado: READY
+2026-09-13 11:28:20.030 +0100 [Player] A reproduzir: true
+2026-09-13 11:28:24.234 +0100 [MediaSession] Controlador desligado: com.xiaomi.wearable, uid=10363
+2026-09-13 11:29:43.801 +0100 [Player] Faixa alterada: mediaId=2413, motivo=2
+2026-09-13 11:29:43.803 +0100 [Player] Estado alterado: BUFFERING
+2026-09-13 11:29:43.804 +0100 [Player] A reproduzir: false
+2026-09-13 11:29:43.863 +0100 [Player] Estado alterado: READY
+2026-09-13 11:29:43.864 +0100 [Player] A reproduzir: true
+2026-09-13 11:30:40.517 +0100 [Player] A reproduzir: false
+2026-09-13 11:32:29.365 +0100 [Player] Estado alterado: IDLE
+2026-09-13 11:36:38.225 +0100 [Player] Estado alterado: BUFFERING
+2026-09-13 11:36:38.532 +0100 [Player] Estado alterado: READY
+2026-09-13 11:36:38.534 +0100 [Player] A reproduzir: true
+2026-09-13 11:39:09.237 +0100 [Player] A reproduzir: false
+2026-09-13 11:39:19.178 +0100 [Player] Estado alterado: IDLE
+2026-09-14 17:58:53.796 +0100 [App] Aplicação aberta
+2026-09-14 17:58:53.864 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-14 17:58:53.899 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-14 17:58:53.899 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-14 17:58:53.900 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-14 17:58:53.940 +0100 [Player] Faixa alterada: mediaId=track:2415, motivo=3
+2026-09-14 17:58:53.941 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 17:58:54.123 +0100 [Player] Estado alterado: READY
+2026-09-14 17:58:57.663 +0100 [Player] Faixa alterada: mediaId=2414, motivo=3
+2026-09-14 17:58:57.665 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 17:58:57.776 +0100 [Player] Estado alterado: READY
+2026-09-14 17:58:57.777 +0100 [Player] A reproduzir: true
+2026-09-14 17:59:00.273 +0100 [Player] Faixa alterada: mediaId=2401, motivo=2
+2026-09-14 17:59:00.277 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 17:59:00.278 +0100 [Player] A reproduzir: false
+2026-09-14 17:59:00.346 +0100 [Player] Estado alterado: READY
+2026-09-14 17:59:00.347 +0100 [Player] A reproduzir: true
+2026-09-14 17:59:00.756 +0100 [Player] Faixa alterada: mediaId=2402, motivo=2
+2026-09-14 17:59:00.758 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 17:59:00.758 +0100 [Player] A reproduzir: false
+2026-09-14 17:59:00.834 +0100 [Player] Estado alterado: READY
+2026-09-14 17:59:00.835 +0100 [Player] A reproduzir: true
+2026-09-14 17:59:02.148 +0100 [Player] Faixa alterada: mediaId=2411, motivo=2
+2026-09-14 17:59:02.154 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 17:59:02.160 +0100 [Player] A reproduzir: false
+2026-09-14 17:59:02.230 +0100 [Player] Estado alterado: READY
+2026-09-14 17:59:02.231 +0100 [Player] A reproduzir: true
+2026-09-14 17:59:04.408 +0100 [Player] Faixa alterada: mediaId=track:2835, motivo=3
+2026-09-14 17:59:04.410 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 17:59:04.411 +0100 [Player] A reproduzir: false
+2026-09-14 17:59:04.540 +0100 [Player] Estado alterado: READY
+2026-09-14 17:59:04.540 +0100 [Player] A reproduzir: true
+2026-09-14 17:59:05.225 +0100 [Player] Faixa alterada: mediaId=track:2705, motivo=2
+2026-09-14 17:59:05.227 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 17:59:05.228 +0100 [Player] A reproduzir: false
+2026-09-14 17:59:05.306 +0100 [Player] Estado alterado: READY
+2026-09-14 17:59:05.309 +0100 [Player] A reproduzir: true
+2026-09-14 17:59:57.546 +0100 [Player] Faixa alterada: mediaId=2701, motivo=3
+2026-09-14 17:59:57.552 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 17:59:57.553 +0100 [Player] A reproduzir: false
+2026-09-14 17:59:57.649 +0100 [Player] Estado alterado: READY
+2026-09-14 17:59:57.650 +0100 [Player] A reproduzir: true
+2026-09-14 18:00:03.438 +0100 [Player] Faixa alterada: mediaId=2688, motivo=2
+2026-09-14 18:00:03.440 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 18:00:03.441 +0100 [Player] A reproduzir: false
+2026-09-14 18:00:03.541 +0100 [Player] Estado alterado: READY
+2026-09-14 18:00:03.543 +0100 [Player] A reproduzir: true
+2026-09-14 18:00:10.038 +0100 [Player] Faixa alterada: mediaId=2689, motivo=2
+2026-09-14 18:00:10.040 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 18:00:10.040 +0100 [Player] A reproduzir: false
+2026-09-14 18:00:10.215 +0100 [Player] Estado alterado: READY
+2026-09-14 18:00:10.215 +0100 [Player] A reproduzir: true
+2026-09-14 18:00:10.221 +0100 [Player] A reproduzir: false
+2026-09-14 18:00:13.657 +0100 [Player] A reproduzir: true
+2026-09-14 18:00:15.891 +0100 [Player] Faixa alterada: mediaId=2698, motivo=2
+2026-09-14 18:00:15.894 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 18:00:15.896 +0100 [Player] A reproduzir: false
+2026-09-14 18:00:16.010 +0100 [Player] Estado alterado: READY
+2026-09-14 18:00:16.012 +0100 [Player] A reproduzir: true
+2026-09-14 18:00:24.350 +0100 [Player] Faixa alterada: mediaId=2696, motivo=2
+2026-09-14 18:00:24.352 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 18:00:24.353 +0100 [Player] A reproduzir: false
+2026-09-14 18:00:24.432 +0100 [Player] Estado alterado: READY
+2026-09-14 18:00:24.433 +0100 [Player] A reproduzir: true
+2026-09-14 18:00:30.813 +0100 [Player] Faixa alterada: mediaId=2699, motivo=2
+2026-09-14 18:00:30.818 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 18:00:30.819 +0100 [Player] A reproduzir: false
+2026-09-14 18:00:30.904 +0100 [Player] Estado alterado: READY
+2026-09-14 18:00:30.905 +0100 [Player] A reproduzir: true
+2026-09-14 18:00:39.241 +0100 [Player] Faixa alterada: mediaId=2691, motivo=2
+2026-09-14 18:00:39.244 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 18:00:39.245 +0100 [Player] A reproduzir: false
+2026-09-14 18:00:39.321 +0100 [Player] Estado alterado: READY
+2026-09-14 18:00:39.323 +0100 [Player] A reproduzir: true
+2026-09-14 18:00:46.087 +0100 [Player] Faixa alterada: mediaId=2699, motivo=2
+2026-09-14 18:00:46.089 +0100 [Player] Estado alterado: BUFFERING
+2026-09-14 18:00:46.090 +0100 [Player] A reproduzir: false
+2026-09-14 18:00:46.168 +0100 [Player] Estado alterado: READY
+2026-09-14 18:00:46.169 +0100 [Player] A reproduzir: true
+2026-09-14 18:04:31.038 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-14 18:04:31.044 +0100 [PlaybackService] Tarefa removida; a reproduzir=true
+2026-09-14 18:04:46.807 +0100 [Player] Faixa alterada: mediaId=2691, motivo=1
+2026-09-14 18:04:49.491 +0100 [Player] A reproduzir: false
+2026-09-14 18:04:59.629 +0100 [Player] Estado alterado: IDLE
+2026-09-14 18:39:53.062 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-15 12:33:55.840 +0100 [App] Aplicação aberta
+2026-09-15 12:33:55.894 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-15 12:33:55.919 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-15 12:33:55.919 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 12:33:55.920 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 12:33:55.968 +0100 [Player] Faixa alterada: mediaId=track:2702, motivo=3
+2026-09-15 12:33:55.971 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 12:33:56.164 +0100 [Player] Estado alterado: READY
+2026-09-15 12:34:06.783 +0100 [Player] Faixa alterada: mediaId=track:2989, motivo=3
+2026-09-15 12:34:06.784 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 12:34:06.848 +0100 [Player] Estado alterado: READY
+2026-09-15 12:34:30.069 +0100 [UI] Log exportado pelo utilizador
+2026-09-15 12:34:40.203 +0100 [Player] Faixa alterada: mediaId=radio:https://stream-icy.bauermedia.pt/m80nacional.aac, motivo=3
+2026-09-15 12:34:40.206 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 12:34:42.400 +0100 [Player] Estado alterado: READY
+2026-09-15 12:34:42.406 +0100 [Player] A reproduzir: true
+2026-09-15 12:34:42.698 +0100 [Player] A reproduzir: false
+2026-09-15 12:34:43.365 +0100 [Player] A reproduzir: true
+2026-09-15 12:35:19.985 +0100 [Player] A reproduzir: false
+2026-09-15 12:35:21.068 +0100 [Player] Estado alterado: IDLE
+2026-09-15 12:35:22.930 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 12:35:22.935 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-15 12:35:22.944 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-15 22:58:35.722 +0100 [App] Aplicação aberta
+2026-09-15 22:58:35.811 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-15 22:58:35.870 +0100 [Player] Faixa alterada: mediaId=track:2989, motivo=3
+2026-09-15 22:58:35.871 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 22:58:35.872 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-15 22:58:35.872 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 22:58:35.876 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 22:58:36.047 +0100 [Player] Estado alterado: READY
+2026-09-15 22:58:46.821 +0100 [Player] Faixa alterada: mediaId=track:3276, motivo=3
+2026-09-15 22:58:46.823 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 22:58:46.898 +0100 [Player] Estado alterado: READY
+2026-09-15 22:58:58.220 +0100 [App] Aplicação aberta
+2026-09-15 22:58:58.299 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-15 22:58:58.344 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-15 22:58:58.345 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 22:58:58.346 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 22:58:58.359 +0100 [Player] Faixa alterada: mediaId=track:3276, motivo=3
+2026-09-15 22:58:58.360 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 22:58:58.474 +0100 [Player] Estado alterado: READY
+2026-09-15 22:59:03.080 +0100 [UI] Log exportado pelo utilizador
+2026-09-15 22:59:07.626 +0100 [Player] Faixa alterada: mediaId=track:3563, motivo=3
+2026-09-15 22:59:07.630 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 22:59:07.700 +0100 [Player] Estado alterado: READY
+2026-09-15 23:04:31.499 +0100 [App] Aplicação aberta
+2026-09-15 23:04:31.568 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-15 23:04:31.603 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-15 23:04:31.603 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 23:04:31.604 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 23:04:31.620 +0100 [Player] Faixa alterada: mediaId=track:3563, motivo=3
+2026-09-15 23:04:31.622 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 23:04:31.742 +0100 [Player] Estado alterado: READY
+2026-09-15 23:04:40.898 +0100 [Player] Faixa alterada: mediaId=track:3850, motivo=3
+2026-09-15 23:04:40.901 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 23:04:40.962 +0100 [Player] Estado alterado: READY
+2026-09-15 23:09:46.014 +0100 [App] Aplicação aberta
+2026-09-15 23:09:46.099 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-15 23:09:46.134 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-15 23:09:46.134 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 23:09:46.135 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 23:09:46.175 +0100 [Player] Faixa alterada: mediaId=track:3850, motivo=3
+2026-09-15 23:09:46.176 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 23:09:46.346 +0100 [Player] Estado alterado: READY
+2026-09-15 23:10:01.982 +0100 [App] Aplicação aberta
+2026-09-15 23:10:02.055 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-15 23:10:02.088 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-15 23:10:02.089 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 23:10:02.090 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 23:10:02.110 +0100 [Player] Faixa alterada: mediaId=track:3850, motivo=3
+2026-09-15 23:10:02.111 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 23:10:02.246 +0100 [Player] Estado alterado: READY
+2026-09-15 23:10:06.037 +0100 [UI] Log exportado pelo utilizador
+2026-09-15 23:10:27.227 +0100 [Player] Faixa alterada: mediaId=track:4137, motivo=3
+2026-09-15 23:10:27.232 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 23:10:27.358 +0100 [Player] Estado alterado: READY
+2026-09-15 23:10:39.328 +0100 [Player] Estado alterado: IDLE
+2026-09-15 23:26:34.671 +0100 [App] Aplicação aberta
+2026-09-15 23:26:34.750 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-15 23:26:34.806 +0100 [Player] Faixa alterada: mediaId=track:4137, motivo=3
+2026-09-15 23:26:34.807 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 23:26:34.807 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-15 23:26:34.809 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 23:26:34.814 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 23:26:34.932 +0100 [Player] Estado alterado: READY
+2026-09-15 23:26:46.420 +0100 [Player] Faixa alterada: mediaId=track:4424, motivo=3
+2026-09-15 23:26:46.425 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 23:26:46.492 +0100 [Player] Estado alterado: READY
+2026-09-15 23:26:55.971 +0100 [Podcast] Pesquisa iniciada
+2026-09-15 23:27:55.483 +0100 [App] Aplicação aberta
+2026-09-15 23:27:55.560 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-15 23:27:55.597 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-15 23:27:55.598 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 23:27:55.599 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-15 23:27:55.638 +0100 [Player] Faixa alterada: mediaId=track:4424, motivo=3
+2026-09-15 23:27:55.639 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 23:27:55.756 +0100 [Player] Estado alterado: READY
+2026-09-15 23:28:05.100 +0100 [UI] Log exportado pelo utilizador
+2026-09-15 23:28:05.361 +0100 [Player] Faixa alterada: mediaId=track:4711, motivo=3
+2026-09-15 23:28:05.363 +0100 [Player] Estado alterado: BUFFERING
+2026-09-15 23:28:05.416 +0100 [Player] Estado alterado: READY
+2026-09-16 09:06:11.690 +0100 [App] Aplicação aberta
+2026-09-16 09:06:11.766 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-16 09:06:11.815 +0100 [Player] Faixa alterada: mediaId=track:4711, motivo=3
+2026-09-16 09:06:11.816 +0100 [Player] Estado alterado: BUFFERING
+2026-09-16 09:06:11.818 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-16 09:06:11.818 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-16 09:06:11.827 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-16 09:06:12.046 +0100 [Player] Estado alterado: READY
+2026-09-16 09:06:15.685 +0100 [UI] Log exportado pelo utilizador
+2026-09-16 09:06:21.478 +0100 [Player] Faixa alterada: mediaId=track:4998, motivo=3
+2026-09-16 09:06:21.479 +0100 [Player] Estado alterado: BUFFERING
+2026-09-16 09:06:21.517 +0100 [Player] Estado alterado: READY
+2026-09-16 09:06:21.915 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:18:24.669 +0100 [App] Aplicação aberta
+2026-09-17 11:18:24.762 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 11:18:24.812 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 11:18:24.813 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:18:24.814 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:18:24.854 +0100 [Player] Faixa alterada: mediaId=track:4998, motivo=3
+2026-09-17 11:18:24.855 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 11:18:25.028 +0100 [Player] Estado alterado: READY
+2026-09-17 11:18:32.855 +0100 [UI] Log exportado pelo utilizador
+2026-09-17 11:18:35.554 +0100 [Player] Faixa alterada: mediaId=track:5285, motivo=3
+2026-09-17 11:18:35.555 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 11:18:35.615 +0100 [Player] Estado alterado: READY
+2026-09-17 11:35:43.216 +0100 [Podcast] Pesquisa iniciada
+2026-09-17 11:35:49.337 +0100 [App] Aplicação aberta
+2026-09-17 11:35:49.413 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 11:35:49.478 +0100 [Player] Faixa alterada: mediaId=track:5285, motivo=3
+2026-09-17 11:35:49.479 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 11:35:49.480 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 11:35:49.480 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:35:49.485 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:35:49.647 +0100 [Player] Estado alterado: READY
+2026-09-17 11:35:55.746 +0100 [Podcast] Pesquisa iniciada
+2026-09-17 11:43:08.163 +0100 [App] Aplicação aberta
+2026-09-17 11:43:08.255 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 11:43:08.314 +0100 [Player] Faixa alterada: mediaId=track:5572, motivo=3
+2026-09-17 11:43:08.316 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 11:43:08.319 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 11:43:08.319 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:43:08.323 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:43:08.590 +0100 [Player] Estado alterado: READY
+2026-09-17 11:43:13.764 +0100 [Podcast] Pesquisa iniciada: termo=extremamente
+2026-09-17 11:43:20.006 +0100 [App] Aplicação aberta
+2026-09-17 11:43:20.084 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 11:43:20.136 +0100 [Player] Faixa alterada: mediaId=track:5572, motivo=3
+2026-09-17 11:43:20.137 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 11:43:20.138 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 11:43:20.139 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:43:20.142 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:43:20.243 +0100 [Player] Estado alterado: READY
+2026-09-17 11:43:26.169 +0100 [Podcast] Pesquisa iniciada: termo=rfm
+2026-09-17 11:43:29.874 +0100 [App] Aplicação aberta
+2026-09-17 11:43:29.943 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 11:43:29.975 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 11:43:29.975 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:43:29.976 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:43:30.013 +0100 [Player] Faixa alterada: mediaId=track:5572, motivo=3
+2026-09-17 11:43:30.016 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 11:43:30.137 +0100 [Player] Estado alterado: READY
+2026-09-17 11:43:35.122 +0100 [Podcast] Pesquisa iniciada: termo=tsf
+2026-09-17 11:43:41.295 +0100 [App] Aplicação aberta
+2026-09-17 11:43:41.371 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 11:43:41.401 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 11:43:41.401 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:43:41.402 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:43:41.428 +0100 [Player] Faixa alterada: mediaId=track:5572, motivo=3
+2026-09-17 11:43:41.429 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 11:43:41.545 +0100 [Player] Estado alterado: READY
+2026-09-17 11:43:46.494 +0100 [UI] Log exportado pelo utilizador
+2026-09-17 11:43:49.828 +0100 [Player] Faixa alterada: mediaId=track:5859, motivo=3
+2026-09-17 11:43:49.830 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 11:43:49.906 +0100 [Player] Estado alterado: READY
+2026-09-17 11:54:36.765 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:55:41.001 +0100 [App] Aplicação aberta
+2026-09-17 11:55:41.091 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 11:55:41.140 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 11:55:41.141 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:55:41.142 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:55:41.164 +0100 [Player] Faixa alterada: mediaId=track:5859, motivo=3
+2026-09-17 11:55:41.166 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 11:55:41.341 +0100 [Player] Estado alterado: READY
+2026-09-17 11:55:46.879 +0100 [Podcast] Pesquisa solicitada: termo=extremamente
+2026-09-17 11:55:46.881 +0100 [Podcast] Pesquisa iniciada: termo=extremamente
+2026-09-17 11:55:46.881 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=extremamente
+2026-09-17 11:55:47.374 +0100 [Crash] Exceção não capturada na thread=main | ClassCastException: sem mensagem
+java.lang.ClassCastException
+	at bx1.a(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:3)
+	at ml2.b(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:104)
+	at ll2.s(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:13)
+	at uj.i(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:8)
+	at be0.run(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+	Suppressed: bd0: [ub3{Cancelling}@9b2f41a, Dispatchers.Main.immediate]
+2026-09-17 11:55:49.971 +0100 [App] Aplicação aberta
+2026-09-17 11:55:50.046 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 11:55:50.094 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 11:55:50.094 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:55:50.095 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:55:50.112 +0100 [Player] Faixa alterada: mediaId=track:5859, motivo=3
+2026-09-17 11:55:50.113 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 11:55:50.215 +0100 [Player] Estado alterado: READY
+2026-09-17 11:55:54.852 +0100 [Podcast] Pesquisa solicitada: termo=rfm
+2026-09-17 11:55:54.854 +0100 [Podcast] Pesquisa iniciada: termo=rfm
+2026-09-17 11:55:54.855 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=rfm
+2026-09-17 11:55:55.548 +0100 [Crash] Exceção não capturada na thread=main | ClassCastException: sem mensagem
+java.lang.ClassCastException
+	at bx1.a(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:3)
+	at ml2.b(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:104)
+	at ll2.s(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:13)
+	at uj.i(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:8)
+	at be0.run(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+	Suppressed: bd0: [ub3{Cancelling}@5519530, Dispatchers.Main.immediate]
+2026-09-17 11:55:59.554 +0100 [App] Aplicação aberta
+2026-09-17 11:55:59.622 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 11:55:59.656 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 11:55:59.656 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:55:59.657 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:55:59.684 +0100 [Player] Faixa alterada: mediaId=track:5859, motivo=3
+2026-09-17 11:55:59.685 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 11:55:59.797 +0100 [Player] Estado alterado: READY
+2026-09-17 11:56:04.638 +0100 [Podcast] Pesquisa solicitada: termo=tfs
+2026-09-17 11:56:04.640 +0100 [Podcast] Pesquisa iniciada: termo=tfs
+2026-09-17 11:56:04.641 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=tfs
+2026-09-17 11:56:05.163 +0100 [Crash] Exceção não capturada na thread=main | ClassCastException: sem mensagem
+java.lang.ClassCastException
+	at bx1.a(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:3)
+	at ml2.b(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:104)
+	at ll2.s(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:13)
+	at uj.i(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:8)
+	at be0.run(r8-map-id-3994ee8033563e5c568e75e0f3565fa7c17f838de8906dda6a78240836e8280a:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+	Suppressed: bd0: [ub3{Cancelling}@4f27b18, Dispatchers.Main.immediate]
+2026-09-17 11:56:08.999 +0100 [App] Aplicação aberta
+2026-09-17 11:56:09.068 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 11:56:09.096 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 11:56:09.097 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:56:09.097 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 11:56:09.114 +0100 [Player] Faixa alterada: mediaId=track:5859, motivo=3
+2026-09-17 11:56:09.116 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 11:56:09.234 +0100 [Player] Estado alterado: READY
+2026-09-17 11:56:12.078 +0100 [UI] Log exportado pelo utilizador
+2026-09-17 11:56:16.519 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 12:20:56.889 +0100 [App] Aplicação aberta
+2026-09-17 12:20:56.970 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 12:20:57.007 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 12:20:57.008 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 12:20:57.009 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 12:20:57.064 +0100 [Player] Faixa alterada: mediaId=track:6146, motivo=3
+2026-09-17 12:20:57.065 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 12:20:57.233 +0100 [Player] Estado alterado: READY
+2026-09-17 12:21:01.066 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 12:22:14.448 +0100 [App] Aplicação aberta
+2026-09-17 12:22:14.533 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 12:22:14.572 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 12:22:14.573 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 12:22:14.574 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 12:22:14.592 +0100 [Player] Faixa alterada: mediaId=track:6433, motivo=3
+2026-09-17 12:22:14.593 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 12:22:14.763 +0100 [Player] Estado alterado: READY
+2026-09-17 12:22:20.616 +0100 [Podcast] Pesquisa solicitada: termo=extremamente
+2026-09-17 12:22:20.617 +0100 [Podcast] Pesquisa iniciada: termo=extremamente
+2026-09-17 12:22:20.617 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=extremamente
+2026-09-17 12:22:21.072 +0100 [Podcast] Pesquisa falhou: resposta inválida, duraçãoMs=455 | db1: Podcast Index devolveu dados incompletos no feed 0.
+db1: Podcast Index devolveu dados incompletos no feed 0.
+	at pl2.b(r8-map-id-2e35e4d881ca8c622bf33d55458204e7da0d86da0e7a1f7a79924b184fb2eb59:484)
+	at ol2.s(r8-map-id-2e35e4d881ca8c622bf33d55458204e7da0d86da0e7a1f7a79924b184fb2eb59:13)
+	at uj.i(r8-map-id-2e35e4d881ca8c622bf33d55458204e7da0d86da0e7a1f7a79924b184fb2eb59:8)
+	at be0.run(r8-map-id-2e35e4d881ca8c622bf33d55458204e7da0d86da0e7a1f7a79924b184fb2eb59:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-17 12:22:23.169 +0100 [Player] Faixa alterada: mediaId=track:6720, motivo=3
+2026-09-17 12:22:23.171 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 12:22:23.262 +0100 [Player] Estado alterado: READY
+2026-09-17 12:22:30.215 +0100 [Podcast] Pesquisa solicitada: termo=rfm
+2026-09-17 12:22:30.216 +0100 [Podcast] Pesquisa iniciada: termo=rfm
+2026-09-17 12:22:30.217 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=rfm
+2026-09-17 12:22:30.694 +0100 [Podcast] Pesquisa falhou: resposta inválida, duraçãoMs=477 | db1: Podcast Index devolveu dados incompletos no feed 0.
+db1: Podcast Index devolveu dados incompletos no feed 0.
+	at pl2.b(r8-map-id-2e35e4d881ca8c622bf33d55458204e7da0d86da0e7a1f7a79924b184fb2eb59:484)
+	at ol2.s(r8-map-id-2e35e4d881ca8c622bf33d55458204e7da0d86da0e7a1f7a79924b184fb2eb59:13)
+	at uj.i(r8-map-id-2e35e4d881ca8c622bf33d55458204e7da0d86da0e7a1f7a79924b184fb2eb59:8)
+	at be0.run(r8-map-id-2e35e4d881ca8c622bf33d55458204e7da0d86da0e7a1f7a79924b184fb2eb59:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-17 12:22:35.766 +0100 [Podcast] Pesquisa solicitada: termo=tfs
+2026-09-17 12:22:35.767 +0100 [Podcast] Pesquisa iniciada: termo=tfs
+2026-09-17 12:22:35.768 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=tfs
+2026-09-17 12:22:36.129 +0100 [Podcast] Pesquisa falhou: resposta inválida, duraçãoMs=362 | db1: Podcast Index devolveu dados incompletos no feed 0.
+db1: Podcast Index devolveu dados incompletos no feed 0.
+	at pl2.b(r8-map-id-2e35e4d881ca8c622bf33d55458204e7da0d86da0e7a1f7a79924b184fb2eb59:484)
+	at ol2.s(r8-map-id-2e35e4d881ca8c622bf33d55458204e7da0d86da0e7a1f7a79924b184fb2eb59:13)
+	at uj.i(r8-map-id-2e35e4d881ca8c622bf33d55458204e7da0d86da0e7a1f7a79924b184fb2eb59:8)
+	at be0.run(r8-map-id-2e35e4d881ca8c622bf33d55458204e7da0d86da0e7a1f7a79924b184fb2eb59:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-17 12:22:41.586 +0100 [UI] Log exportado pelo utilizador
+2026-09-17 12:39:08.248 +0100 [App] Aplicação aberta
+2026-09-17 12:39:08.333 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 12:39:08.384 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 12:39:08.385 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 12:39:08.386 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 12:39:08.404 +0100 [Player] Faixa alterada: mediaId=track:6720, motivo=3
+2026-09-17 12:39:08.405 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 12:39:08.552 +0100 [Player] Estado alterado: READY
+2026-09-17 12:39:15.923 +0100 [Podcast] Pesquisa solicitada: termo=extremamente
+2026-09-17 12:39:15.924 +0100 [Podcast] Pesquisa iniciada: termo=extremamente
+2026-09-17 12:39:15.925 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=extremamente
+2026-09-17 12:39:16.396 +0100 [Podcast] Pesquisa falhou: resposta inválida, duraçãoMs=472 | db1: Podcast Index devolveu dados incompletos no feed 0.
+db1: Podcast Index devolveu dados incompletos no feed 0.
+	at pl2.b(r8-map-id-093c3d33eb91f9269a5fa6e46c683593da7e807789f6063619f3f897ae5243d7:484)
+	at ol2.s(r8-map-id-093c3d33eb91f9269a5fa6e46c683593da7e807789f6063619f3f897ae5243d7:13)
+	at uj.i(r8-map-id-093c3d33eb91f9269a5fa6e46c683593da7e807789f6063619f3f897ae5243d7:8)
+	at be0.run(r8-map-id-093c3d33eb91f9269a5fa6e46c683593da7e807789f6063619f3f897ae5243d7:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-17 12:39:17.793 +0100 [Player] Faixa alterada: mediaId=track:7007, motivo=3
+2026-09-17 12:39:17.794 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 12:39:17.866 +0100 [Player] Estado alterado: READY
+2026-09-17 12:39:24.138 +0100 [Podcast] Pesquisa solicitada: termo=rfm
+2026-09-17 12:39:24.140 +0100 [Podcast] Pesquisa iniciada: termo=rfm
+2026-09-17 12:39:24.140 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=rfm
+2026-09-17 12:39:24.559 +0100 [Podcast] Pesquisa falhou: resposta inválida, duraçãoMs=420 | db1: Podcast Index devolveu dados incompletos no feed 0.
+db1: Podcast Index devolveu dados incompletos no feed 0.
+	at pl2.b(r8-map-id-093c3d33eb91f9269a5fa6e46c683593da7e807789f6063619f3f897ae5243d7:484)
+	at ol2.s(r8-map-id-093c3d33eb91f9269a5fa6e46c683593da7e807789f6063619f3f897ae5243d7:13)
+	at uj.i(r8-map-id-093c3d33eb91f9269a5fa6e46c683593da7e807789f6063619f3f897ae5243d7:8)
+	at be0.run(r8-map-id-093c3d33eb91f9269a5fa6e46c683593da7e807789f6063619f3f897ae5243d7:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-17 12:39:38.522 +0100 [Podcast] Pesquisa solicitada: termo=desagradável
+2026-09-17 12:39:38.523 +0100 [Podcast] Pesquisa iniciada: termo=desagradável
+2026-09-17 12:39:38.523 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=desagradável
+2026-09-17 12:39:38.746 +0100 [Podcast] Pesquisa falhou: resposta inválida, duraçãoMs=223 | db1: Podcast Index devolveu dados incompletos no feed 0.
+db1: Podcast Index devolveu dados incompletos no feed 0.
+	at pl2.b(r8-map-id-093c3d33eb91f9269a5fa6e46c683593da7e807789f6063619f3f897ae5243d7:484)
+	at ol2.s(r8-map-id-093c3d33eb91f9269a5fa6e46c683593da7e807789f6063619f3f897ae5243d7:13)
+	at uj.i(r8-map-id-093c3d33eb91f9269a5fa6e46c683593da7e807789f6063619f3f897ae5243d7:8)
+	at be0.run(r8-map-id-093c3d33eb91f9269a5fa6e46c683593da7e807789f6063619f3f897ae5243d7:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-17 12:39:44.264 +0100 [UI] Log exportado pelo utilizador
+2026-09-17 12:39:57.449 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 12:54:43.498 +0100 [App] Aplicação aberta
+2026-09-17 12:54:43.588 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 12:54:43.630 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 12:54:43.630 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 12:54:43.631 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 12:54:43.645 +0100 [Player] Faixa alterada: mediaId=track:7007, motivo=3
+2026-09-17 12:54:43.646 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 12:54:43.877 +0100 [Player] Estado alterado: READY
+2026-09-17 12:54:48.684 +0100 [Podcast] Pesquisa solicitada: termo=extremamente
+2026-09-17 12:54:48.686 +0100 [Podcast] Pesquisa iniciada: termo=extremamente
+2026-09-17 12:54:48.687 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=extremamente
+2026-09-17 12:54:48.941 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=6, duraçãoMs=254
+2026-09-17 12:54:48.942 +0100 [Podcast] Pesquisa concluída: resultados=6, duraçãoMs=256
+2026-09-17 12:54:54.835 +0100 [Player] Faixa alterada: mediaId=track:7294, motivo=3
+2026-09-17 12:54:54.837 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 12:54:54.917 +0100 [Player] Estado alterado: READY
+2026-09-17 12:54:58.113 +0100 [Podcast] Episódios iniciados: feedId=5751673
+2026-09-17 12:54:58.114 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=5751673
+2026-09-17 12:54:58.562 +0100 [Podcast] Episódios falharam: tipo de resposta incompatível, feedId=5751673, duraçãoMs=449 | ClassCastException: sem mensagem
+java.lang.ClassCastException
+	at cx1.a(r8-map-id-016ae1ba6aeac69df124d48d2c2c06a989b37211bd6c9cf7d9d49a708f004a19:3)
+	at nl2.a(r8-map-id-016ae1ba6aeac69df124d48d2c2c06a989b37211bd6c9cf7d9d49a708f004a19:92)
+	at ll2.s(r8-map-id-016ae1ba6aeac69df124d48d2c2c06a989b37211bd6c9cf7d9d49a708f004a19:14)
+	at uj.i(r8-map-id-016ae1ba6aeac69df124d48d2c2c06a989b37211bd6c9cf7d9d49a708f004a19:8)
+	at be0.run(r8-map-id-016ae1ba6aeac69df124d48d2c2c06a989b37211bd6c9cf7d9d49a708f004a19:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-17 12:55:24.474 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 21:05:38.522 +0100 [App] Aplicação aberta
+2026-09-17 21:05:38.603 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-17 21:05:38.639 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-17 21:05:38.640 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 21:05:38.641 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 21:05:38.685 +0100 [Player] Faixa alterada: mediaId=track:7294, motivo=3
+2026-09-17 21:05:38.686 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 21:05:38.869 +0100 [Player] Estado alterado: READY
+2026-09-17 21:05:45.260 +0100 [Podcast] Pesquisa solicitada: termo=extremamente
+2026-09-17 21:05:45.261 +0100 [Podcast] Pesquisa iniciada: termo=extremamente
+2026-09-17 21:05:45.262 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=extremamente
+2026-09-17 21:05:45.544 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=6, duraçãoMs=282
+2026-09-17 21:05:45.545 +0100 [Podcast] Pesquisa concluída: resultados=6, duraçãoMs=284
+2026-09-17 21:05:48.188 +0100 [Podcast] Episódios iniciados: feedId=5751673
+2026-09-17 21:05:48.189 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=5751673
+2026-09-17 21:05:48.231 +0100 [Player] Faixa alterada: mediaId=track:7581, motivo=3
+2026-09-17 21:05:48.233 +0100 [Player] Estado alterado: BUFFERING
+2026-09-17 21:05:48.286 +0100 [Player] Estado alterado: READY
+2026-09-17 21:05:48.624 +0100 [Podcast] Episódios falharam: tipo de resposta incompatível, feedId=5751673, duraçãoMs=436 | ClassCastException: sem mensagem
+java.lang.ClassCastException
+	at cx1.a(r8-map-id-016ae1ba6aeac69df124d48d2c2c06a989b37211bd6c9cf7d9d49a708f004a19:3)
+	at nl2.a(r8-map-id-016ae1ba6aeac69df124d48d2c2c06a989b37211bd6c9cf7d9d49a708f004a19:92)
+	at ll2.s(r8-map-id-016ae1ba6aeac69df124d48d2c2c06a989b37211bd6c9cf7d9d49a708f004a19:14)
+	at uj.i(r8-map-id-016ae1ba6aeac69df124d48d2c2c06a989b37211bd6c9cf7d9d49a708f004a19:8)
+	at be0.run(r8-map-id-016ae1ba6aeac69df124d48d2c2c06a989b37211bd6c9cf7d9d49a708f004a19:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-17 21:05:51.227 +0100 [UI] Log exportado pelo utilizador
+2026-09-17 21:06:02.440 +0100 [Player] Estado alterado: IDLE
+2026-09-17 21:06:56.818 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-17 21:06:56.831 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-17 21:06:56.836 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-18 09:16:13.187 +0100 [App] Aplicação aberta
+2026-09-18 09:16:13.266 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 09:16:13.331 +0100 [Player] Faixa alterada: mediaId=track:7581, motivo=3
+2026-09-18 09:16:13.333 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 09:16:13.335 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-18 09:16:13.335 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 09:16:13.340 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 09:16:13.606 +0100 [Player] Estado alterado: READY
+2026-09-18 09:16:23.286 +0100 [Player] Faixa alterada: mediaId=track:7868, motivo=3
+2026-09-18 09:16:23.288 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 09:16:23.352 +0100 [Player] Estado alterado: READY
+2026-09-18 09:16:23.710 +0100 [Podcast] Pesquisa solicitada: termo=extremamente
+2026-09-18 09:16:23.710 +0100 [Podcast] Pesquisa iniciada: termo=extremamente
+2026-09-18 09:16:23.710 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=extremamente
+2026-09-18 09:16:24.042 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=6, duraçãoMs=331
+2026-09-18 09:16:24.044 +0100 [Podcast] Pesquisa concluída: resultados=6, duraçãoMs=334
+2026-09-18 09:16:25.059 +0100 [Podcast] Episódios iniciados: feedId=5751673
+2026-09-18 09:16:25.060 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=5751673
+2026-09-18 09:16:25.547 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=5751673, resultados=40, duraçãoMs=487
+2026-09-18 09:16:25.548 +0100 [Podcast] Episódios concluídos: feedId=5751673, resultados=40, duraçãoMs=489
+2026-09-18 09:16:27.147 +0100 [Player] Faixa alterada: mediaId=podcast:episode:60517708880, motivo=3
+2026-09-18 09:16:27.150 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 09:16:28.796 +0100 [Player] Estado alterado: READY
+2026-09-18 09:16:28.797 +0100 [Player] A reproduzir: true
+2026-09-18 09:16:28.872 +0100 [Player] A reproduzir: false
+2026-09-18 09:16:29.764 +0100 [Player] A reproduzir: true
+2026-09-18 09:16:42.135 +0100 [Player] A reproduzir: false
+2026-09-18 09:16:44.495 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 09:16:44.502 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-18 09:16:44.513 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-18 11:54:47.007 +0100 [App] Aplicação aberta
+2026-09-18 11:54:47.096 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 11:54:47.177 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-18 11:54:47.178 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 11:54:47.178 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 11:54:47.203 +0100 [Player] Faixa alterada: mediaId=track:7868, motivo=3
+2026-09-18 11:54:47.216 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 11:54:47.362 +0100 [Player] Estado alterado: READY
+2026-09-18 11:54:54.347 +0100 [Podcast] Pesquisa solicitada: termo=extremamente
+2026-09-18 11:54:54.348 +0100 [Podcast] Pesquisa iniciada: termo=extremamente
+2026-09-18 11:54:54.348 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=extremamente
+2026-09-18 11:54:54.418 +0100 [Player] Faixa alterada: mediaId=track:8155, motivo=3
+2026-09-18 11:54:54.419 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 11:54:54.491 +0100 [Player] Estado alterado: READY
+2026-09-18 11:54:54.584 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=6, duraçãoMs=235
+2026-09-18 11:54:54.585 +0100 [Podcast] Pesquisa concluída: resultados=6, duraçãoMs=237
+2026-09-18 11:54:58.626 +0100 [Podcast] Episódios iniciados: feedId=5751673
+2026-09-18 11:54:58.627 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=5751673
+2026-09-18 11:54:59.014 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=5751673, resultados=40, duraçãoMs=387
+2026-09-18 11:54:59.015 +0100 [Podcast] Episódios concluídos: feedId=5751673, resultados=40, duraçãoMs=389
+2026-09-18 11:55:04.108 +0100 [Player] Faixa alterada: mediaId=podcast:episode:58201788565, motivo=3
+2026-09-18 11:55:04.109 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 11:55:05.461 +0100 [Player] Estado alterado: READY
+2026-09-18 11:55:05.463 +0100 [Player] A reproduzir: true
+2026-09-18 11:55:16.058 +0100 [Player] A reproduzir: false
+2026-09-18 11:55:18.140 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 11:55:18.147 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-18 11:55:18.154 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-18 15:41:04.059 +0100 [App] Aplicação aberta
+2026-09-18 15:41:04.122 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 15:41:04.150 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-18 15:41:04.150 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 15:41:04.151 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 15:41:04.173 +0100 [Player] Faixa alterada: mediaId=track:8155, motivo=3
+2026-09-18 15:41:04.174 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 15:41:04.268 +0100 [Player] Estado alterado: READY
+2026-09-18 15:41:13.613 +0100 [Podcast] Pesquisa solicitada: termo=extremamente
+2026-09-18 15:41:13.614 +0100 [Podcast] Pesquisa iniciada: termo=extremamente
+2026-09-18 15:41:13.615 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=extremamente
+2026-09-18 15:41:13.857 +0100 [Player] Faixa alterada: mediaId=track:8442, motivo=3
+2026-09-18 15:41:13.858 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 15:41:13.868 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=6, duraçãoMs=253
+2026-09-18 15:41:13.868 +0100 [Podcast] Pesquisa concluída: resultados=6, duraçãoMs=253
+2026-09-18 15:41:13.922 +0100 [Player] Estado alterado: READY
+2026-09-18 15:41:22.192 +0100 [Podcast] Episódios iniciados: feedId=5751673
+2026-09-18 15:41:22.193 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=5751673
+2026-09-18 15:41:22.625 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=5751673, resultados=40, duraçãoMs=432
+2026-09-18 15:41:22.626 +0100 [Podcast] Episódios concluídos: feedId=5751673, resultados=40, duraçãoMs=435
+2026-09-18 15:41:28.851 +0100 [Podcast] Episódios iniciados: feedId=1035057
+2026-09-18 15:41:28.852 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=1035057
+2026-09-18 15:41:29.101 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=1035057, resultados=40, duraçãoMs=248
+2026-09-18 15:41:29.102 +0100 [Podcast] Episódios concluídos: feedId=1035057, resultados=40, duraçãoMs=251
+2026-09-18 15:41:30.252 +0100 [Player] Faixa alterada: mediaId=podcast:episode:307198659, motivo=3
+2026-09-18 15:41:30.254 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 15:41:31.343 +0100 [Player] Estado alterado: READY
+2026-09-18 15:41:31.345 +0100 [Player] A reproduzir: true
+2026-09-18 15:41:42.425 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 15:41:42.426 +0100 [Player] A reproduzir: false
+2026-09-18 15:41:42.552 +0100 [Player] Estado alterado: READY
+2026-09-18 15:41:42.553 +0100 [Player] A reproduzir: true
+2026-09-18 15:41:43.307 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 15:41:43.308 +0100 [Player] A reproduzir: false
+2026-09-18 15:41:43.989 +0100 [Player] Estado alterado: READY
+2026-09-18 15:41:43.990 +0100 [Player] A reproduzir: true
+2026-09-18 15:43:02.218 +0100 [Player] A reproduzir: false
+2026-09-18 15:46:19.469 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 15:46:19.475 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-18 15:46:19.485 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-18 16:26:41.676 +0100 [App] Aplicação aberta
+2026-09-18 16:26:41.735 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 16:26:41.754 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-18 16:26:41.755 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 16:26:41.755 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 16:26:41.803 +0100 [Player] Faixa alterada: mediaId=track:8442, motivo=3
+2026-09-18 16:26:41.805 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 16:26:41.901 +0100 [Player] Estado alterado: READY
+2026-09-18 16:26:49.081 +0100 [Podcast] Pesquisa solicitada: termo=coutinho
+2026-09-18 16:26:49.082 +0100 [Podcast] Pesquisa iniciada: termo=coutinho
+2026-09-18 16:26:49.082 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=coutinho
+2026-09-18 16:26:49.428 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=60, duraçãoMs=346
+2026-09-18 16:26:49.428 +0100 [Podcast] Pesquisa concluída: resultados=60, duraçãoMs=347
+2026-09-18 16:26:52.476 +0100 [Player] Faixa alterada: mediaId=track:8729, motivo=3
+2026-09-18 16:26:52.478 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 16:26:52.573 +0100 [Player] Estado alterado: READY
+2026-09-18 16:27:04.668 +0100 [Podcast] Episódios iniciados: feedId=1063831
+2026-09-18 16:27:04.669 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=1063831
+2026-09-18 16:27:04.876 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=1063831, resultados=27, duraçãoMs=208
+2026-09-18 16:27:04.877 +0100 [Podcast] Episódios concluídos: feedId=1063831, resultados=27, duraçãoMs=209
+2026-09-18 16:27:07.421 +0100 [Player] Faixa alterada: mediaId=podcast:episode:7361003792, motivo=3
+2026-09-18 16:27:07.422 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 16:27:08.392 +0100 [Player] Estado alterado: READY
+2026-09-18 16:27:08.393 +0100 [Player] A reproduzir: true
+2026-09-18 16:27:37.044 +0100 [Podcast] Pesquisa solicitada: termo=tia gli
+2026-09-18 16:27:37.045 +0100 [Podcast] Pesquisa iniciada: termo=tia gli
+2026-09-18 16:27:37.046 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=tia gli
+2026-09-18 16:27:37.396 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=0, duraçãoMs=350
+2026-09-18 16:27:37.397 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=351
+2026-09-18 16:27:46.444 +0100 [Podcast] Pesquisa solicitada: termo=Vasco Pereira
+2026-09-18 16:27:46.445 +0100 [Podcast] Pesquisa iniciada: termo=Vasco Pereira
+2026-09-18 16:27:46.445 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=Vasco Pereira
+2026-09-18 16:27:46.857 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=3, duraçãoMs=412
+2026-09-18 16:27:46.860 +0100 [Podcast] Pesquisa concluída: resultados=3, duraçãoMs=415
+2026-09-18 16:28:07.542 +0100 [Player] A reproduzir: false
+2026-09-18 16:28:10.705 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 16:28:10.718 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-18 16:28:10.729 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-18 16:31:22.696 +0100 [App] Aplicação aberta
+2026-09-18 16:31:22.742 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 16:31:22.752 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-18 16:31:22.753 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 16:31:22.754 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 16:31:22.796 +0100 [Player] Faixa alterada: mediaId=track:8729, motivo=3
+2026-09-18 16:31:22.797 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 16:31:22.872 +0100 [Player] Estado alterado: READY
+2026-09-18 16:31:32.813 +0100 [Player] Faixa alterada: mediaId=track:9016, motivo=3
+2026-09-18 16:31:32.814 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 16:31:32.894 +0100 [Player] Estado alterado: READY
+2026-09-18 16:31:34.079 +0100 [Podcast] Pesquisa solicitada: termo=tia bli
+2026-09-18 16:31:34.080 +0100 [Podcast] Pesquisa iniciada: termo=tia bli
+2026-09-18 16:31:34.080 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=tia bli
+2026-09-18 16:31:34.298 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=0, duraçãoMs=219
+2026-09-18 16:31:34.299 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=220
+2026-09-18 16:31:50.402 +0100 [Podcast] Pesquisa solicitada: termo=as pessoas têm que se
+2026-09-18 16:31:50.404 +0100 [Podcast] Pesquisa iniciada: termo=as pessoas têm que se
+2026-09-18 16:31:50.404 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=as pessoas têm que se
+2026-09-18 16:31:50.773 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=1, duraçãoMs=370
+2026-09-18 16:31:50.774 +0100 [Podcast] Pesquisa concluída: resultados=1, duraçãoMs=371
+2026-09-18 16:31:53.108 +0100 [Podcast] Episódios iniciados: feedId=7532870
+2026-09-18 16:31:53.109 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=7532870
+2026-09-18 16:31:53.446 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=7532870, resultados=40, duraçãoMs=337
+2026-09-18 16:31:53.447 +0100 [Podcast] Episódios concluídos: feedId=7532870, resultados=40, duraçãoMs=339
+2026-09-18 16:32:00.996 +0100 [Podcast] Episódios iniciados: feedId=7532870
+2026-09-18 16:32:00.997 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=7532870
+2026-09-18 16:32:01.473 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=7532870, resultados=40, duraçãoMs=476
+2026-09-18 16:32:01.474 +0100 [Podcast] Episódios concluídos: feedId=7532870, resultados=40, duraçãoMs=478
+2026-09-18 16:32:02.243 +0100 [Player] Faixa alterada: mediaId=podcast:episode:60514874513, motivo=3
+2026-09-18 16:32:02.245 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 16:32:03.327 +0100 [Player] Estado alterado: READY
+2026-09-18 16:32:03.329 +0100 [Player] A reproduzir: true
+2026-09-18 16:38:23.255 +0100 [Podcast] Episódios iniciados: feedId=7532870
+2026-09-18 16:38:23.256 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=7532870
+2026-09-18 16:38:23.808 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=7532870, resultados=40, duraçãoMs=552
+2026-09-18 16:38:23.808 +0100 [Podcast] Episódios concluídos: feedId=7532870, resultados=40, duraçãoMs=554
+2026-09-18 16:38:26.139 +0100 [Player] Estado alterado: ENDED
+2026-09-18 16:38:26.143 +0100 [Player] A reproduzir: false
+2026-09-18 16:38:27.557 +0100 [Player] Faixa alterada: mediaId=podcast:episode:57020449420, motivo=3
+2026-09-18 16:38:27.559 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 16:38:28.928 +0100 [Player] Estado alterado: READY
+2026-09-18 16:38:28.931 +0100 [Player] A reproduzir: true
+2026-09-18 16:44:17.551 +0100 [Player] Estado alterado: ENDED
+2026-09-18 16:44:17.556 +0100 [Player] A reproduzir: false
+2026-09-18 16:44:19.274 +0100 [Player] Faixa alterada: mediaId=podcast:episode:55674992505, motivo=3
+2026-09-18 16:44:19.276 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 16:44:20.542 +0100 [Player] Estado alterado: READY
+2026-09-18 16:44:20.544 +0100 [Player] A reproduzir: true
+2026-09-18 16:51:45.980 +0100 [Player] Estado alterado: ENDED
+2026-09-18 16:51:45.985 +0100 [Player] A reproduzir: false
+2026-09-18 16:56:05.683 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 16:56:07.043 +0100 [Player] Estado alterado: READY
+2026-09-18 16:56:07.048 +0100 [Player] A reproduzir: true
+2026-09-18 16:56:30.159 +0100 [Podcast] Episódios iniciados: feedId=7532870
+2026-09-18 16:56:30.163 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=7532870
+2026-09-18 16:56:30.410 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=7532870, resultados=40, duraçãoMs=247
+2026-09-18 16:56:30.410 +0100 [Podcast] Episódios concluídos: feedId=7532870, resultados=40, duraçãoMs=250
+2026-09-18 16:56:33.720 +0100 [Player] Faixa alterada: mediaId=podcast:episode:60514874513, motivo=3
+2026-09-18 16:56:33.722 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 16:56:33.723 +0100 [Player] A reproduzir: false
+2026-09-18 16:56:34.608 +0100 [Player] Estado alterado: READY
+2026-09-18 16:56:34.612 +0100 [Player] A reproduzir: true
+2026-09-18 16:56:50.633 +0100 [Player] A reproduzir: false
+2026-09-18 16:56:53.630 +0100 [Podcast] Pesquisa solicitada: termo=extremamente
+2026-09-18 16:56:53.631 +0100 [Podcast] Pesquisa iniciada: termo=extremamente
+2026-09-18 16:56:53.631 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=extremamente
+2026-09-18 16:56:53.888 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=6, duraçãoMs=256
+2026-09-18 16:56:53.889 +0100 [Podcast] Pesquisa concluída: resultados=6, duraçãoMs=258
+2026-09-18 16:57:10.914 +0100 [Podcast] Episódios iniciados: feedId=1035057
+2026-09-18 16:57:10.915 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=1035057
+2026-09-18 16:57:11.275 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=1035057, resultados=40, duraçãoMs=360
+2026-09-18 16:57:11.276 +0100 [Podcast] Episódios concluídos: feedId=1035057, resultados=40, duraçãoMs=362
+2026-09-18 16:57:14.932 +0100 [Player] Faixa alterada: mediaId=podcast:episode:307198665, motivo=3
+2026-09-18 16:57:14.934 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 16:57:15.871 +0100 [Player] Estado alterado: READY
+2026-09-18 16:57:15.872 +0100 [Player] A reproduzir: true
+2026-09-18 16:57:20.550 +0100 [App] Aplicação aberta
+2026-09-18 17:03:33.271 +0100 [Player] Estado alterado: ENDED
+2026-09-18 17:03:33.276 +0100 [Player] A reproduzir: false
+2026-09-18 17:19:57.487 +0100 [App] Aplicação aberta
+2026-09-18 17:19:59.379 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 17:19:59.414 +0100 [Player] Estado alterado: IDLE
+2026-09-18 17:20:18.681 +0100 [Podcast] Pesquisa solicitada: termo=as pessoas precisam
+2026-09-18 17:20:18.683 +0100 [Podcast] Pesquisa iniciada: termo=as pessoas precisam
+2026-09-18 17:20:18.683 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=as pessoas precisam
+2026-09-18 17:20:18.889 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=0, duraçãoMs=206
+2026-09-18 17:20:18.890 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=207
+2026-09-18 17:20:23.767 +0100 [Podcast] Pesquisa solicitada: termo=as pessoas precisam de falar
+2026-09-18 17:20:23.769 +0100 [Podcast] Pesquisa iniciada: termo=as pessoas precisam de falar
+2026-09-18 17:20:23.769 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=as pessoas precisam de falar
+2026-09-18 17:20:24.006 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=0, duraçãoMs=237
+2026-09-18 17:20:24.007 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=239
+2026-09-18 17:20:43.119 +0100 [Podcast] Pesquisa solicitada: termo=as pessoas têm de
+2026-09-18 17:20:43.121 +0100 [Podcast] Pesquisa iniciada: termo=as pessoas têm de
+2026-09-18 17:20:43.122 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=as pessoas têm de
+2026-09-18 17:20:43.351 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=0, duraçãoMs=229
+2026-09-18 17:20:43.353 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=232
+2026-09-18 17:20:49.851 +0100 [Podcast] Pesquisa solicitada: termo=as pessoas têm de se acalmar
+2026-09-18 17:20:49.852 +0100 [Podcast] Pesquisa iniciada: termo=as pessoas têm de se acalmar
+2026-09-18 17:20:49.853 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=as pessoas têm de se acalmar
+2026-09-18 17:20:50.163 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=0, duraçãoMs=310
+2026-09-18 17:20:50.165 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=312
+2026-09-18 17:20:55.230 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 17:20:55.237 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-18 17:20:55.246 +0100 [Crash] Exceção não capturada na thread=main | IllegalArgumentException: Service not registered: ks1@4c1bcc3
+java.lang.IllegalArgumentException: Service not registered: ks1@4c1bcc3
+	at android.app.LoadedApk.forgetServiceDispatcher(LoadedApk.java:2255)
+	at android.app.ContextImpl.unbindService(ContextImpl.java:2379)
+	at android.content.ContextWrapper.unbindService(ContextWrapper.java:973)
+	at sr1.run(r8-map-id-a0fe734cadafeea576a4c92ef198a0faec75cd149f6cd77ad58f707b4a41ae0d:14)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 17:20:57.873 +0100 [App] Aplicação aberta
+2026-09-18 17:20:57.951 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 17:20:57.990 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-18 17:20:57.990 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 17:20:57.991 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 17:20:58.009 +0100 [Player] Faixa alterada: mediaId=track:9590, motivo=3
+2026-09-18 17:20:58.011 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 17:20:58.152 +0100 [Player] Estado alterado: READY
+2026-09-18 17:21:07.748 +0100 [Player] Faixa alterada: mediaId=track:9877, motivo=3
+2026-09-18 17:21:07.753 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 17:21:07.820 +0100 [Player] Estado alterado: READY
+2026-09-18 17:21:18.441 +0100 [Podcast] Pesquisa solicitada: termo=as pessoas têm de se acalmar,
+2026-09-18 17:21:18.442 +0100 [Podcast] Pesquisa iniciada: termo=as pessoas têm de se acalmar,
+2026-09-18 17:21:18.443 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=as pessoas têm de se acalmar,
+2026-09-18 17:21:18.941 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=0, duraçãoMs=498
+2026-09-18 17:21:18.943 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=501
+2026-09-18 17:21:21.141 +0100 [Podcast] Pesquisa solicitada: termo=as pessoas têm de se acalmar
+2026-09-18 17:21:21.142 +0100 [Podcast] Pesquisa iniciada: termo=as pessoas têm de se acalmar
+2026-09-18 17:21:21.142 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=as pessoas têm de se acalmar
+2026-09-18 17:21:21.497 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=0, duraçãoMs=355
+2026-09-18 17:21:21.499 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=357
+2026-09-18 17:21:29.678 +0100 [Podcast] Pesquisa solicitada: termo=vasco
+2026-09-18 17:21:29.679 +0100 [Podcast] Pesquisa iniciada: termo=vasco
+2026-09-18 17:21:29.680 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=vasco
+2026-09-18 17:21:30.114 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=60, duraçãoMs=434
+2026-09-18 17:21:30.115 +0100 [Podcast] Pesquisa concluída: resultados=60, duraçãoMs=436
+2026-09-18 17:21:36.338 +0100 [Podcast] Pesquisa solicitada: termo=Vasco Pereira
+2026-09-18 17:21:36.340 +0100 [Podcast] Pesquisa iniciada: termo=Vasco Pereira
+2026-09-18 17:21:36.340 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=Vasco Pereira
+2026-09-18 17:21:36.756 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=3, duraçãoMs=415
+2026-09-18 17:21:36.757 +0100 [Podcast] Pesquisa concluída: resultados=3, duraçãoMs=418
+2026-09-18 17:21:43.727 +0100 [Podcast] Pesquisa solicitada: termo=Vasco Pereira Coutinho
+2026-09-18 17:21:43.729 +0100 [Podcast] Pesquisa iniciada: termo=Vasco Pereira Coutinho
+2026-09-18 17:21:43.729 +0100 [PodcastNetwork] Pedido de pesquisa iniciado: termo=Vasco Pereira Coutinho
+2026-09-18 17:21:43.961 +0100 [PodcastNetwork] Pedido de pesquisa concluído: HTTP=200, resultados=0, duraçãoMs=232
+2026-09-18 17:21:43.962 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=233
+2026-09-18 17:21:45.180 +0100 [Podcast] Episódios iniciados: feedId=1035057
+2026-09-18 17:21:45.181 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=1035057
+2026-09-18 17:21:45.786 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=1035057, resultados=40, duraçãoMs=605
+2026-09-18 17:21:45.787 +0100 [Podcast] Episódios concluídos: feedId=1035057, resultados=40, duraçãoMs=607
+2026-09-18 17:21:48.471 +0100 [Player] Faixa alterada: mediaId=podcast:episode:307198671, motivo=3
+2026-09-18 17:21:48.473 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 17:21:49.608 +0100 [Player] Estado alterado: READY
+2026-09-18 17:21:49.609 +0100 [Player] A reproduzir: true
+2026-09-18 17:21:52.531 +0100 [Player] A reproduzir: false
+2026-09-18 17:21:53.623 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 17:21:53.627 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-18 17:21:53.636 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-18 17:47:56.308 +0100 [App] Aplicação aberta
+2026-09-18 17:47:56.364 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 17:47:56.378 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-18 17:47:56.378 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 17:47:56.379 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 17:47:56.462 +0100 [Player] Faixa alterada: mediaId=track:9877, motivo=3
+2026-09-18 17:47:56.463 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 17:47:56.577 +0100 [Player] Estado alterado: READY
+2026-09-18 17:47:56.915 +0100 [Player] A reproduzir: true
+2026-09-18 17:47:57.464 +0100 [MediaSession] Controlador ligado: com.google.android.bluetooth, uid=1002
+2026-09-18 17:48:01.898 +0100 [Podcast] Episódios iniciados: feedId=1035057
+2026-09-18 17:48:01.900 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=1035057
+2026-09-18 17:48:02.460 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=1035057, resultados=40, duraçãoMs=559
+2026-09-18 17:48:02.461 +0100 [Podcast] Episódios concluídos: feedId=1035057, resultados=40, duraçãoMs=563
+2026-09-18 17:48:03.388 +0100 [Player] Faixa alterada: mediaId=podcast:episode:307198663, motivo=3
+2026-09-18 17:48:03.390 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 17:48:03.391 +0100 [Player] A reproduzir: false
+2026-09-18 17:48:05.433 +0100 [Player] Estado alterado: READY
+2026-09-18 17:48:05.434 +0100 [Player] A reproduzir: true
+2026-09-18 17:52:57.524 +0100 [MediaSession] Controlador desligado: com.google.android.bluetooth, uid=1002
+2026-09-18 17:53:58.652 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 17:53:58.658 +0100 [PlaybackService] Tarefa removida; a reproduzir=true
+2026-09-18 17:54:02.622 +0100 [Player] A reproduzir: false
+2026-09-18 17:54:03.429 +0100 [Player] Estado alterado: IDLE
+2026-09-18 18:02:01.104 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-18 18:14:27.012 +0100 [App] Aplicação aberta
+2026-09-18 18:14:27.099 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 18:14:27.142 +0100 [PlaybackService] Sessão solicitada por pt.vcc.vccmusic
+2026-09-18 18:14:27.142 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 18:14:27.143 +0100 [MediaSession] Controlador ligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 18:14:27.232 +0100 [Player] Faixa alterada: mediaId=track:10164, motivo=3
+2026-09-18 18:14:27.233 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 18:14:27.352 +0100 [Player] Estado alterado: READY
+2026-09-18 18:14:29.571 +0100 [UI] Log exportado pelo utilizador
+2026-09-18 18:14:38.515 +0100 [Player] Faixa alterada: mediaId=track:10451, motivo=3
+2026-09-18 18:14:38.516 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 18:14:38.579 +0100 [Player] Estado alterado: READY
+2026-09-18 18:14:44.660 +0100 [MediaSession] Controlador desligado: pt.vcc.vccmusic, uid=10395
+2026-09-18 22:47:53.180 +0100 [App] Aplicação aberta
+2026-09-18 22:47:53.272 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 22:47:53.321 +0100 [AndroidAuto] Sessão solicitada: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 22:47:53.322 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 22:47:53.322 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 22:47:53.337 +0100 [Player] Faixa alterada: mediaId=track:10451, motivo=3
+2026-09-18 22:47:53.339 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 22:47:53.506 +0100 [Player] Estado alterado: READY
+2026-09-18 22:47:53.702 +0100 [PodcastNetwork] Endpoint concluído: endpoint=trending, HTTP=200, resultados=30
+2026-09-18 22:47:53.927 +0100 [PodcastNetwork] Endpoint concluído: endpoint=recent, HTTP=200, resultados=30
+2026-09-18 22:48:05.161 +0100 [Player] Faixa alterada: mediaId=track:10738, motivo=3
+2026-09-18 22:48:05.167 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 22:48:05.254 +0100 [Player] Estado alterado: READY
+2026-09-18 22:49:01.219 +0100 [Podcast] Pesquisa solicitada: termo=Vasco Pereira Coutinho
+2026-09-18 22:49:01.220 +0100 [Podcast] Pesquisa iniciada: termo=Vasco Pereira Coutinho
+2026-09-18 22:49:01.221 +0100 [PodcastNetwork] Pesquisa combinada iniciada: termo=Vasco Pereira Coutinho
+2026-09-18 22:49:01.380 +0100 [PodcastNetwork] Endpoint concluído: endpoint=byterm, HTTP=200, resultados=0
+2026-09-18 22:49:01.381 +0100 [PodcastNetwork] Endpoint concluído: endpoint=bytitle, HTTP=200, resultados=0
+2026-09-18 22:49:01.458 +0100 [PodcastNetwork] Endpoint de pesquisa falhou: endpoint=byperson | jb1: Podcast Index não devolveu o campo feeds como array.
+jb1: Podcast Index não devolveu o campo feeds como array.
+	at rv1.h(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:51)
+	at cm2.d(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:35)
+	at cm2.a(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:145)
+	at xl2.t(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:13)
+	at yj.j(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:8)
+	at he0.run(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 22:49:01.460 +0100 [PodcastNetwork] Pesquisa combinada concluída: resultados=0, endpointsOK=2/3, duraçãoMs=239
+2026-09-18 22:49:01.460 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=239
+2026-09-18 22:54:15.921 +0100 [Podcast] Pesquisa solicitada: termo=as pessoas têm de se acalmar
+2026-09-18 22:54:15.923 +0100 [Podcast] Pesquisa iniciada: termo=as pessoas têm de se acalmar
+2026-09-18 22:54:15.923 +0100 [PodcastNetwork] Pesquisa combinada iniciada: termo=as pessoas têm de se acalmar
+2026-09-18 22:54:16.196 +0100 [PodcastNetwork] Endpoint concluído: endpoint=byterm, HTTP=200, resultados=0
+2026-09-18 22:54:16.250 +0100 [PodcastNetwork] Endpoint concluído: endpoint=bytitle, HTTP=200, resultados=0
+2026-09-18 22:54:16.301 +0100 [PodcastNetwork] Endpoint de pesquisa falhou: endpoint=byperson | jb1: Podcast Index não devolveu o campo feeds como array.
+jb1: Podcast Index não devolveu o campo feeds como array.
+	at rv1.h(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:51)
+	at cm2.d(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:35)
+	at cm2.a(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:145)
+	at xl2.t(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:13)
+	at yj.j(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:8)
+	at he0.run(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 22:54:16.303 +0100 [PodcastNetwork] Pesquisa combinada concluída: resultados=0, endpointsOK=2/3, duraçãoMs=380
+2026-09-18 22:54:16.303 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=380
+2026-09-18 22:54:53.617 +0100 [Podcast] Pesquisa solicitada: termo=as pessoas têm de se acalmar, imediatamente
+2026-09-18 22:54:53.619 +0100 [Podcast] Pesquisa iniciada: termo=as pessoas têm de se acalmar, imediatamente
+2026-09-18 22:54:53.619 +0100 [PodcastNetwork] Pesquisa combinada iniciada: termo=as pessoas têm de se acalmar, imediatamente
+2026-09-18 22:54:53.838 +0100 [PodcastNetwork] Endpoint concluído: endpoint=bytitle, HTTP=200, resultados=0
+2026-09-18 22:54:53.865 +0100 [PodcastNetwork] Endpoint concluído: endpoint=byterm, HTTP=200, resultados=0
+2026-09-18 22:54:53.919 +0100 [PodcastNetwork] Endpoint de pesquisa falhou: endpoint=byperson | jb1: Podcast Index não devolveu o campo feeds como array.
+jb1: Podcast Index não devolveu o campo feeds como array.
+	at rv1.h(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:51)
+	at cm2.d(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:35)
+	at cm2.a(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:145)
+	at xl2.t(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:13)
+	at yj.j(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:8)
+	at he0.run(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 22:54:53.920 +0100 [PodcastNetwork] Pesquisa combinada concluída: resultados=0, endpointsOK=2/3, duraçãoMs=300
+2026-09-18 22:54:53.920 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=301
+2026-09-18 22:55:12.405 +0100 [Player] Estado alterado: IDLE
+2026-09-18 22:55:41.965 +0100 [Podcast] Pesquisa solicitada: termo=rfm
+2026-09-18 22:55:41.966 +0100 [Podcast] Pesquisa iniciada: termo=rfm
+2026-09-18 22:55:41.967 +0100 [PodcastNetwork] Pesquisa combinada iniciada: termo=rfm
+2026-09-18 22:55:42.192 +0100 [PodcastNetwork] Endpoint concluído: endpoint=bytitle, HTTP=200, resultados=2
+2026-09-18 22:55:42.249 +0100 [PodcastNetwork] Endpoint de pesquisa falhou: endpoint=byperson | jb1: Podcast Index não devolveu o campo feeds como array.
+jb1: Podcast Index não devolveu o campo feeds como array.
+	at rv1.h(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:51)
+	at cm2.d(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:35)
+	at cm2.a(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:145)
+	at xl2.t(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:13)
+	at yj.j(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:8)
+	at he0.run(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 22:55:42.281 +0100 [PodcastNetwork] Endpoint concluído: endpoint=byterm, HTTP=200, resultados=60
+2026-09-18 22:55:42.282 +0100 [PodcastNetwork] Pesquisa combinada concluída: resultados=61, endpointsOK=2/3, duraçãoMs=316
+2026-09-18 22:55:42.283 +0100 [Podcast] Pesquisa concluída: resultados=61, duraçãoMs=316
+2026-09-18 22:56:36.812 +0100 [Player] Faixa alterada: mediaId=radio:https://stream-icy.bauermedia.pt/smooth.aac, motivo=3
+2026-09-18 22:56:36.815 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 22:56:38.836 +0100 [Player] Estado alterado: READY
+2026-09-18 22:56:38.837 +0100 [Player] A reproduzir: true
+2026-09-18 22:56:40.924 +0100 [Player] A reproduzir: false
+2026-09-18 22:57:49.725 +0100 [AndroidAuto] Controlador desligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 22:57:49.730 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-18 23:02:21.940 +0100 [App] Aplicação aberta
+2026-09-18 23:02:22.013 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 23:02:22.050 +0100 [AndroidAuto] Sessão solicitada: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 23:02:22.050 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 23:02:22.051 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 23:02:22.091 +0100 [Player] Faixa alterada: mediaId=track:10738, motivo=3
+2026-09-18 23:02:22.093 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:02:22.276 +0100 [Player] Estado alterado: READY
+2026-09-18 23:02:22.518 +0100 [PodcastNetwork] Endpoint concluído: endpoint=trending, HTTP=200, resultados=30
+2026-09-18 23:02:22.685 +0100 [PodcastNetwork] Endpoint concluído: endpoint=recent, HTTP=200, resultados=30
+2026-09-18 23:02:26.008 +0100 [Podcast] Pesquisa solicitada: termo=renascen-a-as-pessoas-t-m-que-se-acalmar-imediatamente
+2026-09-18 23:02:26.011 +0100 [Podcast] Pesquisa iniciada: termo=renascen-a-as-pessoas-t-m-que-se-acalmar-imediatamente
+2026-09-18 23:02:26.012 +0100 [PodcastNetwork] Pesquisa combinada iniciada: termo=renascen-a-as-pessoas-t-m-que-se-acalmar-imediatamente
+2026-09-18 23:02:26.160 +0100 [PodcastNetwork] Endpoint concluído: endpoint=byterm, HTTP=200, resultados=0
+2026-09-18 23:02:26.182 +0100 [PodcastNetwork] Endpoint concluído: endpoint=bytitle, HTTP=200, resultados=0
+2026-09-18 23:02:26.253 +0100 [PodcastNetwork] Endpoint de pesquisa falhou: endpoint=byperson | jb1: Podcast Index não devolveu o campo feeds como array.
+jb1: Podcast Index não devolveu o campo feeds como array.
+	at rv1.h(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:51)
+	at cm2.d(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:35)
+	at cm2.a(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:145)
+	at xl2.t(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:13)
+	at yj.j(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:8)
+	at he0.run(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 23:02:26.254 +0100 [PodcastNetwork] Pesquisa combinada concluída: resultados=0, endpointsOK=2/3, duraçãoMs=242
+2026-09-18 23:02:26.254 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=242
+2026-09-18 23:02:29.929 +0100 [Player] Faixa alterada: mediaId=track:11025, motivo=3
+2026-09-18 23:02:29.932 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:02:30.011 +0100 [Player] Estado alterado: READY
+2026-09-18 23:03:39.253 +0100 [Podcast] Pesquisa solicitada: termo=as pessoas têm que se acalmar
+2026-09-18 23:03:39.254 +0100 [Podcast] Pesquisa iniciada: termo=as pessoas têm que se acalmar
+2026-09-18 23:03:39.254 +0100 [PodcastNetwork] Pesquisa combinada iniciada: termo=as pessoas têm que se acalmar
+2026-09-18 23:03:39.612 +0100 [PodcastNetwork] Endpoint concluído: endpoint=byterm, HTTP=200, resultados=1
+2026-09-18 23:03:39.614 +0100 [PodcastNetwork] Endpoint concluído: endpoint=bytitle, HTTP=200, resultados=0
+2026-09-18 23:03:39.634 +0100 [PodcastNetwork] Endpoint de pesquisa falhou: endpoint=byperson | jb1: Podcast Index não devolveu o campo feeds como array.
+jb1: Podcast Index não devolveu o campo feeds como array.
+	at rv1.h(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:51)
+	at cm2.d(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:35)
+	at cm2.a(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:145)
+	at xl2.t(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:13)
+	at yj.j(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:8)
+	at he0.run(r8-map-id-757d854989d8c2078b7b04c3ef5f41228ac50cd83a2289a24bfa162f6c060bba:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 23:03:39.635 +0100 [PodcastNetwork] Pesquisa combinada concluída: resultados=1, endpointsOK=2/3, duraçãoMs=380
+2026-09-18 23:03:39.635 +0100 [Podcast] Pesquisa concluída: resultados=1, duraçãoMs=381
+2026-09-18 23:03:41.901 +0100 [Podcast] Episódios iniciados: feedId=7532870
+2026-09-18 23:03:41.902 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=7532870
+2026-09-18 23:03:42.135 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=7532870, resultados=40, duraçãoMs=232
+2026-09-18 23:03:42.136 +0100 [Podcast] Episódios concluídos: feedId=7532870, resultados=40, duraçãoMs=235
+2026-09-18 23:23:24.335 +0100 [App] Aplicação aberta
+2026-09-18 23:23:24.427 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 23:23:24.471 +0100 [AndroidAuto] Sessão solicitada: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 23:23:24.472 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 23:23:24.473 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 23:23:24.502 +0100 [Player] Faixa alterada: mediaId=track:11025, motivo=3
+2026-09-18 23:23:24.504 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:23:24.638 +0100 [Player] Estado alterado: READY
+2026-09-18 23:23:24.857 +0100 [PodcastNetwork] Endpoint concluído: endpoint=trending, HTTP=200, resultados=30
+2026-09-18 23:23:25.137 +0100 [PodcastNetwork] Endpoint concluído: endpoint=recent, HTTP=200, resultados=30
+2026-09-18 23:23:36.497 +0100 [Player] Faixa alterada: mediaId=track:11312, motivo=3
+2026-09-18 23:23:36.506 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:23:36.604 +0100 [Player] Estado alterado: READY
+2026-09-18 23:24:15.097 +0100 [Podcast] Pesquisa solicitada: termo=As pessoas têm que se acalmar
+2026-09-18 23:24:15.101 +0100 [Podcast] Pesquisa iniciada: termo=As pessoas têm que se acalmar
+2026-09-18 23:24:15.102 +0100 [PodcastNetwork] Pesquisa combinada iniciada: termo=As pessoas têm que se acalmar
+2026-09-18 23:24:15.365 +0100 [PodcastNetwork] Endpoint de pesquisa falhou: endpoint=byperson | jb1: Podcast Index não devolveu o campo feeds como array.
+jb1: Podcast Index não devolveu o campo feeds como array.
+	at rv1.h(r8-map-id-60290cc7cac3531bcac3d6fab78dca15d05f1d4920bc3d15e5ee1c3286f14a41:51)
+	at cm2.d(r8-map-id-60290cc7cac3531bcac3d6fab78dca15d05f1d4920bc3d15e5ee1c3286f14a41:35)
+	at cm2.a(r8-map-id-60290cc7cac3531bcac3d6fab78dca15d05f1d4920bc3d15e5ee1c3286f14a41:145)
+	at xl2.t(r8-map-id-60290cc7cac3531bcac3d6fab78dca15d05f1d4920bc3d15e5ee1c3286f14a41:13)
+	at yj.j(r8-map-id-60290cc7cac3531bcac3d6fab78dca15d05f1d4920bc3d15e5ee1c3286f14a41:8)
+	at he0.run(r8-map-id-60290cc7cac3531bcac3d6fab78dca15d05f1d4920bc3d15e5ee1c3286f14a41:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 23:24:15.366 +0100 [PodcastNetwork] Endpoint concluído: endpoint=byterm, HTTP=200, resultados=1
+2026-09-18 23:24:15.399 +0100 [PodcastNetwork] Endpoint concluído: endpoint=bytitle, HTTP=200, resultados=0
+2026-09-18 23:24:15.400 +0100 [PodcastNetwork] Pesquisa combinada concluída: resultados=1, endpointsOK=2/3, duraçãoMs=298
+2026-09-18 23:24:15.400 +0100 [Podcast] Pesquisa concluída: resultados=1, duraçãoMs=298
+2026-09-18 23:24:28.204 +0100 [Podcast] Episódios iniciados: feedId=7532870
+2026-09-18 23:24:28.205 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=7532870
+2026-09-18 23:24:28.458 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=7532870, resultados=40, duraçãoMs=252
+2026-09-18 23:24:28.459 +0100 [Podcast] Episódios concluídos: feedId=7532870, resultados=40, duraçãoMs=255
+2026-09-18 23:24:30.937 +0100 [Player] Faixa alterada: mediaId=podcast:episode:60218524509, motivo=3
+2026-09-18 23:24:30.938 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:24:32.287 +0100 [Player] Estado alterado: READY
+2026-09-18 23:24:32.288 +0100 [Player] A reproduzir: true
+2026-09-18 23:25:25.687 +0100 [Player] A reproduzir: false
+2026-09-18 23:25:36.973 +0100 [Player] Faixa alterada: mediaId=radio:http://streaming-live-app.rtp.pt/liveradio/antena180a/playlist.m3u8, motivo=3
+2026-09-18 23:25:36.975 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:25:37.274 +0100 [Player] Estado alterado: READY
+2026-09-18 23:25:37.275 +0100 [Player] A reproduzir: true
+2026-09-18 23:25:42.952 +0100 [Player] Faixa alterada: mediaId=track:11314, motivo=3
+2026-09-18 23:25:42.953 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:25:42.954 +0100 [Player] A reproduzir: false
+2026-09-18 23:25:43.083 +0100 [Player] Estado alterado: READY
+2026-09-18 23:25:43.084 +0100 [Player] A reproduzir: true
+2026-09-18 23:25:48.083 +0100 [Player] Faixa alterada: mediaId=track:11363, motivo=3
+2026-09-18 23:25:48.084 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:25:48.084 +0100 [Player] A reproduzir: false
+2026-09-18 23:25:48.172 +0100 [Player] Estado alterado: READY
+2026-09-18 23:25:48.173 +0100 [Player] A reproduzir: true
+2026-09-18 23:26:07.317 +0100 [Player] A reproduzir: false
+2026-09-18 23:26:20.486 +0100 [Player] Faixa alterada: mediaId=podcast:episode:60514874513, motivo=3
+2026-09-18 23:26:20.487 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:26:21.572 +0100 [Player] Estado alterado: READY
+2026-09-18 23:26:21.573 +0100 [Player] A reproduzir: true
+2026-09-18 23:26:24.545 +0100 [Player] A reproduzir: false
+2026-09-18 23:33:00.772 +0100 [Player] Estado alterado: IDLE
+2026-09-18 23:33:02.474 +0100 [AndroidAuto] Controlador desligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 23:33:02.503 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-18 23:33:02.506 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-18 23:35:10.520 +0100 [App] Aplicação aberta
+2026-09-18 23:35:10.615 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 23:35:10.676 +0100 [AndroidAuto] Sessão solicitada: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 23:35:10.677 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 23:35:10.678 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 23:35:10.695 +0100 [Player] Faixa alterada: mediaId=track:11312, motivo=3
+2026-09-18 23:35:10.697 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:35:10.890 +0100 [Player] Estado alterado: READY
+2026-09-18 23:35:11.198 +0100 [PodcastNetwork] Endpoint concluído: endpoint=trending, HTTP=200, resultados=30
+2026-09-18 23:35:11.404 +0100 [PodcastNetwork] Endpoint concluído: endpoint=recent, HTTP=200, resultados=30
+2026-09-18 23:35:20.611 +0100 [Podcast] Episódios iniciados: feedId=1035057
+2026-09-18 23:35:20.612 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=1035057
+2026-09-18 23:35:20.883 +0100 [Player] Faixa alterada: mediaId=track:11599, motivo=3
+2026-09-18 23:35:20.885 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:35:20.952 +0100 [Player] Estado alterado: READY
+2026-09-18 23:35:21.059 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=1035057, resultados=40, duraçãoMs=448
+2026-09-18 23:35:21.060 +0100 [Podcast] Episódios concluídos: feedId=1035057, resultados=40, duraçãoMs=450
+2026-09-18 23:35:31.672 +0100 [Player] Faixa alterada: mediaId=podcast:episode:307198664, motivo=3
+2026-09-18 23:35:31.673 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:35:32.833 +0100 [Player] Estado alterado: READY
+2026-09-18 23:35:32.835 +0100 [Player] A reproduzir: true
+2026-09-18 23:35:45.492 +0100 [Player] A reproduzir: false
+2026-09-18 23:35:57.617 +0100 [Podcast] Episódios iniciados: feedId=7532870
+2026-09-18 23:35:57.619 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=7532870
+2026-09-18 23:35:57.837 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=7532870, resultados=40, duraçãoMs=218
+2026-09-18 23:35:57.838 +0100 [Podcast] Episódios concluídos: feedId=7532870, resultados=40, duraçãoMs=220
+2026-09-18 23:36:08.153 +0100 [Podcast] Pesquisa solicitada: termo=extremamente
+2026-09-18 23:36:08.154 +0100 [Podcast] Pesquisa iniciada: termo=extremamente
+2026-09-18 23:36:08.155 +0100 [PodcastNetwork] Pesquisa combinada iniciada: termo=extremamente
+2026-09-18 23:36:08.344 +0100 [PodcastNetwork] Endpoint de pesquisa falhou: endpoint=byperson | jb1: Podcast Index não devolveu o campo feeds como array.
+jb1: Podcast Index não devolveu o campo feeds como array.
+	at rv1.h(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:51)
+	at cm2.d(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:35)
+	at cm2.a(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:145)
+	at xl2.t(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:13)
+	at yj.j(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:8)
+	at he0.run(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 23:36:08.348 +0100 [PodcastNetwork] Endpoint concluído: endpoint=byterm, HTTP=200, resultados=6
+2026-09-18 23:36:08.355 +0100 [PodcastNetwork] Endpoint concluído: endpoint=bytitle, HTTP=200, resultados=0
+2026-09-18 23:36:08.356 +0100 [PodcastNetwork] Pesquisa combinada concluída: resultados=6, endpointsOK=2/3, duraçãoMs=202
+2026-09-18 23:36:08.357 +0100 [Podcast] Pesquisa concluída: resultados=6, duraçãoMs=203
+2026-09-18 23:36:29.903 +0100 [Podcast] Pesquisa solicitada: termo=renascença
+2026-09-18 23:36:29.904 +0100 [Podcast] Pesquisa iniciada: termo=renascença
+2026-09-18 23:36:29.904 +0100 [PodcastNetwork] Pesquisa combinada iniciada: termo=renascença
+2026-09-18 23:36:30.109 +0100 [PodcastNetwork] Endpoint concluído: endpoint=bytitle, HTTP=200, resultados=0
+2026-09-18 23:36:30.186 +0100 [PodcastNetwork] Endpoint de pesquisa falhou: endpoint=byperson | jb1: Podcast Index não devolveu o campo feeds como array.
+jb1: Podcast Index não devolveu o campo feeds como array.
+	at rv1.h(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:51)
+	at cm2.d(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:35)
+	at cm2.a(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:145)
+	at xl2.t(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:13)
+	at yj.j(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:8)
+	at he0.run(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 23:36:30.209 +0100 [PodcastNetwork] Endpoint concluído: endpoint=byterm, HTTP=200, resultados=60
+2026-09-18 23:36:30.211 +0100 [PodcastNetwork] Pesquisa combinada concluída: resultados=60, endpointsOK=2/3, duraçãoMs=307
+2026-09-18 23:36:30.211 +0100 [Podcast] Pesquisa concluída: resultados=60, duraçãoMs=307
+2026-09-18 23:36:52.865 +0100 [Podcast] Episódios iniciados: feedId=6627986
+2026-09-18 23:36:52.866 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=6627986
+2026-09-18 23:36:53.197 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=6627986, resultados=40, duraçãoMs=332
+2026-09-18 23:36:53.198 +0100 [Podcast] Episódios concluídos: feedId=6627986, resultados=40, duraçãoMs=334
+2026-09-18 23:36:54.806 +0100 [Player] Faixa alterada: mediaId=podcast:episode:57394878389, motivo=3
+2026-09-18 23:36:54.808 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:36:55.909 +0100 [Player] Estado alterado: READY
+2026-09-18 23:36:55.911 +0100 [Player] A reproduzir: true
+2026-09-18 23:37:05.730 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:37:05.731 +0100 [Player] A reproduzir: false
+2026-09-18 23:37:06.680 +0100 [Player] Estado alterado: READY
+2026-09-18 23:37:06.681 +0100 [Player] A reproduzir: true
+2026-09-18 23:37:30.008 +0100 [Podcast] Episódios iniciados: feedId=7532870
+2026-09-18 23:37:30.009 +0100 [Podcast] Episódios concluídos: feedId=7532870, resultados=40, duraçãoMs=1
+2026-09-18 23:37:38.011 +0100 [Podcast] Episódios iniciados: feedId=5751673
+2026-09-18 23:37:38.012 +0100 [PodcastNetwork] Pedido de episódios iniciado: feedId=5751673
+2026-09-18 23:37:38.459 +0100 [PodcastNetwork] Pedido de episódios concluído: HTTP=200, feedId=5751673, resultados=40, duraçãoMs=448
+2026-09-18 23:37:38.460 +0100 [Podcast] Episódios concluídos: feedId=5751673, resultados=40, duraçãoMs=450
+2026-09-18 23:37:40.969 +0100 [Player] Faixa alterada: mediaId=podcast:episode:60517708880, motivo=3
+2026-09-18 23:37:40.970 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:37:40.971 +0100 [Player] A reproduzir: false
+2026-09-18 23:37:41.940 +0100 [Player] Estado alterado: READY
+2026-09-18 23:37:41.943 +0100 [Player] A reproduzir: true
+2026-09-18 23:37:50.644 +0100 [Player] A reproduzir: false
+2026-09-18 23:38:18.754 +0100 [Podcast] Pesquisa solicitada: termo=as pessoas têm de se acalmar
+2026-09-18 23:38:18.755 +0100 [Podcast] Pesquisa iniciada: termo=as pessoas têm de se acalmar
+2026-09-18 23:38:18.756 +0100 [PodcastNetwork] Pesquisa combinada iniciada: termo=as pessoas têm de se acalmar
+2026-09-18 23:38:19.110 +0100 [PodcastNetwork] Endpoint concluído: endpoint=byterm, HTTP=200, resultados=0
+2026-09-18 23:38:19.114 +0100 [PodcastNetwork] Endpoint concluído: endpoint=bytitle, HTTP=200, resultados=0
+2026-09-18 23:38:19.132 +0100 [PodcastNetwork] Endpoint de pesquisa falhou: endpoint=byperson | jb1: Podcast Index não devolveu o campo feeds como array.
+jb1: Podcast Index não devolveu o campo feeds como array.
+	at rv1.h(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:51)
+	at cm2.d(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:35)
+	at cm2.a(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:145)
+	at xl2.t(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:13)
+	at yj.j(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:8)
+	at he0.run(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 23:38:19.133 +0100 [PodcastNetwork] Pesquisa combinada concluída: resultados=0, endpointsOK=2/3, duraçãoMs=377
+2026-09-18 23:38:19.133 +0100 [Podcast] Pesquisa concluída: resultados=0, duraçãoMs=378
+2026-09-18 23:38:49.389 +0100 [Podcast] Pesquisa solicitada: termo=As pessoas têm que se acalmar
+2026-09-18 23:38:49.390 +0100 [Podcast] Pesquisa iniciada: termo=As pessoas têm que se acalmar
+2026-09-18 23:38:49.390 +0100 [PodcastNetwork] Pesquisa combinada iniciada: termo=As pessoas têm que se acalmar
+2026-09-18 23:38:49.572 +0100 [PodcastNetwork] Endpoint concluído: endpoint=byterm, HTTP=200, resultados=1
+2026-09-18 23:38:49.615 +0100 [PodcastNetwork] Endpoint de pesquisa falhou: endpoint=byperson | jb1: Podcast Index não devolveu o campo feeds como array.
+jb1: Podcast Index não devolveu o campo feeds como array.
+	at rv1.h(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:51)
+	at cm2.d(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:35)
+	at cm2.a(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:145)
+	at xl2.t(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:13)
+	at yj.j(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:8)
+	at he0.run(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:114)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 23:38:49.617 +0100 [PodcastNetwork] Endpoint concluído: endpoint=bytitle, HTTP=200, resultados=0
+2026-09-18 23:38:49.617 +0100 [PodcastNetwork] Pesquisa combinada concluída: resultados=1, endpointsOK=2/3, duraçãoMs=227
+2026-09-18 23:38:49.617 +0100 [Podcast] Pesquisa concluída: resultados=1, duraçãoMs=228
+2026-09-18 23:39:05.112 +0100 [Podcast] Episódios iniciados: feedId=7532870
+2026-09-18 23:39:05.113 +0100 [Podcast] Episódios concluídos: feedId=7532870, resultados=40, duraçãoMs=1
+2026-09-18 23:39:29.435 +0100 [Podcast] Episódios iniciados: feedId=7532870
+2026-09-18 23:39:29.436 +0100 [Podcast] Episódios concluídos: feedId=7532870, resultados=40, duraçãoMs=0
+2026-09-18 23:39:37.051 +0100 [Player] Faixa alterada: mediaId=podcast:episode:53861531432, motivo=3
+2026-09-18 23:39:37.052 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:39:38.132 +0100 [Player] Estado alterado: READY
+2026-09-18 23:39:38.133 +0100 [Player] A reproduzir: true
+2026-09-18 23:39:45.105 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:39:45.106 +0100 [Player] A reproduzir: false
+2026-09-18 23:39:45.625 +0100 [Player] Estado alterado: READY
+2026-09-18 23:39:45.627 +0100 [Player] A reproduzir: true
+2026-09-18 23:39:55.046 +0100 [App] Aplicação aberta
+2026-09-18 23:40:22.046 +0100 [App] Aplicação aberta
+2026-09-18 23:40:23.434 +0100 [Player] A reproduzir: false
+2026-09-18 23:41:11.407 +0100 [AndroidAuto] Controlador desligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 23:41:11.414 +0100 [PlaybackService] Tarefa removida; a reproduzir=false
+2026-09-18 23:41:11.427 +0100 [Crash] Exceção não capturada na thread=main | IllegalArgumentException: Service not registered: qs1@d70fbce
+java.lang.IllegalArgumentException: Service not registered: qs1@d70fbce
+	at android.app.LoadedApk.forgetServiceDispatcher(LoadedApk.java:2255)
+	at android.app.ContextImpl.unbindService(ContextImpl.java:2379)
+	at android.content.ContextWrapper.unbindService(ContextWrapper.java:973)
+	at yr1.run(r8-map-id-9ed3577c03db38d4ecacdd767f9fa73809090da29e342ee6deb093ee6dd0c9f9:14)
+	at android.os.Handler.handleCallback(Handler.java:1095)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:125)
+	at android.os.Looper.loopOnce(Looper.java:296)
+	at android.os.Looper.loop(Looper.java:397)
+	at android.app.ActivityThread.main(ActivityThread.java:9523)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+2026-09-18 23:41:13.669 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-18 23:41:13.684 +0100 [AndroidAuto] Sessão solicitada: origem=local, package=pt.vcc.vccmusic, uid=-1
+2026-09-18 23:41:13.688 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-18 23:41:14.085 +0100 [Player] Faixa alterada: mediaId=track:12173, motivo=3
+2026-09-18 23:41:14.095 +0100 [Player] Estado alterado: BUFFERING
+2026-09-18 23:41:14.551 +0100 [Player] Estado alterado: READY
+2026-09-18 23:42:43.595 +0100 [PlaybackService] Serviço multimédia terminado
+2026-09-19 10:13:44.439 +0100 [App] Aplicação aberta
+2026-09-19 10:13:44.502 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-19 10:13:44.528 +0100 [AndroidAuto] Sessão solicitada: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-19 10:13:44.529 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-19 10:13:44.530 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-19 10:13:44.592 +0100 [Player] Faixa alterada: mediaId=track:12173, motivo=3
+2026-09-19 10:13:44.594 +0100 [Player] Estado alterado: BUFFERING
+2026-09-19 10:13:44.864 +0100 [Player] Estado alterado: READY
+2026-09-19 10:13:45.073 +0100 [PodcastNetwork] Endpoint concluído: endpoint=trending, HTTP=200, resultados=30
+2026-09-19 10:13:45.296 +0100 [PodcastNetwork] Endpoint concluído: endpoint=recent, HTTP=200, resultados=30
+2026-09-19 10:13:47.616 +0100 [UI] Log exportado pelo utilizador
+2026-09-19 10:13:51.176 +0100 [AndroidAuto] Controlador desligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-21 17:04:35.644 +0100 [App] Aplicação aberta
+2026-09-21 17:04:35.747 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-21 17:04:35.760 +0100 [PlaybackService] Serviço ligado: ação=androidx.media3.session.MediaSessionService
+2026-09-21 17:04:35.814 +0100 [Player] Faixa alterada: mediaId=track:12460, motivo=3
+2026-09-21 17:04:35.815 +0100 [Player] Estado alterado: BUFFERING
+2026-09-21 17:04:35.817 +0100 [AndroidAuto] Sessão solicitada: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-21 17:04:35.818 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-21 17:04:35.823 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-21 17:04:35.836 +0100 [Player] A carregar: true
+2026-09-21 17:04:36.014 +0100 [Player] Estado alterado: READY
+2026-09-21 17:04:36.015 +0100 [Player] A carregar: false
+2026-09-21 17:04:36.453 +0100 [PodcastNetwork] Endpoint concluído: endpoint=trending, HTTP=200, resultados=30
+2026-09-21 17:04:36.655 +0100 [PodcastNetwork] Endpoint concluído: endpoint=recent, HTTP=200, resultados=30
+2026-09-21 17:04:46.329 +0100 [Player] Faixa alterada: mediaId=track:12747, motivo=3
+2026-09-21 17:04:46.330 +0100 [Player] Estado alterado: BUFFERING
+2026-09-21 17:04:46.348 +0100 [Player] A carregar: true
+2026-09-21 17:04:46.397 +0100 [Player] Estado alterado: READY
+2026-09-21 17:04:46.418 +0100 [Player] A carregar: false
+2026-09-21 17:04:48.594 +0100 [UI] Log exportado pelo utilizador
+2026-09-21 17:10:11.385 +0100 [App] Aplicação aberta
+2026-09-21 17:10:11.475 +0100 [PlaybackService] Serviço multimédia iniciado
+2026-09-21 17:10:11.481 +0100 [PlaybackService] Serviço ligado: ação=androidx.media3.session.MediaSessionService
+2026-09-21 17:10:11.529 +0100 [AndroidAuto] Sessão solicitada: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-21 17:10:11.529 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-21 17:10:11.530 +0100 [AndroidAuto] Controlador ligado: origem=local, package=pt.vcc.vccmusic, uid=10395
+2026-09-21 17:10:11.554 +0100 [Player] Faixa alterada: mediaId=track:12747, motivo=3
+2026-09-21 17:10:11.556 +0100 [Player] Estado alterado: BUFFERING
+2026-09-21 17:10:11.569 +0100 [Player] A carregar: true
+2026-09-21 17:10:11.732 +0100 [Player] Estado alterado: READY
+2026-09-21 17:10:11.744 +0100 [Player] A carregar: false
+2026-09-21 17:10:13.285 +0100 [PodcastNetwork] Endpoint concluído: endpoint=trending, HTTP=200, resultados=30
+2026-09-21 17:10:13.584 +0100 [PodcastNetwork] Endpoint concluído: endpoint=recent, HTTP=200, resultados=30
+2026-09-21 17:10:22.708 +0100 [UI] Log exportado pelo utilizador
+2026-09-21 17:10:22.796 +0100 [Player] Faixa alterada: mediaId=track:13034, motivo=3
+2026-09-21 17:10:22.798 +0100 [Player] Estado alterado: BUFFERING
+2026-09-21 17:10:22.811 +0100 [Player] A carregar: true
+2026-09-21 17:10:22.879 +0100 [Player] Estado alterado: READY
+2026-09-21 17:10:22.915 +0100 [Player] A carregar: false
