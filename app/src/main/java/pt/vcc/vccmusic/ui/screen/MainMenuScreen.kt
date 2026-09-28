@@ -2,11 +2,9 @@ package pt.vcc.vccmusic.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -78,12 +76,15 @@ fun MainMenuScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(contentPadding)
-            .padding(horizontal = 24.dp, vertical = 20.dp)
+            .padding(vertical = 20.dp)
             .verticalScroll(rememberScrollState())
             .testTag("screen-main-menu"),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Column(
+            modifier = Modifier.padding(horizontal = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
             Text(
                 text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineLarge,
@@ -95,7 +96,11 @@ fun MainMenuScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        BoxWithConstraints {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
             val actions = listOf(
                 QuickAction(
                     R.string.music,
@@ -130,44 +135,27 @@ fun MainMenuScreen(
                     "action-podcasts",
                 ),
             )
-            val columns = when {
-                maxWidth >= 1100.dp -> 4
-                maxWidth >= 650.dp -> 3
-                else -> 2
-            }.coerceAtMost(actions.size)
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                actions.chunked(columns).forEach { rowActions ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    ) {
-                        rowActions.forEach { action ->
-                            FeatureCard(action, Modifier.weight(1f))
-                        }
-                        repeat(columns - rowActions.size) {
-                            Spacer(Modifier.weight(1f))
-                        }
-                    }
-                }
+            actions.forEach { action ->
+                FeatureCard(action, Modifier.fillMaxWidth(0.9f))
             }
         }
         Text(
             text = stringResource(R.string.favorites),
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(top = 4.dp),
+            modifier = Modifier.padding(top = 4.dp, start = 24.dp, end = 24.dp),
         )
         if (favoriteTracks.isEmpty() && favoritePlaylists.isEmpty() && favoriteStations.isEmpty() && favoritePodcasts.isEmpty()) {
             Text(
                 text = stringResource(R.string.no_favorites),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 24.dp),
             )
         } else {
-            BoxWithConstraints {
-                val favoriteColumns = when {
-                    maxWidth >= 900.dp -> 4
-                    maxWidth >= 560.dp -> 3
-                    else -> 2
-                }
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
                 val favorites = buildList<@Composable () -> Unit> {
                     favoriteTracks.forEach { track ->
                         add { FavoriteTrackCard(track, onClick = { onFavoriteTrack(track) }) }
@@ -190,21 +178,9 @@ fun MainMenuScreen(
                     }
                 }
 
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    favorites.chunked(favoriteColumns).forEach { rowFavorites ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        ) {
-                            rowFavorites.forEach { favorite ->
-                                Box(Modifier.weight(1f)) {
-                                    favorite()
-                                }
-                            }
-                            repeat(favoriteColumns - rowFavorites.size) {
-                                Spacer(Modifier.weight(1f))
-                            }
-                        }
+                favorites.forEach { favorite ->
+                    Box(Modifier.fillMaxWidth(0.9f)) {
+                        favorite()
                     }
                 }
             }
@@ -224,24 +200,27 @@ private fun FavoritePlaylistCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(96.dp),
+            .height(64.dp),
+        shape = RoundedCornerShape(28.dp),
         start = PlaylistCardStart,
         end = PlaylistCardEnd,
     ) {
-        Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(playlist.name.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium, maxLines = 2)
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(playlist.name.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium, maxLines = 1)
                 Text(
                     text = "$trackCount ${if (trackCount == 1) "música" else "músicas"}",
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.weight(1f),
+                    maxLines = 1,
                 )
-                TextButton(onClick = onShuffle, enabled = trackCount > 0) {
-                    Text(stringResource(R.string.shuffle))
-                }
+            }
+            TextButton(onClick = onShuffle, enabled = trackCount > 0) {
+                Text(stringResource(R.string.shuffle))
             }
         }
     }
@@ -257,15 +236,18 @@ private fun FavoriteTrackCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(96.dp),
+            .height(64.dp),
+        shape = RoundedCornerShape(28.dp),
         start = LibraryCardStart,
         end = LibraryCardEnd,
     ) {
         Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.Center,
         ) {
-            Text(track.title.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium, maxLines = 2)
+            Text(track.title.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium, maxLines = 1)
             track.artist?.takeIf { it.isNotBlank() }?.let {
                 Text(it.withoutParentheticalText(), style = MaterialTheme.typography.bodySmall, maxLines = 1)
             }
@@ -282,15 +264,18 @@ private fun FeatureCard(
     AppGradientCard(
         onClick = action.onClick,
         modifier = modifier
-            .height(88.dp)
+            .height(56.dp)
             .testTag(action.testTag),
         shape = RoundedCornerShape(28.dp),
         start = MainMenuCardStart,
         end = MainMenuCardEnd,
     ) {
-        Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(action.icon, contentDescription = null, tint = action.contentColor)
             Text(stringResource(action.labelRes), color = action.contentColor, style = MaterialTheme.typography.titleMedium)
@@ -308,13 +293,16 @@ private fun FavoriteCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(96.dp),
+            .height(64.dp),
+        shape = RoundedCornerShape(28.dp),
         start = RadioCardStart,
         end = RadioCardEnd,
     ) {
         Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.Center,
         ) {
             Text(station.name.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium, maxLines = 2)
         }
@@ -331,15 +319,18 @@ private fun FavoritePodcastCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(96.dp),
+            .height(64.dp),
+        shape = RoundedCornerShape(28.dp),
         start = MainMenuCardStart,
         end = MainMenuCardEnd,
     ) {
         Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.Center,
         ) {
-            Text(podcast.title, style = MaterialTheme.typography.titleMedium, maxLines = 2)
+            Text(podcast.title, style = MaterialTheme.typography.titleMedium, maxLines = 1)
             podcast.author?.takeIf { it.isNotBlank() }?.let {
                 Text(it, style = MaterialTheme.typography.bodySmall, maxLines = 1)
             }

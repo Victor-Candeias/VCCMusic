@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -147,7 +148,7 @@ private fun Header() {
 }
 
 @Composable
-/** Exibe a imagem da faixa ou um marcador musical quando não existe artwork. */
+/** Exibe a imagem da faixa ou o ícone da aplicação quando não existe artwork. */
 private fun Artwork(
     state: PlaybackUiState,
     modifier: Modifier,
@@ -173,7 +174,12 @@ private fun Artwork(
                 contentScale = ContentScale.Crop,
             )
         } else {
-            Text("♫", color = MaterialTheme.colorScheme.onPrimary, fontSize = 72.sp)
+            Image(
+                painter = painterResource(R.mipmap.ic_launcher),
+                contentDescription = stringResource(R.string.app_name),
+                modifier = Modifier.fillMaxSize(0.6f),
+                contentScale = ContentScale.Fit,
+            )
         }
     }
 }

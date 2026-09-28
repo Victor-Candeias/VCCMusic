@@ -298,6 +298,29 @@ class MusicPlaybackService : MediaLibraryService() {
             )
             .build()
 
+    /** Cria uma ação reproduzível apresentada como item normal no Android Auto. */
+    private fun toCollectionActionItem(
+        mediaId: String,
+        title: String,
+        subtitle: String,
+    ): MediaItem {
+        val metadata = MediaMetadata.Builder()
+            .setTitle(title)
+            .setIsBrowsable(false)
+            .setIsPlayable(true)
+            .apply {
+                if (subtitle.isNotBlank()) {
+                    setArtist(subtitle)
+                }
+            }
+            .build()
+
+        return MediaItem.Builder()
+            .setMediaId(mediaId)
+            .setMediaMetadata(metadata)
+            .build()
+    }
+
     /** Cria um item navegável que representa uma playlist. */
     private fun toPlaylistItem(id: Long, name: String): MediaItem =
         MediaItem.Builder()
@@ -463,10 +486,48 @@ class MusicPlaybackService : MediaLibraryService() {
                     "items=${mediaItemsDescription(mediaItems)}, " +
                     "startIndex=$startIndex, startPositionMs=$startPositionMs",
             )
-            val future =
-                SettableFuture.create<MediaSession.MediaItemsWithStartPosition>()
+            val future = SettableFuture.create<MediaSession.MediaItemsWithStartPosition>()
             serviceScope.launch(Dispatchers.IO) {
                 try {
+                    val actionId = mediaItems.singleOrNull()?.mediaId?.takeIf(::isCollectionAction)
+                    if (actionId != null) {
+                        val collectionItems = collectionItemsForAction(actionId)
+                        if (collectionItems.isEmpty()) {
+                            DiagnosticLogger.log(
+                                this@MusicPlaybackService,
+                                "AndroidAuto",
+                                "Ação de coleção sem faixas: mediaId=$actionId",
+                            )
+                            future.set(
+                                MediaSession.MediaItemsWithStartPosition(
+                                    mediaItems,
+                                    startIndex,
+                                    startPositionMs,
+                                ),
+                            )
+                            return@launch
+                        }
+                        val itemsToPlay = if (isRandomCollectionAction(actionId)) {
+                            collectionItems.shuffled()
+                        } else {
+                            collectionItems
+                        }
+                        DiagnosticLogger.log(
+                            this@MusicPlaybackService,
+                            "AndroidAuto",
+                            "${if (isRandomCollectionAction(actionId)) "Play Random" else "Play All"}: " +
+                                "mediaId=$actionId, items=${itemsToPlay.size}",
+                        )
+                        future.set(
+                            MediaSession.MediaItemsWithStartPosition(
+                                itemsToPlay,
+                                0,
+                                C.TIME_UNSET,
+                            ),
+                        )
+                        return@launch
+                    }
+
                     val resolvedItems = mediaItems.mapNotNull { item ->
                         resolvePlayableMediaItem(item)
                     }
@@ -476,18 +537,17 @@ class MusicPlaybackService : MediaLibraryService() {
                                 mediaItems,
                                 startIndex,
                                 startPositionMs,
-                            )
+                            ),
                         )
                         return@launch
                     }
-                    val safeIndex =
-                        startIndex.coerceIn(0, resolvedItems.lastIndex)
+                    val safeIndex = startIndex.coerceIn(0, resolvedItems.lastIndex)
                     future.set(
                         MediaSession.MediaItemsWithStartPosition(
                             resolvedItems,
                             safeIndex,
                             startPositionMs,
-                        )
+                        ),
                     )
                 } catch (error: Exception) {
                     DiagnosticLogger.log(
@@ -513,7 +573,36 @@ class MusicPlaybackService : MediaLibraryService() {
                 "Adicionar faixas: ${controllerDescription(controller)}, " +
                     "items=${mediaItemsDescription(mediaItems)}",
             )
-            return super.onAddMediaItems(session, controller, mediaItems)
+            val future = SettableFuture.create<List<MediaItem>>()
+            serviceScope.launch(Dispatchers.IO) {
+                try {
+                    val actionId = mediaItems.singleOrNull()?.mediaId?.takeIf(::isCollectionAction)
+                    if (actionId != null) {
+                        val collectionItems = collectionItemsForAction(actionId)
+                        val itemsToAdd = if (isRandomCollectionAction(actionId)) {
+                            collectionItems.shuffled()
+                        } else {
+                            collectionItems
+                        }
+                        future.set(itemsToAdd.ifEmpty { mediaItems })
+                        return@launch
+                    }
+
+                    val resolvedItems = mediaItems.mapNotNull { item ->
+                        resolvePlayableMediaItem(item)
+                    }
+                    future.set(resolvedItems.ifEmpty { mediaItems })
+                } catch (error: Exception) {
+                    DiagnosticLogger.log(
+                        this@MusicPlaybackService,
+                        "AndroidAuto",
+                        "Falha ao adicionar MediaItems resolvidos",
+                        error,
+                    )
+                    future.set(mediaItems)
+                }
+            }
+            return future
         }
 
         override fun onPlaybackResumption(
@@ -679,11 +768,11 @@ class MusicPlaybackService : MediaLibraryService() {
                 // Se esta versão abrir corretamente no carro, adiciona as restantes
                 // categorias novamente, uma a uma, para identificar a que causa o bloqueio.
                 ROOT_ID -> listOf(
-                    toCategoryItem(FOLDERS_ID, getString(R.string.folders)),
-                    toCategoryItem(ALL_TRACKS_ID, getString(R.string.all_music)),
+                    toCategoryItem(ALL_TRACKS_ID, "Biblioteca"),
                     toCategoryItem(PODCASTS_ID, getString(R.string.podcasts)),
-                    toCategoryItem(PLAYLISTS_ID, getString(R.string.playlists)),
                     toCategoryItem(ONLINE_RADIOS_ID, "Rádios Online"),
+                    toCategoryItem(PLAYLISTS_ID, getString(R.string.playlists)),
+                    toCategoryItem(FOLDERS_ID, getString(R.string.folders)),
                 )
                 FOLDERS_ID -> root?.let {
                     repository.observeFolders(it.id, null).first().map { folder ->
@@ -691,7 +780,11 @@ class MusicPlaybackService : MediaLibraryService() {
                     }
                 }.orEmpty()
                 ALL_TRACKS_ID -> root?.let {
-                    repository.observeAllTracks(it.id).first().map(::toMediaItem)
+                    val tracks = repository.observeAllTracks(it.id).first().map(::toMediaItem)
+                    listOf(
+                        toCollectionActionItem(ACTION_PLAY_ALL_ALL_TRACKS, "▶", ""),
+                        toCollectionActionItem(ACTION_PLAY_RANDOM_ALL_TRACKS, "🔀", ""),
+                    ) + tracks
                 }.orEmpty()
                 PLAYLISTS_ID -> repository.observePlaylists().first().map {
                     toPlaylistItem(it.id, it.name)
@@ -713,13 +806,30 @@ class MusicPlaybackService : MediaLibraryService() {
                         if (folder == null) emptyList() else {
                             val children = repository.observeFolders(folder.rootId, folder.id).first()
                                 .map { child -> toFolderItem(child.id, child.name) }
-                            children + repository.observeDirectTracks(folder.id).first().map(::toMediaItem)
+                            val directTracks = repository.observeDirectTracks(folder.id).first().map(::toMediaItem)
+                            val actions = if (directTracks.isNotEmpty()) {
+                                listOf(
+                                    toCollectionActionItem(actionPlayAllFolder(folder.id), "▶", ""),
+                                    toCollectionActionItem(actionPlayRandomFolder(folder.id), "🔀", ""),
+                                )
+                            } else {
+                                emptyList()
+                            }
+                            actions + children + directTracks
                         }
                     }
                     parentId.startsWith(PLAYLIST_PREFIX) -> {
-                        repository.observePlaylistTracks(
-                            parentId.removePrefix(PLAYLIST_PREFIX).toLongOrNull() ?: -1,
-                        ).first().map(::toMediaItem)
+                        val playlistId = parentId.removePrefix(PLAYLIST_PREFIX).toLongOrNull() ?: -1
+                        val tracks = repository.observePlaylistTracks(playlistId).first().map(::toMediaItem)
+                        val playlistName = repository.observePlaylists().first()
+                            .firstOrNull { it.id == playlistId }
+                            ?.name
+                            ?.withoutParentheticalText()
+                            ?: getString(R.string.playlists)
+                        listOf(
+                            toCollectionActionItem(actionPlayAllPlaylist(playlistId), "▶", ""),
+                            toCollectionActionItem(actionPlayRandomPlaylist(playlistId), "🔀", ""),
+                        ) + tracks
                     }
                     parentId.startsWith(MediaIds.PODCAST_FEED_PREFIX) -> {
                         podcastRepository.episodes(
@@ -756,7 +866,7 @@ class MusicPlaybackService : MediaLibraryService() {
             val item = when {
                 mediaId == ROOT_ID -> toCategoryItem(ROOT_ID, getString(R.string.app_name))
                 mediaId == FOLDERS_ID -> toCategoryItem(FOLDERS_ID, getString(R.string.folders))
-                mediaId == ALL_TRACKS_ID -> toCategoryItem(ALL_TRACKS_ID, getString(R.string.all_music))
+                mediaId == ALL_TRACKS_ID -> toCategoryItem(ALL_TRACKS_ID, "Biblioteca")
                 mediaId == PLAYLISTS_ID -> toCategoryItem(PLAYLISTS_ID, getString(R.string.playlists))
                 mediaId == SHUFFLE_ID -> toCategoryItem(SHUFFLE_ID, getString(R.string.shuffle))
                 mediaId == PODCASTS_ID -> toCategoryItem(PODCASTS_ID, getString(R.string.podcasts))
@@ -765,6 +875,28 @@ class MusicPlaybackService : MediaLibraryService() {
                     toCategoryItem(TRENDING_PODCASTS_ID, getString(R.string.trending_podcasts))
                 mediaId == RECENT_PODCASTS_ID ->
                     toCategoryItem(RECENT_PODCASTS_ID, getString(R.string.recent_podcasts))
+                mediaId == ACTION_PLAY_ALL_ALL_TRACKS ->
+                    toCollectionActionItem(mediaId, "▶", "")
+                mediaId == ACTION_PLAY_RANDOM_ALL_TRACKS ->
+                    toCollectionActionItem(mediaId, "🔀", "")
+                mediaId.startsWith(ACTION_PLAY_ALL_PLAYLIST_PREFIX) -> {
+                    val playlistId = mediaId.removePrefix(ACTION_PLAY_ALL_PLAYLIST_PREFIX).toLongOrNull()
+                    val playlistName = playlistId?.let { id ->
+                        repository.observePlaylists().first().firstOrNull { it.id == id }?.name?.withoutParentheticalText()
+                    } ?: getString(R.string.playlists)
+                    toCollectionActionItem(mediaId, "▶", "")
+                }
+                mediaId.startsWith(ACTION_PLAY_RANDOM_PLAYLIST_PREFIX) -> {
+                    val playlistId = mediaId.removePrefix(ACTION_PLAY_RANDOM_PLAYLIST_PREFIX).toLongOrNull()
+                    val playlistName = playlistId?.let { id ->
+                        repository.observePlaylists().first().firstOrNull { it.id == id }?.name?.withoutParentheticalText()
+                    } ?: getString(R.string.playlists)
+                    toCollectionActionItem(mediaId, "🔀", "")
+                }
+                mediaId.startsWith(ACTION_PLAY_ALL_FOLDER_PREFIX) ->
+                    toCollectionActionItem(mediaId, "▶", "")
+                mediaId.startsWith(ACTION_PLAY_RANDOM_FOLDER_PREFIX) ->
+                    toCollectionActionItem(mediaId, "🔀", "")
                 mediaId.startsWith(RADIO_PREFIX) -> {
                     val radioValue = mediaId.removePrefix(RADIO_PREFIX)
                     radioRepository
@@ -904,6 +1036,65 @@ class MusicPlaybackService : MediaLibraryService() {
             )
             .build()
 
+    /** Indica se o MediaItem representa uma ação de coleção. */
+    private fun isCollectionAction(mediaId: String): Boolean =
+        mediaId == ACTION_PLAY_ALL_ALL_TRACKS ||
+            mediaId == ACTION_PLAY_RANDOM_ALL_TRACKS ||
+            mediaId.startsWith(ACTION_PLAY_ALL_PLAYLIST_PREFIX) ||
+            mediaId.startsWith(ACTION_PLAY_RANDOM_PLAYLIST_PREFIX) ||
+            mediaId.startsWith(ACTION_PLAY_ALL_FOLDER_PREFIX) ||
+            mediaId.startsWith(ACTION_PLAY_RANDOM_FOLDER_PREFIX)
+
+    /** Indica se a ação deve usar uma ordem aleatória. */
+    private fun isRandomCollectionAction(mediaId: String): Boolean =
+        mediaId == ACTION_PLAY_RANDOM_ALL_TRACKS ||
+            mediaId.startsWith(ACTION_PLAY_RANDOM_PLAYLIST_PREFIX) ||
+            mediaId.startsWith(ACTION_PLAY_RANDOM_FOLDER_PREFIX)
+
+    /** Resolve as faixas reais de Play All / Play Random. */
+    private suspend fun collectionItemsForAction(mediaId: String): List<MediaItem> {
+        val repository = (application as VccMusicApplication).container.musicRepository
+        return when {
+            mediaId == ACTION_PLAY_ALL_ALL_TRACKS || mediaId == ACTION_PLAY_RANDOM_ALL_TRACKS -> {
+                val root = repository.activeRoot()
+                root?.let { repository.observeAllTracks(it.id).first().map(::toMediaItem) }.orEmpty()
+            }
+            mediaId.startsWith(ACTION_PLAY_ALL_PLAYLIST_PREFIX) ||
+                mediaId.startsWith(ACTION_PLAY_RANDOM_PLAYLIST_PREFIX) -> {
+                val prefix = if (mediaId.startsWith(ACTION_PLAY_ALL_PLAYLIST_PREFIX)) {
+                    ACTION_PLAY_ALL_PLAYLIST_PREFIX
+                } else {
+                    ACTION_PLAY_RANDOM_PLAYLIST_PREFIX
+                }
+                val playlistId = mediaId.removePrefix(prefix).toLongOrNull() ?: return emptyList()
+                repository.observePlaylistTracks(playlistId).first().map(::toMediaItem)
+            }
+            mediaId.startsWith(ACTION_PLAY_ALL_FOLDER_PREFIX) ||
+                mediaId.startsWith(ACTION_PLAY_RANDOM_FOLDER_PREFIX) -> {
+                val prefix = if (mediaId.startsWith(ACTION_PLAY_ALL_FOLDER_PREFIX)) {
+                    ACTION_PLAY_ALL_FOLDER_PREFIX
+                } else {
+                    ACTION_PLAY_RANDOM_FOLDER_PREFIX
+                }
+                val folderId = mediaId.removePrefix(prefix).toLongOrNull() ?: return emptyList()
+                repository.observeDirectTracks(folderId).first().map(::toMediaItem)
+            }
+            else -> emptyList()
+        }
+    }
+
+    private fun actionPlayAllPlaylist(playlistId: Long): String =
+        "$ACTION_PLAY_ALL_PLAYLIST_PREFIX$playlistId"
+
+    private fun actionPlayRandomPlaylist(playlistId: Long): String =
+        "$ACTION_PLAY_RANDOM_PLAYLIST_PREFIX$playlistId"
+
+    private fun actionPlayAllFolder(folderId: Long): String =
+        "$ACTION_PLAY_ALL_FOLDER_PREFIX$folderId"
+
+    private fun actionPlayRandomFolder(folderId: Long): String =
+        "$ACTION_PLAY_RANDOM_FOLDER_PREFIX$folderId"
+
     private suspend fun findPodcastEpisodeById(episodeId: Long): PodcastEpisode?
     {
         val container =
@@ -971,5 +1162,12 @@ class MusicPlaybackService : MediaLibraryService() {
         const val FOLDER_PREFIX = "folder:"
         const val PLAYLIST_PREFIX = "playlist:"
         const val RADIO_PREFIX = "radio:"
+
+        const val ACTION_PLAY_ALL_ALL_TRACKS = "action:play_all:all_tracks"
+        const val ACTION_PLAY_RANDOM_ALL_TRACKS = "action:play_random:all_tracks"
+        const val ACTION_PLAY_ALL_PLAYLIST_PREFIX = "action:play_all:playlist:"
+        const val ACTION_PLAY_RANDOM_PLAYLIST_PREFIX = "action:play_random:playlist:"
+        const val ACTION_PLAY_ALL_FOLDER_PREFIX = "action:play_all:folder:"
+        const val ACTION_PLAY_RANDOM_FOLDER_PREFIX = "action:play_random:folder:"
     }
 }
