@@ -1,5 +1,4 @@
 package pt.vcc.vccmusic.playback
-
 import android.content.Intent
 import android.net.Uri
 import android.os.IBinder
@@ -35,6 +34,8 @@ import pt.vcc.vccmusic.podcast.model.PodcastEpisode
 import pt.vcc.vccmusic.podcast.model.PodcastFeed
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
+import pt.vcc.vccmusic.ui.screen.RadioBrowserRepository
+import pt.vcc.vccmusic.ui.screen.RadioBrowserStation
 
 @OptIn(UnstableApi::class)
 class MusicPlaybackService : MediaLibraryService() {
@@ -54,6 +55,7 @@ class MusicPlaybackService : MediaLibraryService() {
             "PlaybackService",
             "Serviço multimédia iniciado: thread=${Thread.currentThread().name}",
         )
+        radioRepository = RadioBrowserRepository(this)
         player = ExoPlayer.Builder(this, SpectrumRenderersFactory(this))
             .setAudioAttributes(
                 AudioAttributes.Builder()
@@ -201,6 +203,8 @@ class MusicPlaybackService : MediaLibraryService() {
         )
         return super.onUnbind(intent)
     }
+
+    private lateinit var radioRepository: RadioBrowserRepository
 
     /** Repete uma rádio trocando HTTPS por HTTP como fallback de compatibilidade. */
     private fun retryRadioOverHttp(mediaItem: MediaItem, uri: Uri) {
@@ -452,7 +456,6 @@ class MusicPlaybackService : MediaLibraryService() {
             startIndex: Int,
             startPositionMs: Long,
         ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
-
             DiagnosticLogger.log(
                 this@MusicPlaybackService,
                 "AndroidAuto",
@@ -460,18 +463,13 @@ class MusicPlaybackService : MediaLibraryService() {
                     "items=${mediaItemsDescription(mediaItems)}, " +
                     "startIndex=$startIndex, startPositionMs=$startPositionMs",
             )
-
             val future =
                 SettableFuture.create<MediaSession.MediaItemsWithStartPosition>()
-
             serviceScope.launch(Dispatchers.IO) {
-
                 try {
-
                     val resolvedItems = mediaItems.mapNotNull { item ->
                         resolvePlayableMediaItem(item)
                     }
-
                     if (resolvedItems.isEmpty()) {
                         future.set(
                             MediaSession.MediaItemsWithStartPosition(
@@ -482,10 +480,8 @@ class MusicPlaybackService : MediaLibraryService() {
                         )
                         return@launch
                     }
-
                     val safeIndex =
                         startIndex.coerceIn(0, resolvedItems.lastIndex)
-
                     future.set(
                         MediaSession.MediaItemsWithStartPosition(
                             resolvedItems,
@@ -493,20 +489,16 @@ class MusicPlaybackService : MediaLibraryService() {
                             startPositionMs,
                         )
                     )
-
                 } catch (error: Exception) {
-
                     DiagnosticLogger.log(
                         this@MusicPlaybackService,
                         "AndroidAuto",
                         "Falha ao resolver MediaItems para reprodução",
                         error,
                     )
-
                     future.setException(error)
                 }
             }
-
             return future
         }
 
@@ -653,7 +645,6 @@ class MusicPlaybackService : MediaLibraryService() {
                 "Pedido de raiz: ${controllerDescription(browser)}, " +
                     "params=${params?.extras?.keySet()?.joinToString(",") ?: "nenhum"}",
             )
-
             val result = LibraryResult.ofItem(
                 toCategoryItem(ROOT_ID, getString(R.string.app_name)),
                 params,
@@ -692,6 +683,7 @@ class MusicPlaybackService : MediaLibraryService() {
                     toCategoryItem(ALL_TRACKS_ID, getString(R.string.all_music)),
                     toCategoryItem(PODCASTS_ID, getString(R.string.podcasts)),
                     toCategoryItem(PLAYLISTS_ID, getString(R.string.playlists)),
+                    toCategoryItem(ONLINE_RADIOS_ID, "Rádios Online"),
                 )
                 FOLDERS_ID -> root?.let {
                     repository.observeFolders(it.id, null).first().map { folder ->
@@ -708,6 +700,11 @@ class MusicPlaybackService : MediaLibraryService() {
                     repository.observeAllTracks(it.id).first().shuffled().map(::toMediaItem)
                 }.orEmpty()
                 PODCASTS_ID -> podcastStore.observeFavorites().first().map(::toPodcastFeedItem)
+                ONLINE_RADIOS_ID ->
+                    radioRepository
+                        .observePortugueseStations()
+                        .first()
+                        .map(::toRadioItem)
                 TRENDING_PODCASTS_ID -> podcastRepository.trending(30, "pt").map(::toPodcastFeedItem)
                 RECENT_PODCASTS_ID -> podcastRepository.recent(30, "pt").map(::toPodcastFeedItem)
                 else -> when {
@@ -763,11 +760,21 @@ class MusicPlaybackService : MediaLibraryService() {
                 mediaId == PLAYLISTS_ID -> toCategoryItem(PLAYLISTS_ID, getString(R.string.playlists))
                 mediaId == SHUFFLE_ID -> toCategoryItem(SHUFFLE_ID, getString(R.string.shuffle))
                 mediaId == PODCASTS_ID -> toCategoryItem(PODCASTS_ID, getString(R.string.podcasts))
+                mediaId == ONLINE_RADIOS_ID -> toCategoryItem(ONLINE_RADIOS_ID, "Rádios Online")
                 mediaId == TRENDING_PODCASTS_ID ->
                     toCategoryItem(TRENDING_PODCASTS_ID, getString(R.string.trending_podcasts))
                 mediaId == RECENT_PODCASTS_ID ->
                     toCategoryItem(RECENT_PODCASTS_ID, getString(R.string.recent_podcasts))
-
+                mediaId.startsWith(RADIO_PREFIX) -> {
+                    val radioValue = mediaId.removePrefix(RADIO_PREFIX)
+                    radioRepository
+                        .observePortugueseStations()
+                        .first()
+                        .firstOrNull { station ->
+                            station.id == radioValue || station.streamUrl == radioValue
+                        }
+                        ?.let(::toRadioItem)
+                }
                 mediaId.startsWith(MediaIds.PODCAST_FEED_PREFIX) -> podcastStore.observeFavorites().first()
                     .firstOrNull {
                         MediaIds.podcastFeed(it.feedId) == mediaId
@@ -775,25 +782,20 @@ class MusicPlaybackService : MediaLibraryService() {
                     ?: (
                         podcastRepository.trending(30, "pt") + podcastRepository.recent(30, "pt")
                     ).firstOrNull { MediaIds.podcastFeed(it.id) == mediaId }?.let(::toPodcastFeedItem)
-
                     mediaId.startsWith(MediaIds.PODCAST_EPISODE_PREFIX) -> {
                         val episodeId =
                             mediaId.removePrefix(MediaIds.PODCAST_EPISODE_PREFIX)
                                 .toLongOrNull()
-
                         episodeId
                             ?.let { findPodcastEpisodeById(it) }
                             ?.let(::toPodcastEpisodeItem)
                     }
-
                 mediaId.startsWith(FOLDER_PREFIX) -> repository.folder(
                     mediaId.removePrefix(FOLDER_PREFIX).toLongOrNull() ?: -1,
                 )?.let { toFolderItem(it.id, it.name) }
-
                 mediaId.startsWith(PLAYLIST_PREFIX) -> repository.observePlaylists().first()
                     .firstOrNull { it.id == mediaId.removePrefix(PLAYLIST_PREFIX).toLongOrNull() }
                     ?.let { toPlaylistItem(it.id, it.name) }
-
                 mediaId.startsWith(MediaIds.TRACK_PREFIX) -> repository.track(
                     mediaId.removePrefix(MediaIds.TRACK_PREFIX).toLongOrNull() ?: -1,
                 )?.let(::toMediaItem)
@@ -837,46 +839,45 @@ class MusicPlaybackService : MediaLibraryService() {
     }
 
     private suspend fun resolvePlayableMediaItem(requested: MediaItem): MediaItem? {
-
         val id = requested.mediaId
-
         val container =
             (application as VccMusicApplication).container
-
         val repository =
             container.musicRepository
-
         val podcastRepository =
             container.podcastRepository
-
         /*
         * Música local
         */
         if (id.startsWith(MediaIds.TRACK_PREFIX)) {
-
             val trackId =
                 id.removePrefix(MediaIds.TRACK_PREFIX)
                     .toLongOrNull()
                     ?: return null
-
             return repository.track(trackId)
                 ?.let(::toMediaItem)
         }
-
         /*
         * Episódio de podcast
         */
         if (id.startsWith(MediaIds.PODCAST_EPISODE_PREFIX)) {
-
             val episodeId =
                 id.removePrefix(MediaIds.PODCAST_EPISODE_PREFIX)
                     .toLongOrNull()
                     ?: return null
-
             return findPodcastEpisodeById(episodeId)
                 ?.let(::toPodcastEpisodeItem)
         }
-
+        if (id.startsWith(RADIO_PREFIX)) {
+            val radioValue = id.removePrefix(RADIO_PREFIX)
+            val station = radioRepository
+                .observePortugueseStations()
+                .first()
+                .firstOrNull { candidate ->
+                    candidate.id == radioValue || candidate.streamUrl == radioValue
+                }
+            return station?.let(::toRadioItem)
+        }
         /*
         * Caso o Android Auto ainda tenha enviado
         * o MediaItem completo com URI.
@@ -884,78 +885,79 @@ class MusicPlaybackService : MediaLibraryService() {
         if (requested.localConfiguration?.uri != null) {
             return requested
         }
-
         return null
     }
 
-    private suspend fun findPodcastEpisodeById(episodeId: Long): PodcastEpisode? 
+    private fun toRadioItem(
+        station: RadioBrowserStation,
+    ): MediaItem =
+        MediaItem.Builder()
+            .setMediaId("$RADIO_PREFIX${station.id}")
+            .setUri(station.streamUrl)
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(station.name.withoutParentheticalText())
+                    .setArtist(station.tags.ifBlank { "Rádio Online" })
+                    .setIsBrowsable(false)
+                    .setIsPlayable(true)
+                    .build(),
+            )
+            .build()
+
+    private suspend fun findPodcastEpisodeById(episodeId: Long): PodcastEpisode?
     {
         val container =
             (application as VccMusicApplication).container
-
         val podcastStore = container.podcastStore
         val podcastRepository = container.podcastRepository
-
         val checkedFeedIds = mutableSetOf<Long>()
-
         // Favoritos
         val favorites = podcastStore.observeFavorites().first()
-
         for (feed in favorites) {
             if (!checkedFeedIds.add(feed.feedId)) continue
-
             val episode =
                 podcastRepository
                     .episodes(feed.feedId)
                     .firstOrNull { it.id == episodeId }
-
             if (episode != null) {
                 return episode
             }
         }
-
         // Trending
         val trending = podcastRepository.trending(30, "pt")
-
         for (feed in trending) {
             if (!checkedFeedIds.add(feed.id)) continue
-
             val episode =
                 podcastRepository
                     .episodes(feed.id)
                     .firstOrNull { it.id == episodeId }
-
             if (episode != null) {
                 return episode
             }
         }
-
         // Recentes
         val recent = podcastRepository.recent(30, "pt")
-
         for (feed in recent) {
             if (!checkedFeedIds.add(feed.id)) continue
-
             val episode =
                 podcastRepository
                     .episodes(feed.id)
                     .firstOrNull { it.id == episodeId }
-
             if (episode != null) {
                 return episode
             }
         }
-
         return null
     }
-
     /** Codifica o identificador de uma faixa no formato da sessão. */
     private fun trackId(id: Long) = MediaIds.track(id)
+
     /** Codifica o identificador de uma pasta no formato da sessão. */
     private fun folderId(id: Long) = "$FOLDER_PREFIX$id"
+
     /** Codifica o identificador de uma playlist no formato da sessão. */
     private fun playlistId(id: Long) = "$PLAYLIST_PREFIX$id"
-
+    
     private companion object {
         const val ROOT_ID = "root"
         const val FOLDERS_ID = "folders"
@@ -963,9 +965,11 @@ class MusicPlaybackService : MediaLibraryService() {
         const val PLAYLISTS_ID = "playlists"
         const val SHUFFLE_ID = "shuffle"
         const val PODCASTS_ID = "podcasts"
+        const val ONLINE_RADIOS_ID = "online_radios"
         const val TRENDING_PODCASTS_ID = "podcasts_trending"
         const val RECENT_PODCASTS_ID = "podcasts_recent"
         const val FOLDER_PREFIX = "folder:"
         const val PLAYLIST_PREFIX = "playlist:"
+        const val RADIO_PREFIX = "radio:"
     }
 }
