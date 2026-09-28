@@ -33,7 +33,10 @@ import pt.vcc.vccmusic.diagnostics.DiagnosticLogger
 import pt.vcc.vccmusic.data.local.PodcastFavoriteEntity
 import pt.vcc.vccmusic.podcast.model.PodcastEpisode
 import pt.vcc.vccmusic.podcast.model.PodcastFeed
+import androidx.annotation.OptIn
+import androidx.media3.common.util.UnstableApi
 
+@OptIn(UnstableApi::class)
 class MusicPlaybackService : MediaLibraryService() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private lateinit var player: ExoPlayer
@@ -259,6 +262,8 @@ class MusicPlaybackService : MediaLibraryService() {
                     .setTitle(track.title.withoutParentheticalText())
                     .setArtist(track.artist?.withoutParentheticalText())
                     .setAlbumTitle(track.album?.withoutParentheticalText())
+                    .setIsBrowsable(false)
+                    .setIsPlayable(true)
                     .build(),
             )
             .build()
@@ -447,14 +452,62 @@ class MusicPlaybackService : MediaLibraryService() {
             startIndex: Int,
             startPositionMs: Long,
         ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
+
             DiagnosticLogger.log(
                 this@MusicPlaybackService,
                 "AndroidAuto",
                 "Definir faixas: ${controllerDescription(controller)}, " +
-                    "items=${mediaItemsDescription(mediaItems)}, startIndex=$startIndex, " +
-                    "startPositionMs=$startPositionMs",
+                    "items=${mediaItemsDescription(mediaItems)}, " +
+                    "startIndex=$startIndex, startPositionMs=$startPositionMs",
             )
-            return super.onSetMediaItems(session, controller, mediaItems, startIndex, startPositionMs)
+
+            val future =
+                SettableFuture.create<MediaSession.MediaItemsWithStartPosition>()
+
+            serviceScope.launch(Dispatchers.IO) {
+
+                try {
+
+                    val resolvedItems = mediaItems.mapNotNull { item ->
+                        resolvePlayableMediaItem(item)
+                    }
+
+                    if (resolvedItems.isEmpty()) {
+                        future.set(
+                            MediaSession.MediaItemsWithStartPosition(
+                                mediaItems,
+                                startIndex,
+                                startPositionMs,
+                            )
+                        )
+                        return@launch
+                    }
+
+                    val safeIndex =
+                        startIndex.coerceIn(0, resolvedItems.lastIndex)
+
+                    future.set(
+                        MediaSession.MediaItemsWithStartPosition(
+                            resolvedItems,
+                            safeIndex,
+                            startPositionMs,
+                        )
+                    )
+
+                } catch (error: Exception) {
+
+                    DiagnosticLogger.log(
+                        this@MusicPlaybackService,
+                        "AndroidAuto",
+                        "Falha ao resolver MediaItems para reprodução",
+                        error,
+                    )
+
+                    future.setException(error)
+                }
+            }
+
+            return future
         }
 
         override fun onAddMediaItems(
@@ -714,6 +767,7 @@ class MusicPlaybackService : MediaLibraryService() {
                     toCategoryItem(TRENDING_PODCASTS_ID, getString(R.string.trending_podcasts))
                 mediaId == RECENT_PODCASTS_ID ->
                     toCategoryItem(RECENT_PODCASTS_ID, getString(R.string.recent_podcasts))
+
                 mediaId.startsWith(MediaIds.PODCAST_FEED_PREFIX) -> podcastStore.observeFavorites().first()
                     .firstOrNull {
                         MediaIds.podcastFeed(it.feedId) == mediaId
@@ -721,12 +775,25 @@ class MusicPlaybackService : MediaLibraryService() {
                     ?: (
                         podcastRepository.trending(30, "pt") + podcastRepository.recent(30, "pt")
                     ).firstOrNull { MediaIds.podcastFeed(it.id) == mediaId }?.let(::toPodcastFeedItem)
+
+                    mediaId.startsWith(MediaIds.PODCAST_EPISODE_PREFIX) -> {
+                        val episodeId =
+                            mediaId.removePrefix(MediaIds.PODCAST_EPISODE_PREFIX)
+                                .toLongOrNull()
+
+                        episodeId
+                            ?.let { findPodcastEpisodeById(it) }
+                            ?.let(::toPodcastEpisodeItem)
+                    }
+
                 mediaId.startsWith(FOLDER_PREFIX) -> repository.folder(
                     mediaId.removePrefix(FOLDER_PREFIX).toLongOrNull() ?: -1,
                 )?.let { toFolderItem(it.id, it.name) }
+
                 mediaId.startsWith(PLAYLIST_PREFIX) -> repository.observePlaylists().first()
                     .firstOrNull { it.id == mediaId.removePrefix(PLAYLIST_PREFIX).toLongOrNull() }
                     ?.let { toPlaylistItem(it.id, it.name) }
+
                 mediaId.startsWith(MediaIds.TRACK_PREFIX) -> repository.track(
                     mediaId.removePrefix(MediaIds.TRACK_PREFIX).toLongOrNull() ?: -1,
                 )?.let(::toMediaItem)
@@ -767,6 +834,119 @@ class MusicPlaybackService : MediaLibraryService() {
             val end = (start + pageSize).coerceAtMost(items.size)
             return items.subList(start, end)
         }
+    }
+
+    private suspend fun resolvePlayableMediaItem(requested: MediaItem): MediaItem? {
+
+        val id = requested.mediaId
+
+        val container =
+            (application as VccMusicApplication).container
+
+        val repository =
+            container.musicRepository
+
+        val podcastRepository =
+            container.podcastRepository
+
+        /*
+        * Música local
+        */
+        if (id.startsWith(MediaIds.TRACK_PREFIX)) {
+
+            val trackId =
+                id.removePrefix(MediaIds.TRACK_PREFIX)
+                    .toLongOrNull()
+                    ?: return null
+
+            return repository.track(trackId)
+                ?.let(::toMediaItem)
+        }
+
+        /*
+        * Episódio de podcast
+        */
+        if (id.startsWith(MediaIds.PODCAST_EPISODE_PREFIX)) {
+
+            val episodeId =
+                id.removePrefix(MediaIds.PODCAST_EPISODE_PREFIX)
+                    .toLongOrNull()
+                    ?: return null
+
+            return findPodcastEpisodeById(episodeId)
+                ?.let(::toPodcastEpisodeItem)
+        }
+
+        /*
+        * Caso o Android Auto ainda tenha enviado
+        * o MediaItem completo com URI.
+        */
+        if (requested.localConfiguration?.uri != null) {
+            return requested
+        }
+
+        return null
+    }
+
+    private suspend fun findPodcastEpisodeById(episodeId: Long): PodcastEpisode? 
+    {
+        val container =
+            (application as VccMusicApplication).container
+
+        val podcastStore = container.podcastStore
+        val podcastRepository = container.podcastRepository
+
+        val checkedFeedIds = mutableSetOf<Long>()
+
+        // Favoritos
+        val favorites = podcastStore.observeFavorites().first()
+
+        for (feed in favorites) {
+            if (!checkedFeedIds.add(feed.feedId)) continue
+
+            val episode =
+                podcastRepository
+                    .episodes(feed.feedId)
+                    .firstOrNull { it.id == episodeId }
+
+            if (episode != null) {
+                return episode
+            }
+        }
+
+        // Trending
+        val trending = podcastRepository.trending(30, "pt")
+
+        for (feed in trending) {
+            if (!checkedFeedIds.add(feed.id)) continue
+
+            val episode =
+                podcastRepository
+                    .episodes(feed.id)
+                    .firstOrNull { it.id == episodeId }
+
+            if (episode != null) {
+                return episode
+            }
+        }
+
+        // Recentes
+        val recent = podcastRepository.recent(30, "pt")
+
+        for (feed in recent) {
+            if (!checkedFeedIds.add(feed.id)) continue
+
+            val episode =
+                podcastRepository
+                    .episodes(feed.id)
+                    .firstOrNull { it.id == episodeId }
+
+            if (episode != null) {
+                return episode
+            }
+        }
+
+        return null
     }
 
     /** Codifica o identificador de uma faixa no formato da sessão. */
