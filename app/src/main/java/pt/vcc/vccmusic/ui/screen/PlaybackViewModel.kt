@@ -138,11 +138,13 @@ class PlaybackViewModel(
             pendingTracks = Quadruple(tracks, selectedId, source, shuffle)
             return
         }
-        currentController.setMediaItems(queue.map(::toMediaItem))
+        val selectedIndex = selectedId
+            ?.let { id -> queue.indexOfFirst { it.id == id } }
+            ?.takeIf { it >= 0 }
+            ?: 0
+        currentController.setMediaItems(queue.map(::toMediaItem), selectedIndex, 0L)
         shuffle?.let { currentController.shuffleModeEnabled = it }
-        val selectedIndex = selectedId?.let { id -> queue.indexOfFirst { it.id == id } } ?: 0
         currentController.prepare()
-        currentController.seekTo(selectedIndex.coerceAtLeast(0), 0)
         currentController.play()
     }
 

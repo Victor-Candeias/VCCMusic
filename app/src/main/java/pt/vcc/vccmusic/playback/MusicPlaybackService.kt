@@ -47,6 +47,10 @@ class MusicPlaybackService : MediaLibraryService() {
     private var heartbeatJob: kotlinx.coroutines.Job? = null
     private var connectedControllers = 0
 
+    /** Fila completa da biblioteca usada apenas para retomar reprodução sem fila ativa. */
+    @Volatile
+    private var libraryQueue: List<MediaItem> = emptyList()
+
     /** Cria o leitor, a sessão multimédia e inicia a sincronização da biblioteca. */
     override fun onCreate() {
         super.onCreate()
@@ -222,7 +226,13 @@ class MusicPlaybackService : MediaLibraryService() {
         player.play()
     }
 
-    /** Observa a raiz ativa e mantém a fila local do leitor sincronizada. */
+    /**
+     * Observa a raiz ativa e guarda a fila da biblioteca em cache.
+     *
+     * A fila do leitor nunca é alterada aqui: só o utilizador (ou o Android Auto)
+     * define o que é reproduzido, evitando trocas de faixa espontâneas sempre que
+     * a biblioteca emite uma nova lista.
+     */
     private fun loadActiveLibrary() {
         serviceScope.launch(Dispatchers.IO) {
             val container = (application as VccMusicApplication).container
@@ -233,25 +243,14 @@ class MusicPlaybackService : MediaLibraryService() {
             }
             val tracks = container.musicRepository.observeAllTracks(root.id)
             tracks.collect { entities ->
-                val items = QueueBuilder.build(
+                libraryQueue = QueueBuilder.build(
                     QueueRequest(QueueSource.ALL_TRACKS, entities),
                 ).map(::toMediaItem)
-                launch(Dispatchers.Main) {
-                    val currentId = player.currentMediaItem?.mediaId
-                    if (currentId?.startsWith("radio:") == true ||
-                        currentId?.startsWith(MediaIds.PODCAST_EPISODE_PREFIX) == true
-                    ) {
-                        return@launch
-                    }
-                    if (items.isEmpty()) {
-                        player.clearMediaItems()
-                    } else {
-                        val index = player.currentMediaItemIndex
-                            .coerceIn(0, items.lastIndex)
-                        player.setMediaItems(items, index, player.currentPosition)
-                        player.prepare()
-                    }
-                }
+                DiagnosticLogger.log(
+                    this@MusicPlaybackService,
+                    "Library",
+                    "Fila da biblioteca em cache: faixas=${libraryQueue.size}",
+                )
             }
         }
     }
@@ -528,10 +527,10 @@ class MusicPlaybackService : MediaLibraryService() {
                         return@launch
                     }
 
-                    val resolvedItems = mediaItems.mapNotNull { item ->
-                        resolvePlayableMediaItem(item)
+                    val resolvedPairs = mediaItems.mapIndexedNotNull { index, item ->
+                        resolvePlayableMediaItem(item)?.let { index to it }
                     }
-                    if (resolvedItems.isEmpty()) {
+                    if (resolvedPairs.isEmpty()) {
                         future.set(
                             MediaSession.MediaItemsWithStartPosition(
                                 mediaItems,
@@ -541,7 +540,16 @@ class MusicPlaybackService : MediaLibraryService() {
                         )
                         return@launch
                     }
-                    val safeIndex = startIndex.coerceIn(0, resolvedItems.lastIndex)
+                    val resolvedItems = resolvedPairs.map { it.second }
+                    val safeIndex = if (startIndex == C.INDEX_UNSET) {
+                        C.INDEX_UNSET
+                    } else {
+                        resolvedPairs
+                            .indexOfFirst { (original, _) -> original >= startIndex }
+                            .takeIf { it >= 0 }
+                            ?.coerceIn(0, resolvedItems.lastIndex)
+                            ?: resolvedItems.lastIndex
+                    }
                     future.set(
                         MediaSession.MediaItemsWithStartPosition(
                             resolvedItems,
@@ -614,6 +622,17 @@ class MusicPlaybackService : MediaLibraryService() {
                 "AndroidAuto",
                 "Retomar reprodução: ${controllerDescription(controller)}, ${playerStateDescription()}",
             )
+            val queue = libraryQueue
+            if (player.mediaItemCount == 0 && queue.isNotEmpty()) {
+                DiagnosticLogger.log(
+                    this@MusicPlaybackService,
+                    "AndroidAuto",
+                    "Retomar com fila da biblioteca: faixas=${queue.size}",
+                )
+                return Futures.immediateFuture(
+                    MediaSession.MediaItemsWithStartPosition(queue, 0, C.TIME_UNSET),
+                )
+            }
             return super.onPlaybackResumption(session, controller)
         }
 
@@ -775,9 +794,11 @@ class MusicPlaybackService : MediaLibraryService() {
                     toCategoryItem(FOLDERS_ID, getString(R.string.folders)),
                 )
                 FOLDERS_ID -> root?.let {
-                    repository.observeFolders(it.id, null).first().map { folder ->
-                        toFolderItem(folder.id, folder.name)
-                    }
+                    repository.observeFolders(it.id, null).first()
+                        .filterNot { folder -> folder.name.startsWith(".") }
+                        .map { folder ->
+                            toFolderItem(folder.id, folder.name)
+                        }
                 }.orEmpty()
                 ALL_TRACKS_ID -> root?.let {
                     val tracks = repository.observeAllTracks(it.id).first().map(::toMediaItem)
@@ -805,6 +826,7 @@ class MusicPlaybackService : MediaLibraryService() {
                         val folder = repository.folder(parentId.removePrefix(FOLDER_PREFIX).toLongOrNull() ?: -1)
                         if (folder == null) emptyList() else {
                             val children = repository.observeFolders(folder.rootId, folder.id).first()
+                                .filterNot { child -> child.name.startsWith(".") }
                                 .map { child -> toFolderItem(child.id, child.name) }
                             val directTracks = repository.observeDirectTracks(folder.id).first().map(::toMediaItem)
                             val actions = if (directTracks.isNotEmpty()) {

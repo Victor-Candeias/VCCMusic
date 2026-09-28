@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -285,10 +286,11 @@ private fun TrackRow(
                 contentScale = ContentScale.Crop,
             )
         } else {
-            Icon(
-                Icons.AutoMirrored.Filled.List,
-                contentDescription = null,
+            Image(
+                painter = painterResource(R.mipmap.ic_launcher),
+                contentDescription = track.title.withoutParentheticalText(),
                 modifier = Modifier.size(56.dp),
+                contentScale = ContentScale.Fit,
             )
         }
         Text(

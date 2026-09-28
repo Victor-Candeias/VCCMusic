@@ -121,6 +121,7 @@ class SafMusicScanner(
 
                 for (child in children) {
                     currentCoroutineContext().ensureActive()
+                    if (isHidden(child)) continue
                     if (child.mimeType == DocumentsContract.Document.MIME_TYPE_DIR) {
                         pending.add(child to folder.uri.toString())
                     } else if (isAudio(child)) {
@@ -233,6 +234,9 @@ class SafMusicScanner(
             }
         } ?: throw IOException("O provider não devolveu documentos.")
     }
+
+    /** Ignora pastas e ficheiros ocultos, como `.thumbnails` ou `.trashed`. */
+    private fun isHidden(document: DocumentInfo): Boolean = document.name.startsWith(".")
 
     /** Determina se um documento deve ser tratado como ficheiro de áudio. */
     private fun isAudio(document: DocumentInfo): Boolean {
