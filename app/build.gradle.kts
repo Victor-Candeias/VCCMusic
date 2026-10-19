@@ -36,8 +36,8 @@ android {
         applicationId = "pt.vcc.vccmusic"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -105,7 +105,11 @@ android {
 androidComponents {
     onVariants { variant ->
         variant.outputs.forEach { output ->
-            val fileName = if (variant.name == "release") "VCCMusic.apk" else "VCCMusic-${variant.name}.apk"
+            val fileName = if (variant.name == "release") {
+                "VCCMusic-${android.defaultConfig.versionName}.apk"
+            } else {
+                "VCCMusic-${variant.name}.apk"
+            }
             (output as? com.android.build.api.variant.impl.VariantOutputImpl)?.outputFileName?.set(fileName)
         }
     }

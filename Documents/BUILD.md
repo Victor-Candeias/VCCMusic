@@ -29,4 +29,4 @@ Para executar os testes Compose no dispositivo ativo:
 .\gradlew.bat connectedDebugAndroidTest
 ```
 
-O build release desta fase não tem assinatura de produção. Chaves e credenciais nunca devem ser guardadas no repositório.
+O build release é assinado automaticamente quando existe `keystore.properties` na raiz (com `storeFile`, `storePassword`, `keyAlias` e `keyPassword`); o APK é gerado em `app\build\outputs\apk\release\VCCMusic-<versionName>.apk`. A versão é definida em `versionCode`/`versionName` no `app\build.gradle.kts`. Chaves e credenciais nunca devem ser guardadas no repositório.
