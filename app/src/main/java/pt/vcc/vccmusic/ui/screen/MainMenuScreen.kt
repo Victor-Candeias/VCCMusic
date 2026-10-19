@@ -80,7 +80,6 @@ fun MainMenuScreen(
         }
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             listOf(
                 QuickAction(R.string.music, Icons.Default.LibraryMusic, onMusic, "action-music"),
@@ -110,7 +109,6 @@ fun MainMenuScreen(
         } else {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 favoriteTracks.forEach { track ->
                     LibraryListRow(

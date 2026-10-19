@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -50,16 +51,40 @@ import pt.vcc.vccmusic.R
 import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.ui.theme.DarkBackgroundBottom
 import kotlin.math.abs
-
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.automirrored.filled.QueueMusic
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-/** Apresenta a faixa atual, artwork, equalizador e controlos de reprodução. */
+/** Apresenta a faixa atual, artwork, equalizador, controlos e a fila deslizante. */
 fun NowPlayingScreen(
     viewModel: PlaybackViewModel,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val queue by viewModel.queue.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
+    val scaffoldState = rememberBottomSheetScaffoldState()
+    val sheetState = scaffoldState.bottomSheetState
+    val coroutineScope = rememberCoroutineScope()
+    val queueExpanded = sheetState.targetValue == SheetValue.Expanded
+    BackHandler(enabled = queueExpanded) {
+        coroutineScope.launch { sheetState.partialExpand() }
+    }
     val swipeModifier = Modifier.pointerInput(Unit) {
         var distance = 0f
         detectHorizontalDragGestures(
@@ -74,7 +99,7 @@ fun NowPlayingScreen(
         )
     }
 
-    BoxWithConstraints(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(
@@ -82,52 +107,195 @@ fun NowPlayingScreen(
                     darkTheme = MaterialTheme.colorScheme.background == DarkBackgroundBottom,
                 ),
             )
-            .padding(contentPadding)
-            .then(swipeModifier)
             .testTag("screen-now-playing"),
     ) {
-        val landscape = maxWidth > maxHeight
-        val contentModifier = Modifier
-            .then(if (landscape) Modifier else Modifier.verticalScroll(scrollState))
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-
-        if (landscape) {
-            Row(
-                modifier = contentModifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-            ) {
-                Artwork(
-                    state = state,
-                    modifier = Modifier
-                        .weight(1f)
-                        .widthIn(max = 360.dp)
-                        .aspectRatio(1f),
+        BottomSheetScaffold(
+            scaffoldState = scaffoldState,
+            modifier = Modifier
+                .padding(contentPadding)
+                .clipToBounds(),
+            sheetPeekHeight = QueuePeekHeight,
+            containerColor = Color.Transparent,
+            sheetContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            sheetShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+            sheetDragHandle = {
+                QueueHandle(
+                    trackCount = queue.entries.size,
+                    expanded = queueExpanded,
+                    onToggle = {
+                        coroutineScope.launch {
+                            if (queueExpanded) sheetState.partialExpand() else sheetState.expand()
+                        }
+                    },
                 )
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .verticalScroll(scrollState),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    Header()
-                    PlaybackControls(state = state, viewModel = viewModel)
+            },
+            sheetContent = {
+                QueueList(
+                    queue = queue,
+                    currentArtwork = state.artworkData,
+                    expanded = queueExpanded,
+                    onSelect = viewModel::playQueueItem,
+                )
+            },
+        ) { sheetPadding ->
+            BoxWithConstraints(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(sheetPadding)
+                    .then(swipeModifier),
+            ) {
+                val landscape = maxWidth > maxHeight
+                val contentModifier = Modifier
+                    .then(if (landscape) Modifier else Modifier.verticalScroll(scrollState))
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+
+                if (landscape) {
+                    Row(
+                        modifier = contentModifier.fillMaxSize(),
+                        horizontalArrangement = Arrangement.spacedBy(20.dp),
+                    ) {
+                        Artwork(
+                            state = state,
+                            modifier = Modifier
+                                .weight(1f)
+                                .widthIn(max = 360.dp)
+                                .aspectRatio(1f),
+                        )
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                                .verticalScroll(scrollState),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            Header()
+                            PlaybackControls(state = state, viewModel = viewModel)
+                        }
+                    }
+                } else {
+                    Column(
+                        modifier = contentModifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        Header()
+                        Artwork(
+                            state = state,
+                            modifier = Modifier
+                                .fillMaxWidth(0.62f)
+                                .aspectRatio(1f),
+                        )
+                        PlaybackControls(state = state, viewModel = viewModel)
+                    }
                 }
             }
-        } else {
-            Column(
-                modifier = contentModifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                Header()
-                Artwork(
-                    state = state,
-                    modifier = Modifier
-                        .fillMaxWidth(0.62f)
-                        .aspectRatio(1f),
-                )
-                PlaybackControls(state = state, viewModel = viewModel)
-            }
+        }
+    }
+}
+
+private val QueuePeekHeight = 56.dp
+
+@Composable
+/** Pega do painel da fila: arrastar ou tocar abre e fecha a lista. */
+private fun QueueHandle(
+    trackCount: Int,
+    expanded: Boolean,
+    onToggle: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(QueuePeekHeight)
+            .clickable(onClick = onToggle)
+            .testTag("now-playing-queue-handle"),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .size(width = 36.dp, height = 4.dp)
+                .clip(RoundedCornerShape(2.dp))
+                .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)),
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                Icons.AutoMirrored.Filled.QueueMusic,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                text = stringResource(R.string.playback_queue),
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 10.dp),
+            )
+            Text(
+                text = trackCountLabel(trackCount),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Icon(
+                imageVector = if (expanded) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+                contentDescription = stringResource(if (expanded) R.string.hide_queue else R.string.show_queue),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 8.dp),
+            )
+        }
+    }
+}
+
+@Composable
+/** Lista as faixas da fila pela ordem de reprodução; tocar numa faixa salta para ela. */
+private fun QueueList(
+    queue: PlaybackQueue,
+    currentArtwork: ByteArray?,
+    expanded: Boolean,
+    onSelect: (Int) -> Unit,
+) {
+    val listState = rememberLazyListState()
+    val currentPosition = queue.entries.indexOfFirst { it.windowIndex == queue.currentWindowIndex }
+    LaunchedEffect(expanded) {
+        if (expanded && currentPosition >= 0) listState.scrollToItem(currentPosition)
+    }
+    if (queue.entries.isEmpty()) {
+        Text(
+            text = stringResource(R.string.queue_empty),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        return
+    }
+    LazyColumn(
+        state = listState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.8f)
+            .testTag("now-playing-queue"),
+    ) {
+        itemsIndexed(queue.entries, key = { _, entry -> entry.windowIndex }) { position, entry ->
+            val isCurrent = entry.windowIndex == queue.currentWindowIndex
+            LibraryListRow(
+                title = entry.title.withoutParentheticalText(),
+                subtitle = entry.artist?.withoutParentheticalText(),
+                onClick = { onSelect(entry.windowIndex) },
+                highlighted = isCurrent,
+                modifier = Modifier.testTag("queue-item-$position"),
+                leading = {
+                    ListRowArtwork(
+                        trackId = entry.windowIndex.toLong(),
+                        artwork = if (isCurrent) currentArtwork else null,
+                        contentDescription = entry.title.withoutParentheticalText(),
+                    )
+                },
+            )
         }
     }
 }

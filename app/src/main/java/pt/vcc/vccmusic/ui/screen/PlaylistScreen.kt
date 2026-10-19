@@ -67,7 +67,7 @@ fun PlaylistScreen(
             if (playlists.isEmpty()) {
                 Text(stringResource(R.string.no_playlists), modifier = Modifier.padding(24.dp))
             } else {
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                LazyColumn {
                     items(playlists, key = { it.id }) { playlist ->
                         val tracks by viewModel.observeTracks(playlist.id)
                             .collectAsStateWithLifecycle(initialValue = emptyList())
@@ -192,7 +192,7 @@ private fun PlaylistDetail(
     ) {
         Text(stringResource(R.string.play_playlist))
     }
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    LazyColumn {
         items(tracks, key = { it.id }) { track ->
             TrackRow(
                 track = track,

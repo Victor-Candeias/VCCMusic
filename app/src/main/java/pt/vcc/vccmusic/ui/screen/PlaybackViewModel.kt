@@ -46,12 +46,28 @@ data class PlaybackUiState(
     val spectrum: List<Float> = List(24) { 0f },
 )
 
+/** Faixa da fila de reprodução, identificada pelo índice no leitor. */
+data class QueueEntry(
+    val windowIndex: Int,
+    val mediaId: String,
+    val title: String,
+    val artist: String?,
+)
+
+/** Fila de reprodução pela ordem efetiva (respeitando o modo aleatório). */
+data class PlaybackQueue(
+    val entries: List<QueueEntry> = emptyList(),
+    val currentWindowIndex: Int = C.INDEX_UNSET,
+)
+
 class PlaybackViewModel(
     context: Context,
     private val podcastStore: PodcastStore? = null,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PlaybackUiState())
     val state: StateFlow<PlaybackUiState> = _state.asStateFlow()
+    private val _queue = MutableStateFlow(PlaybackQueue())
+    val queue: StateFlow<PlaybackQueue> = _queue.asStateFlow()
     private val controllerFuture = MediaController.Builder(
         context,
         SessionToken(context, ComponentName(context, MusicPlaybackService::class.java)),
@@ -69,6 +85,7 @@ class PlaybackViewModel(
                 controller = controllerFuture.get().also {
                     it.addListener(listener)
                     updateState(it)
+                    updateQueue(it)
                     pendingRadio?.let { (name, streamUrl) ->
                         pendingRadio = null
                         playRadioOnController(it, name, streamUrl)
@@ -271,6 +288,14 @@ class PlaybackViewModel(
         controller?.seekToNextMediaItem()
     }
 
+    /** Salta para uma faixa da fila atual sem a reconstruir. */
+    fun playQueueItem(windowIndex: Int) {
+        val currentController = controller ?: return
+        if (windowIndex !in 0 until currentController.mediaItemCount) return
+        currentController.seekToDefaultPosition(windowIndex)
+        currentController.play()
+    }
+
     /** Alterna o modo de reprodução aleatória. */
     fun toggleShuffle() {
         controller?.let { it.shuffleModeEnabled = !it.shuffleModeEnabled }
@@ -291,7 +316,36 @@ class PlaybackViewModel(
         /** Atualiza o estado exposto quando o leitor comunica alterações. */
         override fun onEvents(player: Player, events: Player.Events) {
             updateState(player)
+            if (events.containsAny(
+                    Player.EVENT_TIMELINE_CHANGED,
+                    Player.EVENT_MEDIA_ITEM_TRANSITION,
+                    Player.EVENT_SHUFFLE_MODE_ENABLED_CHANGED,
+                )
+            ) {
+                updateQueue(player)
+            }
         }
+    }
+
+    /** Reconstrói a fila exposta pela ordem de reprodução do leitor. */
+    private fun updateQueue(player: Player) {
+        val timeline = player.currentTimeline
+        val entries = mutableListOf<QueueEntry>()
+        if (!timeline.isEmpty) {
+            val shuffle = player.shuffleModeEnabled
+            var index = timeline.getFirstWindowIndex(shuffle)
+            while (index != C.INDEX_UNSET && entries.size < timeline.windowCount) {
+                val item = player.getMediaItemAt(index)
+                entries += QueueEntry(
+                    windowIndex = index,
+                    mediaId = item.mediaId,
+                    title = item.mediaMetadata.title?.toString().orEmpty(),
+                    artist = item.mediaMetadata.artist?.toString(),
+                )
+                index = timeline.getNextWindowIndex(index, Player.REPEAT_MODE_OFF, shuffle)
+            }
+        }
+        _queue.value = PlaybackQueue(entries, player.currentMediaItemIndex)
     }
 
     /** Copia metadados e posição do leitor para o estado da interface. */

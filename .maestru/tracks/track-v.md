@@ -18,6 +18,6 @@ status: active
 |---|---|---|---|---|---|---|---|---|---|
 | V1 | Listas do menu principal e playlists com o aspeto da biblioteca | done | 2026-10-19 | developer | high | 2026-10-19 |  |  |  |
 | V2 | Texto do botao Reproduzir Aleatoriamente numa so linha | done | 2026-10-19 | developer | medium | 2026-10-19 |  |  |  |
-| V3 | Fila de reproducao deslizante no ecra Em Reproducao | backlog | 2026-10-19 | developer | high |  |  |  |  |
+| V3 | Fila de reproducao deslizante no ecra Em Reproducao | done | 2026-10-19 | developer | high | 2026-10-19 |  |  |  |
 | V4 | APK de release assinado e versionado | backlog | 2026-10-19 | developer | medium |  |  | V1, V2, V3 |  |
 <!-- /maestru:work-items-list -->

@@ -33,6 +33,7 @@ Dar controlo e feedback consistentes no telefone, notificação, lock screen e d
 - Estão disponíveis seek, anterior, seguinte, shuffle e ciclo repeat off/all/one.
 - O estado é observado diretamente do player Media3 e atualizado periodicamente para a posição.
 - A sessão e o serviço mantêm a reprodução fora da Activity, incluindo notificação e lock screen através do Media3.
+- O ecrã “Em reprodução” tem um painel “Fila de reprodução” no fundo: arrastar para cima (ou tocar na pega) mostra as faixas pela ordem de reprodução (respeitando o modo aleatório), com a faixa atual destacada. Tocar numa faixa salta para ela sem reconstruir a fila; “Voltar” fecha o painel (V3).
 
 **Conclusão:** WI-10 finalizado.
 
