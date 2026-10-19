@@ -20,4 +20,5 @@ status: active
 | V2 | Texto do botao Reproduzir Aleatoriamente numa so linha | done | 2026-10-19 | developer | medium | 2026-10-19 |  |  |  |
 | V3 | Fila de reproducao deslizante no ecra Em Reproducao | done | 2026-10-19 | developer | high | 2026-10-19 |  |  |  |
 | V4 | APK de release assinado e versionado | done | 2026-10-19 | developer | medium | 2026-10-19 |  | V1, V2, V3 |  |
+| V5 | Reduzir capa no ecra Em Reproducao para subir os controlos | done | 2026-10-19 | developer | medium | 2026-10-19 |  |  |  |
 <!-- /maestru:work-items-list -->

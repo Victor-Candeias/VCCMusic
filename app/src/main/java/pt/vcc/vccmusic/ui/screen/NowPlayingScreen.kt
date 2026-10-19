@@ -181,7 +181,7 @@ fun NowPlayingScreen(
                         Artwork(
                             state = state,
                             modifier = Modifier
-                                .fillMaxWidth(0.62f)
+                                .fillMaxWidth(0.45f)
                                 .aspectRatio(1f),
                         )
                         PlaybackControls(state = state, viewModel = viewModel)
