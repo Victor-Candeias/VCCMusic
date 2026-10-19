@@ -61,7 +61,7 @@
     <string name="sort_album">Álbum</string>
     <string name="search_tracks">Pesquisar músicas</string>
     <string name="play_all">Reproduzir todas</string>
-    <string name="play_all_shuffle">Reproduzir aleatoriamente</string>
+    <string name="play_all_shuffle">Aleatório</string>
     <string name="folders">Pastas</string>
     <string name="no_music_root">Escolha uma pasta para começar a indexar a sua música.</string>
     <string name="library_empty">A biblioteca está vazia.</string>

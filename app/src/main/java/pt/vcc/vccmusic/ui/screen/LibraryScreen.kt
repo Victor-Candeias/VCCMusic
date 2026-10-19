@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import pt.vcc.vccmusic.R
@@ -289,7 +290,7 @@ private fun TrackContents(
                 enabled = visibleTracks.isNotEmpty(),
                 modifier = Modifier.weight(1f),
             ) {
-                Text(stringResource(R.string.play_all))
+                Text(stringResource(R.string.play_all), maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
             Button(
                 onClick = {
@@ -302,7 +303,7 @@ private fun TrackContents(
                 enabled = visibleTracks.isNotEmpty(),
                 modifier = Modifier.weight(1f),
             ) {
-                Text(stringResource(R.string.play_all_shuffle))
+                Text(stringResource(R.string.play_all_shuffle), maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         }
         TrackList(
