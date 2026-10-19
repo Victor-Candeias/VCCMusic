@@ -1,0 +1,23 @@
+---
+maestru: "0.4"
+type: work-track
+id: track-v
+title: Melhorias de interface e reproducao
+created: 2026-10-19
+description: "Uniformizacao de listas, ajustes de botoes e fila de reproducao no ecra Em Reproducao"
+owner: developer
+status: active
+---
+
+# track-v: Melhorias de interface e reproducao
+
+## Summary
+
+<!-- maestru:work-items-list -->
+| ID | Title | Status | Created | Owner | Priority | Completed | Template | Blocked By | Spec |
+|---|---|---|---|---|---|---|---|---|---|
+| V1 | Listas do menu principal e playlists com o aspeto da biblioteca | backlog | 2026-10-19 | developer | high |  |  |  |  |
+| V2 | Texto do botao Reproduzir Aleatoriamente numa so linha | backlog | 2026-10-19 | developer | medium |  |  |  |  |
+| V3 | Fila de reproducao deslizante no ecra Em Reproducao | backlog | 2026-10-19 | developer | high |  |  |  |  |
+| V4 | APK de release assinado e versionado | backlog | 2026-10-19 | developer | medium |  |  | V1, V2, V3 |  |
+<!-- /maestru:work-items-list -->
