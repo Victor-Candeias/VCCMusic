@@ -1,15 +1,11 @@
 package pt.vcc.vccmusic.ui.screen
 
-import android.graphics.BitmapFactory
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,7 +20,6 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,10 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,9 +42,6 @@ import pt.vcc.vccmusic.data.local.PlaylistEntity
 import pt.vcc.vccmusic.data.local.TrackEntity
 import pt.vcc.vccmusic.data.withoutParentheticalText
 import pt.vcc.vccmusic.playback.QueueSource
-import pt.vcc.vccmusic.ui.theme.AppGradientCard
-import pt.vcc.vccmusic.ui.theme.PlaylistCardEnd
-import pt.vcc.vccmusic.ui.theme.PlaylistCardStart
 
 @Composable
 /** Apresenta playlists e o detalhe da playlist selecionada. */
@@ -78,7 +67,7 @@ fun PlaylistScreen(
             if (playlists.isEmpty()) {
                 Text(stringResource(R.string.no_playlists), modifier = Modifier.padding(24.dp))
             } else {
-                LazyColumn {
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(playlists, key = { it.id }) { playlist ->
                         val tracks by viewModel.observeTracks(playlist.id)
                             .collectAsStateWithLifecycle(initialValue = emptyList())
@@ -128,45 +117,31 @@ private fun PlaylistCard(
     onShuffle: () -> Unit,
     onToggleFavorite: () -> Unit,
 ) {
-    AppGradientCard(
+    val actionTint = MaterialTheme.colorScheme.onBackground.copy(alpha = LIST_ROW_ACTION_ALPHA)
+    LibraryListRow(
+        title = playlist.name.withoutParentheticalText(),
+        subtitle = trackCountLabel(trackCount),
         onClick = onOpen,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(92.dp)
-            .padding(horizontal = 16.dp, vertical = 5.dp),
-        start = PlaylistCardStart,
-        end = PlaylistCardEnd,
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
-            Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
-                Text(playlist.name.withoutParentheticalText(), style = MaterialTheme.typography.titleMedium)
-                Text(
-                    text = "$trackCount ${if (trackCount == 1) "música" else "músicas"}",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
+        modifier = Modifier.testTag("playlist-${playlist.id}"),
+        leading = { ListRowIcon(Icons.AutoMirrored.Filled.List) },
+        trailing = {
             IconButton(onClick = onToggleFavorite) {
                 Icon(
                     imageVector = if (playlist.isFavorite) Icons.Default.Star else Icons.Outlined.StarBorder,
                     contentDescription = stringResource(
                         if (playlist.isFavorite) R.string.remove_from_favorites else R.string.add_to_favorites,
                     ),
+                    tint = actionTint,
                 )
             }
             IconButton(onClick = onPlay, enabled = trackCount > 0) {
-                Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.play_playlist))
+                Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.play_playlist), tint = actionTint)
             }
             IconButton(onClick = onShuffle, enabled = trackCount > 0) {
-                Icon(Icons.Default.Shuffle, contentDescription = stringResource(R.string.shuffle))
+                Icon(Icons.Default.Shuffle, contentDescription = stringResource(R.string.shuffle), tint = actionTint)
             }
-        }
-    }
+        },
+    )
 }
 
 @Composable
@@ -217,7 +192,7 @@ private fun PlaylistDetail(
     ) {
         Text(stringResource(R.string.play_playlist))
     }
-    LazyColumn {
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(tracks, key = { it.id }) { track ->
             TrackRow(
                 track = track,
@@ -269,43 +244,21 @@ private fun TrackRow(
     track: TrackEntity,
     onRemove: () -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        val artwork = track.artwork?.let {
-            BitmapFactory.decodeByteArray(it, 0, it.size)?.asImageBitmap()
-        }
-        if (artwork != null) {
-            Image(
-                bitmap = artwork,
-                contentDescription = track.title.withoutParentheticalText(),
-                modifier = Modifier.size(56.dp),
-                contentScale = ContentScale.Crop,
-            )
-        } else {
-            Image(
-                painter = painterResource(R.mipmap.ic_launcher),
-                contentDescription = track.title.withoutParentheticalText(),
-                modifier = Modifier.size(56.dp),
-                contentScale = ContentScale.Fit,
-            )
-        }
-        Text(
-            track.title.withoutParentheticalText(),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 12.dp).weight(1f),
-        )
-        IconButton(onClick = onRemove) {
-            Icon(
-                Icons.Default.Delete,
-                contentDescription = stringResource(R.string.remove),
-            )
-        }
-    }
-    HorizontalDivider()
+    LibraryListRow(
+        title = track.title.withoutParentheticalText(),
+        subtitle = track.artist?.withoutParentheticalText(),
+        onClick = null,
+        leading = { ListRowArtwork(track.id, track.artwork, track.title.withoutParentheticalText()) },
+        trailing = {
+            IconButton(onClick = onRemove) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = stringResource(R.string.remove),
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = LIST_ROW_ACTION_ALPHA),
+                )
+            }
+        },
+    )
 }
 
 @Composable
